@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+
+# Working design notes, kept local
+polyphony.md
+
+# Generated MIDI
+output/
+
+# Ableton analysis sidecars
+*.asd
+
+# Caches from the deleted audio-era pipeline. The directories no longer exist;
+# the rules stay because stem_renders/ reappeared once after its rule was removed
+# and 3.4 MB of it was committed before anyone noticed.
+cache/
+cond/
+drum_cache/
+drum_cond/
+bass_cache/
+bass_cond/
+bass_grid/
+bass_notes/
+stems/
+stem_renders/
+
+# Audio and arrays are ignored by default, then re-admitted below where the file
+# is small, irreplaceable, or needed to run.
+*.wav
+*.npy
+*.npz
+
+# Tracked on purpose:
+#   checkpoints/            the models. Not regenerable without retraining, and
+#                           the training scripts only exist at 84f209b~1.
+#   drum_samples/           the conditioning loops the pipeline needs to run.
+#   training_data/dpo/      hand-edited MIDI — the only human-authored data here.
+#
+# NOT tracked: training_data/{bass,arp}_notes_midi/. Those 7,704 .npz are lossy but
+# musically recognisable derivatives of purchased sample-pack MIDI — a clone could
+# reconstruct the rhythm and intervals of 354 basslines from them. The licence covers
+# using the packs, not redistributing derivatives, so they stay local and
+# training_data/README.md records how to regenerate them.
+!drum_samples/*.wav
+!training_data/dpo/**/stems/
+!training_data/dpo/**/stems/*.mid
+!training_data/drum_loops/*.wav

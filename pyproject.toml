@@ -1,0 +1,23 @@
+[project]
+name = "midi-gpt"
+version = "0.1.0"
+description = "Inference-only symbolic GPT pipeline for generating UK garage bass and arp MIDI"
+requires-python = ">=3.12,<3.13"
+# librosa and scipy are NOT audio-output dependencies: they read the drum loop and
+# extract its kick-pocket onset grid, which conditions note generation.
+dependencies = [
+    "librosa>=0.11.0,<0.12",
+    "mido>=1.3.3,<2",
+    "numpy>=2.0,<3",
+    "scipy>=1.14,<2",
+    "torch==2.12.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.1.0,<8",
+    "pytest>=9.0.0,<10",
+]
+
+[tool.uv]
+package = false
