@@ -19,6 +19,12 @@ GRID_STEPS_PER_BAR = 16
 GRID_STEPS = GRID_BARS * GRID_STEPS_PER_BAR
 GRID_FRAMES = round(GRID_BARS * 4 * (60.0 / GRID_REF_BPM) * FRAME_RATE)
 
+# How each role's MIDI was reduced to a single voice when the corpus was built, and the
+# register its pitches were centred on. Fine-tuning must reproduce both exactly, or an
+# edited clip would tokenize differently from the original it is paired against.
+ROLE_MONO = {"bass": "lowest", "arp": "highest"}
+ROLE_CENTER = {"bass": 40, "arp": 60}                  # E2 and C4
+
 # Symbolic bass/arp representation: one token per sixteenth-note step.
 NOTE_BARS = 4
 NOTE_STEPS = NOTE_BARS * GRID_STEPS_PER_BAR
