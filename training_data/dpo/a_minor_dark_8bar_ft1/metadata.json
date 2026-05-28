@@ -1,0 +1,44 @@
+{
+  "request": "8 bar ukg track in A minor, dark",
+  "parsed": {
+    "root": "A",
+    "mode": "minor",
+    "bars": 8,
+    "mood": "dark"
+  },
+  "bpm": 130.0,
+  "progression": "Am-F-Dm-Em",
+  "sections": 2,
+  "drum_loop": "drumgen_1_temp0.7.wav",
+  "sound": {
+    "bass_lp": 280.0,
+    "arp_lp": 1500.0,
+    "bass_gain": 0.95,
+    "arp_gain": 0.38,
+    "drum_gain": 0.85
+  },
+  "sampling": {
+    "bass_temp": 1.2,
+    "arp_temp": 1.3,
+    "top_p": 0.98,
+    "seed": 0,
+    "candidates_per_section": 10
+  },
+  "validation": {
+    "bass": {
+      "chord_fit": 0.844,
+      "kick_lock": 0.843,
+      "notes": 32
+    },
+    "arp": {
+      "chord_fit": 0.897,
+      "kick_lock": 0.567,
+      "notes": 39
+    }
+  },
+  "models": {
+    "bass": "bass_notes_gpt_ft1.pt",
+    "arp": "arp_notes_gpt_ft1.pt"
+  },
+  "created": "2026-07-04 07:41:18"
+}
