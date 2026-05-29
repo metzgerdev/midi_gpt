@@ -59,18 +59,54 @@ DRUM_DIR = BASE / "drum_samples"                        # conditioning loops liv
 OUTPUT_DIR = BASE / "output"                            # generated MIDI lands here
 
 
+def drum_loops() -> list[Path]:
+    """Every conditioning loop available in drum_samples/, by name."""
+    return sorted(DRUM_DIR.glob("*.wav"))
+
+
 def default_drum() -> Path:
     """The conditioning loop: the only wav in drum_samples/, else the first by name.
 
     Resolved lazily rather than at import so an empty folder fails at run time with a
     useful message instead of breaking every import of this module.
     """
-    loops = sorted(DRUM_DIR.glob("*.wav"))
+    loops = drum_loops()
     if not loops:
         raise SystemExit(
             f"no drum loop in {DRUM_DIR} — drop a 2-step wav there, or pass --drum"
         )
     return loops[0]
+
+
+def detect_bpm(path: Path) -> float | None:
+    """Read a tempo out of the filename: 'house_drums_loop_127bpm' -> 127.
+
+    Filename rather than beat tracking, which is unreliable on two bars of drums and
+    would fail silently. Returns None when there is nothing to go on, and the caller
+    then assumes the loop is already at GRID_REF_BPM.
+    """
+    stem = Path(path).stem.lower()
+    m = re.search(r"(\d{2,3})\s*bpm", stem) or re.search(r"(?<!\d)(\d{2,3})(?!\d)", stem)
+    if m and 60 <= int(m.group(1)) <= 200:
+        return float(m.group(1))
+    return None
+
+
+def align_to_grid_tempo(audio: np.ndarray, loop_bpm: float) -> np.ndarray:
+    """Time-stretch a loop so two of its bars fill the fixed analysis window.
+
+    `onset_grid` always reads the first GRID_FRAMES frames — 3.693 s, which is exactly
+    two bars at GRID_REF_BPM — and splits that into 32 sixteenth bins. A loop at any other
+    tempo has bars of a different length, so its onsets land in the wrong bins and the
+    error compounds across the bar. On a 127 BPM house loop that misplaced 9 of 32
+    steps, including the downbeat kick.
+
+    Stretching only aligns the analysis; the grid is tempo-agnostic in step space, and
+    the output tempo is set separately by --bpm.
+    """
+    if abs(loop_bpm - GRID_REF_BPM) < 0.01:
+        return audio
+    return librosa.effects.time_stretch(audio, rate=GRID_REF_BPM / loop_bpm)
 
 PC = {"C": 0, "C#": 1, "DB": 1, "D": 2, "D#": 3, "EB": 3, "E": 4, "F": 5,
       "F#": 6, "GB": 6, "G": 7, "G#": 8, "AB": 8, "A": 9, "A#": 10, "BB": 10, "B": 11}
@@ -307,6 +343,9 @@ def main():
                     help="natural-language track request (non-interactive)")
     ap.add_argument("--genre", choices=list(GENRES), default=None, help="genre preset (overrides request mood)")
     ap.add_argument("--bpm", type=int, default=None, help="tempo (default: genre's native bpm)")
+    ap.add_argument("--drum-bpm", type=float, default=None,
+                    help="tempo of the conditioning loop (default: read from its filename, "
+                         "else assume it is already at 130)")
     ap.add_argument("--drum", type=Path, default=None,
                     help="2-step drum loop wav (default: the loop in drum_samples/)")
     ap.add_argument("--seed", type=int, default=None,
@@ -390,8 +429,14 @@ def main():
     # The loop is read purely to condition generation; its audio is never written out.
     # Analysis stays at SAMPLE_RATE so the grid matches what the models trained on.
     drum24, _ = librosa.load(drum, sr=SAMPLE_RATE, mono=True)
-    loop_bars = len(drum24) / SAMPLE_RATE / (4 * 60.0 / GRID_REF_BPM)
-    print(f"drum:    {Path(drum).name}  ({loop_bars:.1f} bars @ {GRID_REF_BPM:.0f})", flush=True)
+    drum_bpm = args.drum_bpm or detect_bpm(drum) or GRID_REF_BPM
+    loop_bars = len(drum24) / SAMPLE_RATE / (4 * 60.0 / drum_bpm)
+    source = "given" if args.drum_bpm else ("filename" if detect_bpm(drum) else "assumed")
+    print(f"drum:    {Path(drum).name}  ({loop_bars:.1f} bars @ {drum_bpm:.0f}, {source})", flush=True)
+    if abs(drum_bpm - GRID_REF_BPM) >= 0.01:
+        print(f"         stretched to {GRID_REF_BPM:.0f} so its bars fill the analysis window",
+              flush=True)
+    drum24 = align_to_grid_tempo(drum24, drum_bpm)
     # onset_grid truncates to GRID_FRAMES, so only the first GRID_BARS ever reach the
     # model. Longer loops are not an error, but say so rather than dropping them quietly.
     if loop_bars > GRID_BARS + 0.05:
@@ -441,6 +486,7 @@ def main():
         "sections": n_sections,
         "duration_sec": round(total_sec, 2),
         "drum_loop": str(Path(drum).name),          # conditioning source, not mixed audio
+        "drum_bpm": drum_bpm,
         # device is part of the sampling record: a seed reproduces on the same device
         # only — MPS and CPU diverge within a few steps from identical state.
         "sampling": {"bass_temp": bass_temp, "arp_temp": arp_temp, "top_p": 0.98,
