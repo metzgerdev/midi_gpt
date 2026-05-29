@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import random
 import re
 import sys
 import time
@@ -125,11 +126,26 @@ def run_folder(root: Path, slug: str) -> Path:
     return out
 
 
-def pick_device() -> torch.device:
-    if torch.cuda.is_available():
-        return torch.device("cuda")
-    if torch.backends.mps.is_available():
-        return torch.device("mps")
+def pick_device(name: str | None = None) -> torch.device:
+    """CPU by default — measured ~10x faster than MPS for this model.
+
+    Generation is 64 sequential single-token passes through a 0.70M-parameter model.
+    The tensors are small enough that accelerator launch and sync overhead dominates
+    the arithmetic: 632 ms per candidate on MPS against 60 ms on CPU, so an 8-bar run
+    costs ~25 s on GPU and ~2.4 s on CPU.
+
+    The accelerator branch is kept rather than deleted because the trade flips if the
+    sampler is ever batched or the model grows. `--device auto` restores the old
+    behaviour. Note that a seed does not carry across devices: MPS and CPU diverge
+    within a few steps, so runs are reproducible on one device, not between two.
+    """
+    if name in ("cpu", "mps", "cuda"):
+        return torch.device(name)
+    if name == "auto":
+        if torch.cuda.is_available():
+            return torch.device("cuda")
+        if torch.backends.mps.is_available():
+            return torch.device("mps")
     return torch.device("cpu")
 
 
@@ -293,13 +309,21 @@ def main():
     ap.add_argument("--bpm", type=int, default=None, help="tempo (default: genre's native bpm)")
     ap.add_argument("--drum", type=Path, default=None,
                     help="2-step drum loop wav (default: the loop in drum_samples/)")
-    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--seed", type=int, default=None,
+                    help="default: a new random seed each run. Pass the seed printed by an "
+                         "earlier run (and match its device) to reproduce it exactly")
     ap.add_argument("--candidates", type=int, default=10, help="best-of-N per 4-bar section")
+    ap.add_argument("--bass-temp", type=float, default=None,
+                    help="override the mood's bass sampling temperature (default 1.2-1.3)")
+    ap.add_argument("--arp-temp", type=float, default=None,
+                    help="override the mood's arp sampling temperature (default 1.3-1.35)")
     ap.add_argument("--bass-ckpt", type=Path, default=None, help="override bass model (e.g. a _ftN checkpoint)")
     ap.add_argument("--arp-ckpt", type=Path, default=None, help="override arp model (e.g. a _ftN checkpoint)")
     ap.add_argument("--base", action="store_true",
                     help="force the un-tuned base models (default: latest SFT _ftN checkpoint)")
     ap.add_argument("--no-arp", action="store_true", help="bass only")
+    ap.add_argument("--device", default=None, choices=("cpu", "mps", "cuda", "auto"),
+                    help="override the sampling device (default: cpu — ~10x faster here)")
     ap.add_argument("--out-root", type=Path, default=OUTPUT_DIR,
                     help="where generated MIDI folders are written (default: output/)")
     args = ap.parse_args()
@@ -317,12 +341,18 @@ def main():
                 "bpm": args.bpm or g["bpm"], "drum": g["drum"], "use_sft": not args.base}
 
     req = {k: spec[k] for k in ("root", "mode", "bars", "mood")}
+    # A fixed default seed made every run of the same request produce identical music —
+    # generation is deterministic given (seed, device, weights, conditioning). Vary it by
+    # default and print it, so runs differ but any one of them can still be reproduced.
+    seed = args.seed if args.seed is not None else random.randrange(1_000_000)
     bpm = float(args.bpm or spec["bpm"])
     genre = spec["genre"]
     drum = args.drum or spec["drum"] or default_drum()
     request_str = (args.request if not interactive else
                    f"{GENRES[genre]['label']}, {req['root']} {req['mode']}, {int(bpm)} bpm, {req['bars']} bars")
     prof = MOODS[req["mood"]]
+    bass_temp = args.bass_temp if args.bass_temp is not None else prof["bass_temp"]
+    arp_temp = args.arp_temp if args.arp_temp is not None else prof["arp_temp"]
     prog = build_progression(req["root"], req["mode"], req["mood"])
     n_sections = req["bars"] // NOTE_BARS
 
@@ -349,10 +379,12 @@ def main():
           f"  progression={prog}  bpm={bpm:.0f}", flush=True)
     print(f"weights: bass={bass_ckpt.name}  arp={arp_ckpt.name}"
           f"  ({'SFT' if '_ft' in bass_ckpt.name else 'base'})", flush=True)
+    print(f"sampling: seed={seed}  temps bass={bass_temp} arp={arp_temp}  "
+          f"best-of-{args.candidates}", flush=True)
     if args.no_arp:
         print("stems:   bass only (arp disabled)", flush=True)
 
-    device = pick_device()
+    device = pick_device(args.device)
 
     # ── rhythm skeleton: drum loop -> kick grid (2-bar loop tiled to 4-bar sections).
     # The loop is read purely to condition generation; its audio is never written out.
@@ -377,16 +409,16 @@ def main():
 
     # ── note stems: N independent 4-bar sections per stem (A A' form)
     metrics = {}
-    roles = [("bass", bass_ckpt, prof["bass_temp"])]
+    roles = [("bass", bass_ckpt, bass_temp)]
     if not args.no_arp:
-        roles.append(("arp", arp_ckpt, prof["arp_temp"]))
+        roles.append(("arp", arp_ckpt, arp_temp))
     for role, ckpt, temp in roles:
         model = load_note_model(ckpt, device)
         role_off = 0 if role == "bass" else 31          # fixed (hash() is salted per-process)
         notes, fits, locks = [], [], []
         for s in range(n_sections):
             tk, (f, l) = best_section(model, grid_tok, chord_tok, chroma, grid64, temp,
-                                      base_seed=args.seed * 1000 + s * 7 + role_off,
+                                      base_seed=seed * 1000 + s * 7 + role_off,
                                       device=device, n_cand=args.candidates)
             fits.append(f); locks.append(l)
             sec_notes = tokens_to_notes(tk, 0)
@@ -409,8 +441,11 @@ def main():
         "sections": n_sections,
         "duration_sec": round(total_sec, 2),
         "drum_loop": str(Path(drum).name),          # conditioning source, not mixed audio
-        "sampling": {"bass_temp": prof["bass_temp"], "arp_temp": prof["arp_temp"], "top_p": 0.98,
-                     "seed": args.seed, "candidates_per_section": args.candidates},
+        # device is part of the sampling record: a seed reproduces on the same device
+        # only — MPS and CPU diverge within a few steps from identical state.
+        "sampling": {"bass_temp": bass_temp, "arp_temp": arp_temp, "top_p": 0.98,
+                     "seed": seed, "candidates_per_section": args.candidates,
+                     "device": str(device)},
         "validation": metrics,
         "models": {r: c.name for r, c, *_ in roles},
         "created": time.strftime("%Y-%m-%d %H:%M:%S"),
