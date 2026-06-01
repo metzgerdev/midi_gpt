@@ -45,7 +45,7 @@ import numpy as np
 import torch
 
 from audio_features import onset_grid
-from chords import NAMES, progression_to_track
+from chords import NAMES, color_progression, progression_to_track
 from config import (
     GRID_BARS, GRID_REF_BPM, GRID_STEPS, NOTE_BARS, NOTE_BOS, NOTE_EOS,
     NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS, SAMPLE_RATE,
@@ -172,7 +172,7 @@ def pick_device(name: str | None = None) -> torch.device:
 
     The accelerator branch is kept rather than deleted because the trade flips if the
     sampler is ever batched or the model grows. `--device auto` restores the old
-    behaviour. Note that a seed does not carry across devices: MPS and CPU diverge
+    behavior. Note that a seed does not carry across devices: MPS and CPU diverge
     within a few steps, so runs are reproducible on one device, not between two.
     """
     if name in ("cpu", "mps", "cuda"):
@@ -361,6 +361,9 @@ def main():
     ap.add_argument("--base", action="store_true",
                     help="force the un-tuned base models (default: latest SFT _ftN checkpoint)")
     ap.add_argument("--no-arp", action="store_true", help="bass only")
+    ap.add_argument("--chords", default="fixed", choices=("fixed", "color"),
+                    help="fixed: the mood template's plain triads. color: recolor each "
+                         "chord with an in-key 7th or suspension, freshly per section")
     ap.add_argument("--device", default=None, choices=("cpu", "mps", "cuda", "auto"),
                     help="override the sampling device (default: cpu — ~10x faster here)")
     ap.add_argument("--out-root", type=Path, default=OUTPUT_DIR,
@@ -448,9 +451,21 @@ def main():
     grid64 = np.tile(grid32, NOTE_STEPS // len(grid32))[:NOTE_STEPS]
     grid_tok = note_grid_cond(grid64)
 
-    # ── harmony skeleton: progression -> per-step chroma (same chords every section)
-    chroma = progression_to_track(prog, NOTE_STEPS)
-    chord_tok = note_chord_cond(chroma)
+    # ── harmony skeleton: progression -> per-step chroma.
+    # Fixed mode reuses one progression for every section, so an 8-bar run is the same
+    # 4 bars of harmony twice. Color mode redraws the voicings per section, giving A and
+    # A' different colors over the same roots — variation the seed alone cannot reach,
+    # since the chroma is conditioning rather than something the model samples.
+    chord_rng = random.Random(seed)
+    key_pc = PC[req["root"].upper()]
+    progs = [prog if args.chords == "fixed"
+             else color_progression(prog, key_pc, req["mode"], chord_rng)
+             for _ in range(n_sections)]
+    chromas = [progression_to_track(p, NOTE_STEPS) for p in progs]
+    chord_toks = [note_chord_cond(c) for c in chromas]
+    if args.chords != "fixed":
+        for i, p in enumerate(progs, 1):
+            print(f"  section {i}: {p}", flush=True)
 
     # ── note stems: N independent 4-bar sections per stem (A A' form)
     metrics = {}
@@ -462,7 +477,7 @@ def main():
         role_off = 0 if role == "bass" else 31          # fixed (hash() is salted per-process)
         notes, fits, locks = [], [], []
         for s in range(n_sections):
-            tk, (f, l) = best_section(model, grid_tok, chord_tok, chroma, grid64, temp,
+            tk, (f, l) = best_section(model, grid_tok, chord_toks[s], chromas[s], grid64, temp,
                                       base_seed=seed * 1000 + s * 7 + role_off,
                                       device=device, n_cand=args.candidates)
             fits.append(f); locks.append(l)
@@ -483,6 +498,8 @@ def main():
         "genre": genre,
         "bpm": bpm,
         "progression": prog,
+        "progressions": progs,          # per section; equal to prog in fixed mode
+        "chords": args.chords,
         "sections": n_sections,
         "duration_sec": round(total_sec, 2),
         "drum_loop": str(Path(drum).name),          # conditioning source, not mixed audio

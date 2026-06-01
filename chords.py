@@ -26,6 +26,22 @@ QUALITIES = {
 }
 
 
+# Diatonic scales, as semitone offsets from the key root. Natural minor rather than
+# harmonic — a raised 7th would put a major dominant in the key, which is exactly the
+# color the dark UKG mood template avoids.
+SCALES = {
+    "minor": (0, 2, 3, 5, 7, 8, 10),
+    "major": (0, 2, 4, 5, 7, 9, 11),
+}
+
+# Candidate recolorings for a chord, by its plain triad quality. Which of these
+# survive is decided by the key, not by taste: see `color_progression`.
+COLORS = {
+    "m": ("m", "m7", "sus4", "sus2"),
+    "": ("", "maj7", "7", "sus4", "sus2"),
+}
+
+
 def chord_chroma(root_pc: int, quality: str = "min") -> np.ndarray:
     vector = np.zeros(12, np.float32)
     for interval in QUALITIES[quality]:
@@ -74,6 +90,38 @@ def infer_chord_track(step_pitch: np.ndarray, n_bars: int, steps_per_bar: int) -
                 histogram[int(pitch) % 12] += 1.0
         track[bar * steps_per_bar:(bar + 1) * steps_per_bar] = infer_chord(histogram)
     return track
+
+
+def scale_pcs(key_root: int, mode: str) -> set[int]:
+    """The pitch classes of a key, e.g. A minor -> {A B C D E F G}."""
+    return {(key_root + step) % 12 for step in SCALES[mode]}
+
+
+def in_key(root_pc: int, quality: str, scale: set[int]) -> bool:
+    """True when every tone of the chord is diatonic to the key."""
+    return set(np.flatnonzero(chord_chroma(root_pc, quality)).tolist()) <= scale
+
+
+def color_progression(progression: str, key_root: int, mode: str, rng) -> str:
+    """Recolor each chord with a 7th or suspension that stays in the key.
+
+    Harmonic function is untouched — the roots and their major/minor quality come from
+    the mood template and stay put. Only the color above the triad varies, and a
+    candidate is kept only if all of its tones are diatonic, so correctness falls out
+    of the key rather than out of a hand-written table. In A minor that admits Fmaj7
+    on the VI and G7 on the VII while rejecting F7 (Eb) and Gmaj7 (F#) automatically.
+
+    `rng` is a seeded random.Random, so a run's chords are reproducible from its seed.
+    """
+    scale = scale_pcs(key_root, mode)
+    out = []
+    for root_pc, quality in parse_progression(progression):
+        base = "m" if quality in ("m", "min") else ""
+        options = [q for q in COLORS.get(base, (base,)) if in_key(root_pc, q, scale)]
+        if base not in options:                    # the plain triad may leave the key
+            options.append(base)                   # (borrowed chords); keep it reachable
+        out.append(NAMES[root_pc] + rng.choice(options))
+    return "-".join(out)
 
 
 def parse_chord(token: str) -> tuple[int, str]:
