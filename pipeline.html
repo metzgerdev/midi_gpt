@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="How the midi_gpt pipeline works: text request through two conditioning skeletons into a 0.687M-param note GPT, out to bass and arp MIDI.">
+<title>midi_gpt — symbolic pipeline</title>
+<style>
+  :root {
+    --ground: #F2F4F6;
+    --surface: #FFFFFF;
+    --surface-2: #E7EAEF;
+    --ink: #14171C;
+    --ink-muted: #565E6C;
+    --ink-faint: #878F9D;
+    --rule: #D3D9E1;
+    --rule-strong: #B6BEC9;
+    --rhythm: #B4671A;
+    --rhythm-soft: #F3E6D4;
+    --rhythm-line: #DDBC91;
+    --harmony: #35459A;
+    --harmony-soft: #DEE2F4;
+    --harmony-line: #A6AFDE;
+    --dead: #9AA2B0;
+
+    --display: "Avenir Next", Futura, "Trebuchet MS", sans-serif;
+    --body: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+    --mono: "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #121419;
+      --surface: #191C23;
+      --surface-2: #22262F;
+      --ink: #E5E8EE;
+      --ink-muted: #99A1B0;
+      --ink-faint: #6B7382;
+      --rule: #2B303A;
+      --rule-strong: #3D4450;
+      --rhythm: #E0A05C;
+      --rhythm-soft: #33261A;
+      --rhythm-line: #6E5433;
+      --harmony: #8E9DEE;
+      --harmony-soft: #212745;
+      --harmony-line: #454F82;
+      --dead: #5C6472;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #121419;
+    --surface: #191C23;
+    --surface-2: #22262F;
+    --ink: #E5E8EE;
+    --ink-muted: #99A1B0;
+    --ink-faint: #6B7382;
+    --rule: #2B303A;
+    --rule-strong: #3D4450;
+    --rhythm: #E0A05C;
+    --rhythm-soft: #33261A;
+    --rhythm-line: #6E5433;
+    --harmony: #8E9DEE;
+    --harmony-soft: #212745;
+    --harmony-line: #454F82;
+    --dead: #5C6472;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 24px 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  /* ---------- header ---------- */
+  header { padding-top: 72px; display: flex; flex-direction: column; gap: 18px; }
+
+  .eyebrow {
+    font-family: var(--display);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .eyebrow .tick { color: var(--rule-strong); }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(30px, 5.2vw, 46px);
+    font-weight: 600;
+    letter-spacing: -0.022em;
+    line-height: 1.08;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .lede {
+    max-width: 63ch;
+    font-size: 18.5px;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .lede em { color: var(--ink); font-style: italic; }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--surface);
+    margin-top: 6px;
+  }
+  .fact {
+    flex: 1 1 130px;
+    padding: 13px 16px;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .fact:last-child { border-right: 0; }
+  .fact dt {
+    font-family: var(--display);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .fact dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  /* ---------- section furniture ---------- */
+  section { display: flex; flex-direction: column; gap: 22px; }
+
+  h2 {
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0;
+    padding-bottom: 11px;
+    border-bottom: 1.5px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  h2 .note {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    font-weight: 400;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+  }
+
+  p { margin: 0; max-width: 65ch; }
+  p.sub { color: var(--ink-muted); font-size: 16px; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.87em;
+    background: var(--surface-2);
+    padding: 0.1em 0.36em;
+    border-radius: 2px;
+  }
+
+  /* ---------- flow ---------- */
+  .flow { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+
+  .node {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .node .title {
+    font-family: var(--display);
+    font-size: 14.5px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .node .detail {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  .arrow {
+    width: 1.5px;
+    height: 26px;
+    background: var(--rule-strong);
+    margin: 0 auto;
+    position: relative;
+    flex: none;
+  }
+  .arrow::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-top: 6px solid var(--rule-strong);
+  }
+  .arrow.tall { height: 34px; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 680px) { .split { grid-template-columns: 1fr; } }
+
+  .lane {
+    border: 1px solid var(--rule);
+    border-top-width: 3px;
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .lane--rhythm { border-top-color: var(--rhythm); }
+  .lane--harmony { border-top-color: var(--harmony); }
+
+  .lane-head {
+    padding: 12px 16px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .lane-head .name {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .lane--rhythm .name { color: var(--rhythm); }
+  .lane--harmony .name { color: var(--harmony); }
+  .lane-head .what { font-size: 14.5px; color: var(--ink); }
+
+  ol.chain { list-style: none; margin: 0; padding: 6px 0; display: flex; flex-direction: column; }
+  ol.chain li {
+    padding: 7px 16px 7px 34px;
+    position: relative;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  ol.chain li::before {
+    content: "";
+    position: absolute;
+    left: 17px; top: 15px;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+  }
+  .lane--rhythm ol.chain li::before { background: var(--rhythm-line); }
+  .lane--harmony ol.chain li::before { background: var(--harmony-line); }
+  ol.chain li::after {
+    content: "";
+    position: absolute;
+    left: 19.2px; top: 20px; bottom: -7px;
+    width: 1px;
+  }
+  .lane--rhythm ol.chain li:not(:last-child)::after { background: var(--rhythm-line); }
+  .lane--harmony ol.chain li:not(:last-child)::after { background: var(--harmony-line); }
+  ol.chain li .out { color: var(--ink-faint); }
+
+  .lane-out {
+    margin-top: auto;
+    padding: 10px 16px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    border-top: 1px solid var(--rule);
+  }
+  .lane--rhythm .lane-out { background: var(--rhythm-soft); color: var(--rhythm); }
+  .lane--harmony .lane-out { background: var(--harmony-soft); color: var(--harmony); }
+
+  .merge-arrows { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  @media (max-width: 680px) { .merge-arrows { grid-template-columns: 1fr; } }
+  .merge-arrows .arrow.r { background: var(--rhythm-line); }
+  .merge-arrows .arrow.r::after { border-top-color: var(--rhythm-line); }
+  .merge-arrows .arrow.h { background: var(--harmony-line); }
+  .merge-arrows .arrow.h::after { border-top-color: var(--harmony-line); }
+
+  .node--model {
+    border-color: var(--rule-strong);
+    border-left: 3px solid var(--ink);
+    background: var(--surface);
+  }
+  .sum {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin-top: 6px;
+    padding: 11px 14px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .sum .r { color: var(--rhythm); font-weight: 600; }
+  .sum .h { color: var(--harmony); font-weight: 600; }
+
+  .node--out {
+    border-color: var(--ink);
+    border-width: 1.5px;
+  }
+  .files-out { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .files-out span {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    padding: 4px 9px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--surface-2);
+  }
+
+  .roles {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 9px 0 3px;
+  }
+
+  /* ---------- step grid ---------- */
+  .gridwrap { overflow-x: auto; padding-bottom: 4px; }
+  .seq {
+    min-width: 640px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .seq-row { display: grid; grid-template-columns: 128px repeat(16, 1fr); align-items: stretch; }
+  .seq-row + .seq-row { border-top: 1px solid var(--rule); }
+  .seq-label {
+    padding: 9px 12px;
+    font-family: var(--display);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-right: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+  }
+  .cell {
+    border-right: 1px solid var(--rule);
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-faint);
+  }
+  .cell:last-child { border-right: 0; }
+  .cell.beat { border-left: 1.5px solid var(--rule-strong); }
+  .seq-row.ruler .cell { min-height: 26px; font-size: 10px; }
+  .cell.kick { background: var(--rhythm); color: var(--surface); font-weight: 700; }
+  .cell.pitch { background: var(--harmony); color: var(--surface); font-weight: 700; }
+  .cell.sust { background: var(--harmony-soft); color: var(--harmony); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 16px 22px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-muted); }
+  .legend span { display: flex; align-items: center; gap: 7px; }
+  .swatch { width: 13px; height: 13px; border-radius: 2px; border: 1px solid var(--rule-strong); flex: none; }
+  .swatch.k { background: var(--rhythm); border-color: var(--rhythm); }
+  .swatch.p { background: var(--harmony); border-color: var(--harmony); }
+  .swatch.s { background: var(--harmony-soft); border-color: var(--harmony-line); }
+  .swatch.e { background: var(--surface); }
+
+  /* ---------- table ---------- */
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; }
+  caption { text-align: left; color: var(--ink-faint); font-size: 13px; padding-bottom: 10px; font-family: var(--mono); }
+  th, td { text-align: left; padding: 9px 14px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th {
+    font-family: var(--display);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom-color: var(--rule-strong);
+  }
+  td.m { font-family: var(--mono); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  td.m.r { color: var(--rhythm); }
+  td.m.h { color: var(--harmony); }
+
+  /* ---------- four-term stack ---------- */
+  .stack {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .stack-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 74px;
+    gap: 18px;
+    padding: 14px 17px;
+    align-items: baseline;
+  }
+  @media (max-width: 620px) {
+    .stack-row { grid-template-columns: 1fr; gap: 5px; }
+    .stack-n { text-align: left; }
+  }
+  .stack-row + .stack-row { border-top: 1px solid var(--rule); }
+  .stack-term { font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  .stack-term.r { color: var(--rhythm); }
+  .stack-term.h { color: var(--harmony); }
+  .stack-plain { font-size: 16px; color: var(--ink); }
+  .stack-plain em { color: var(--ink-muted); font-style: normal; font-size: 14px; }
+  .stack-n {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .stack-row.total {
+    background: var(--surface-2);
+    border-top: 1.5px solid var(--ink);
+  }
+  .stack-row.total .stack-term,
+  .stack-row.total .stack-n { color: var(--ink); font-weight: 600; }
+
+  /* ---------- funnel ---------- */
+  .funnel {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .fn-row {
+    display: grid;
+    grid-template-columns: 1fr 78px;
+    align-items: center;
+    gap: 16px;
+    padding: 11px 16px;
+  }
+  .fn-row + .fn-row { border-top: 1px solid var(--rule); }
+  .fn-label { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .fn-what {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .fn-bar { height: 5px; border-radius: 3px; background: var(--surface-2); }
+  .fn-bar i { display: block; height: 100%; border-radius: 3px; background: var(--ink-faint); }
+  .fn-n {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: var(--ink);
+  }
+  .fn-row.gain { background: var(--harmony-soft); }
+  .fn-row.gain .fn-bar i { background: var(--harmony); }
+  .fn-row.gain .fn-n { color: var(--harmony); font-weight: 600; }
+
+  /* ---------- callout ---------- */
+  .callout {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rhythm);
+    border-radius: 0 3px 3px 0;
+    background: var(--surface);
+    padding: 14px 17px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .callout .head {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--rhythm);
+  }
+  .callout p { font-size: 15.5px; color: var(--ink-muted); max-width: none; }
+  .callout p strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- lineage ---------- */
+  .lineage { display: flex; flex-wrap: wrap; align-items: stretch; gap: 0; }
+  .ck {
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1 1 150px;
+  }
+  .ck + .ck { border-left: 0; }
+  .ck.live { border-color: var(--ink); border-width: 1.5px; background: var(--surface); }
+  .ck .n { font-family: var(--mono); font-size: 12.5px; font-weight: 600; }
+  .ck .d { font-family: var(--mono); font-size: 11.5px; color: var(--ink-faint); }
+  .ck.live .n { color: var(--ink); }
+
+  /* ---------- removed ---------- */
+  .gone { display: flex; flex-wrap: wrap; gap: 7px; }
+  .gone span {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    padding: 4px 10px;
+    border: 1px dashed var(--rule-strong);
+    border-radius: 2px;
+    color: var(--dead);
+    text-decoration: line-through;
+    text-decoration-color: var(--rule-strong);
+  }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">
+      <span>midi_gpt</span><span class="tick">/</span>
+      <span>Documents/Code</span><span class="tick">/</span>
+      <span>symbolic pipeline</span>
+    </div>
+    <h1>Text in, UK garage MIDI out.</h1>
+    <p class="lede">
+      Two conditioning skeletons — a kick pocket lifted from a drum loop, and a chord
+      progression derived from mood — are summed into the embeddings of a 0.687M-parameter
+      GPT that emits <em>one token per sixteenth note</em>. Nothing downstream renders audio.
+    </p>
+    <dl class="facts">
+      <div class="fact"><dt>Source</dt><dd>8 files · 928 lines</dd></div>
+      <div class="fact"><dt>Note model</dt><dd>0.687M params</dd></div>
+      <div class="fact"><dt>Resolution</dt><dd>16ths · 64 steps</dd></div>
+      <div class="fact"><dt>Output</dt><dd>.mid + .json</dd></div>
+    </dl>
+  </header>
+
+  <section>
+    <h2>The signal chain <span class="note">make_track.py</span></h2>
+
+    <div class="flow">
+      <div class="node">
+        <span class="title">Text request</span>
+        <span class="detail">"8 bar UKG track in A minor, dark" → regex parse → root · mode · bars · mood<br>mood picks a preset: degrees, sampling temperature</span>
+      </div>
+
+      <div class="arrow"></div>
+
+      <div class="split">
+        <div class="lane lane--rhythm">
+          <div class="lane-head">
+            <span class="name">Rhythm skeleton</span>
+            <span class="what">Where the kick sits</span>
+          </div>
+          <ol class="chain">
+            <li>drumgen_1_temp0.7.wav <span class="out">— approved 2-bar loop</span></li>
+            <li>librosa.load(sr=24000, mono)</li>
+            <li>butter(4, 160&nbsp;Hz, low) <span class="out">— kick band only</span></li>
+            <li>onset_strength(hop=320) <span class="out">→ 277 frames</span></li>
+            <li>split into 32 bins, take max</li>
+            <li>binarize &gt; 0.25 <span class="out">→ 32 steps</span></li>
+            <li>tile ×2 <span class="out">→ 64 steps</span></li>
+          </ol>
+          <div class="lane-out">grid_tok &nbsp;[65]</div>
+        </div>
+
+        <div class="lane lane--harmony">
+          <div class="lane-head">
+            <span class="name">Harmony skeleton</span>
+            <span class="what">Which notes are in play</span>
+          </div>
+          <ol class="chain">
+            <li>mood → degrees <span class="out">— dark minor = i-VI-iv-v</span></li>
+            <li>root + degrees → "Am-F-Dm-Em"</li>
+            <li>parse_progression <span class="out">— root + quality</span></li>
+            <li>chord_chroma <span class="out">— 12-dim pitch-class mask</span></li>
+            <li>held one chord per bar <span class="out">→ [64, 12]</span></li>
+          </ol>
+          <div class="lane-out">chord_tok &nbsp;[65, 12]</div>
+        </div>
+      </div>
+
+      <div class="merge-arrows">
+        <div class="arrow r tall"></div>
+        <div class="arrow h tall"></div>
+      </div>
+
+      <div class="node node--model">
+        <span class="title">HarmonicNoteGPT</span>
+        <span class="detail">vocab 65 · context 68 · emb 128 · 3 layers · 4 heads — both skeletons are projected to
+        the embedding width and added per step, so conditioning is temporal, not pooled:</span>
+        <div class="sum">x = tok_emb + pos_emb + <span class="r">grid_proj(grid)</span> + <span class="h">chord_proj(chroma)</span></div>
+      </div>
+
+      <div class="arrow"></div>
+
+      <div class="node">
+        <span class="title">Autoregressive sampling</span>
+        <span class="detail">64 steps from BOS, stopping at EOS · temperature 1.2 bass / 1.3 arp · top-p 0.98<br>each step emits one of: rest · sustain · one of 61 pitches (MIDI 24–84)</span>
+      </div>
+
+      <div class="arrow"></div>
+
+      <div class="node">
+        <span class="title">Best-of-N selection</span>
+        <span class="detail">N candidates per 4-bar section, scored and ranked — the quality floor:<br>
+        score = 2·chord_fit + 1·kick_lock + 0.7·density, minus 2 if fewer than 3 onsets</span>
+      </div>
+
+      <div class="arrow"></div>
+
+      <div class="node">
+        <span class="title">Tokens → notes → file</span>
+        <span class="detail">sustain extends the held note, rest ends it → (midi, start_step, duration)<br>
+        480 ticks/beat · 120 ticks/step · velocity 90</span>
+      </div>
+
+      <div class="arrow"></div>
+
+      <div class="node node--out">
+        <span class="title">Per run</span>
+        <span class="detail">Sections beyond 4 bars are generated independently over the same progression and
+        concatenated into one continuous performance (A A′ form).</span>
+        <div class="files-out">
+          <span>stems/bass.mid</span>
+          <span>stems/arp.mid</span>
+          <span>metadata.json</span>
+        </div>
+      </div>
+
+      <div class="roles">↑ run once per role: bass, then arp ↑</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What that one equation means <span class="note">the whole input, unpacked</span></h2>
+    <p class="sub">
+      Think of a session bassist. At any instant they are holding four things in mind: the
+      note they just played, where they are in the bar, whether the kick drum lands on this
+      beat, and what chord the band is on. They do not weigh these one at a time — the four
+      fuse into a single sense of <em>here is where I am</em>, and the next note follows from
+      that. The equation is that fusion, written down.
+    </p>
+
+    <div class="stack">
+      <div class="stack-row">
+        <span class="stack-term">tok_emb</span>
+        <span class="stack-plain">The note it just played <em>— A1</em></span>
+        <span class="stack-n">7.71</span>
+      </div>
+      <div class="stack-row">
+        <span class="stack-term">pos_emb</span>
+        <span class="stack-plain">Where it is in the four bars <em>— step 5 of 64</em></span>
+        <span class="stack-n">7.71</span>
+      </div>
+      <div class="stack-row">
+        <span class="stack-term r">grid_proj(grid)</span>
+        <span class="stack-plain">Whether a kick lands here <em>— yes</em></span>
+        <span class="stack-n">5.56</span>
+      </div>
+      <div class="stack-row">
+        <span class="stack-term h">chord_proj(chroma)</span>
+        <span class="stack-plain">Which chord is sounding <em>— F major</em></span>
+        <span class="stack-n">4.08</span>
+      </div>
+      <div class="stack-row total">
+        <span class="stack-term">= x</span>
+        <span class="stack-plain">Everything it knows at this instant</span>
+        <span class="stack-n">11.97</span>
+      </div>
+    </div>
+    <p class="sub" style="font-family:var(--mono);font-size:12px;">
+      Right column: the length of each vector, and of their sum. Not 25.06, because they
+      point in different directions.
+    </p>
+
+    <p class="sub">
+      Adding four things together sounds like it should destroy them — mix four tins of
+      paint and you cannot unmix them. It works here because there are 128 dimensions to
+      spread across, and training pushed each signal into its own set of them. Measured,
+      any two of the four are as unrelated as randomly chosen directions. So the sum stays
+      legible in the same way four instruments in different registers stay audible in one
+      mix: nothing is lost, because nothing is competing for the same space.
+    </p>
+
+    <p class="sub">
+      The lengths in that last column are a mix balance. The note and the position are
+      loudest; the kick and the chord sit underneath at roughly half — present enough to
+      steer the next choice, not so present that they drown out what was actually played.
+      Nobody set those levels. They are what training settled on.
+    </p>
+
+    <h2>What a bar actually looks like <span class="note">1 of 4 bars · 16 steps</span></h2>
+    <p class="sub">
+      Both the conditioning and the output live on the same sixteenth-note grid. The kick row is
+      given; the note row is sampled against it. This is why kick-lock is measurable — it is the
+      correlation between these two rows.
+    </p>
+    <div class="gridwrap">
+      <div class="seq">
+        <div class="seq-row ruler">
+          <div class="seq-label">Step</div>
+          <div class="cell beat">1</div><div class="cell">2</div><div class="cell">3</div><div class="cell">4</div>
+          <div class="cell beat">5</div><div class="cell">6</div><div class="cell">7</div><div class="cell">8</div>
+          <div class="cell beat">9</div><div class="cell">10</div><div class="cell">11</div><div class="cell">12</div>
+          <div class="cell beat">13</div><div class="cell">14</div><div class="cell">15</div><div class="cell">16</div>
+        </div>
+        <div class="seq-row">
+          <div class="seq-label">Kick grid</div>
+          <div class="cell kick beat">1</div><div class="cell">·</div><div class="cell">·</div><div class="cell">·</div>
+          <div class="cell beat">·</div><div class="cell">·</div><div class="cell kick">1</div><div class="cell">·</div>
+          <div class="cell beat">·</div><div class="cell">·</div><div class="cell">·</div><div class="cell kick">1</div>
+          <div class="cell beat">·</div><div class="cell">·</div><div class="cell">·</div><div class="cell">·</div>
+        </div>
+        <div class="seq-row">
+          <div class="seq-label">Note tokens</div>
+          <div class="cell pitch beat">A1</div><div class="cell sust">~</div><div class="cell sust">~</div><div class="cell">·</div>
+          <div class="cell beat">·</div><div class="cell">·</div><div class="cell pitch">A1</div><div class="cell sust">~</div>
+          <div class="cell beat">·</div><div class="cell">·</div><div class="cell">·</div><div class="cell pitch">E2</div>
+          <div class="cell sust">~</div><div class="cell sust">~</div><div class="cell">·</div><div class="cell">·</div>
+        </div>
+        <div class="seq-row">
+          <div class="seq-label">Chroma</div>
+          <div class="cell beat" style="grid-column: span 16; justify-content: flex-start; padding-left: 12px; color: var(--harmony); font-weight: 600;">Am — {A, C, E} held for the whole bar</div>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i class="swatch k"></i> kick onset (1)</span>
+      <span><i class="swatch p"></i> pitch token (2–62)</span>
+      <span><i class="swatch s"></i> sustain (1)</span>
+      <span><i class="swatch e"></i> rest (0)</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Shapes at each stage</h2>
+    <div class="tablewrap">
+      <table>
+        <caption>One 4-bar section. The +1 on conditioning length is the BOS prefix alignment.</caption>
+        <thead>
+          <tr><th>Stage</th><th>Shape</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="m r">onset envelope</td><td class="m">[277]</td><td>kick-band strength at 75 fps</td></tr>
+          <tr><td class="m r">kick grid</td><td class="m">[64]</td><td>binary onset per sixteenth</td></tr>
+          <tr><td class="m r">grid_tok</td><td class="m">[65]</td><td>BOS-aligned, → <code>grid_proj</code></td></tr>
+          <tr><td class="m h">chroma</td><td class="m">[64, 12]</td><td>pitch classes in the current chord</td></tr>
+          <tr><td class="m h">chord_tok</td><td class="m">[65, 12]</td><td>BOS-aligned, → <code>chord_proj</code></td></tr>
+          <tr><td class="m">logits</td><td class="m">[1, t, 65]</td><td>next-step distribution</td></tr>
+          <tr><td class="m">tokens</td><td class="m">[64]</td><td>rest · sustain · 61 pitches</td></tr>
+          <tr><td class="m">notes</td><td class="m">n × 3</td><td>(midi, start_step, duration)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where the training data came from <span class="note">mine_midi_bass.py</span></h2>
+    <p class="sub">
+      None of this runs at inference — it produced the checkpoints. Bass and arp were mined
+      from the MIDI corpus of a sibling project, <code>multitrack-collaborator/</code>, whose
+      songs come from sample packs (JAFUNK, SOUKG, OSG) rather than from a model.
+    </p>
+
+    <div class="funnel">
+      <div class="fn-row">
+        <div class="fn-label">
+          <span class="fn-what">.mid files in the corpus</span>
+          <span class="fn-bar"><i style="width:100%"></i></span>
+        </div>
+        <span class="fn-n">19,356</span>
+      </div>
+      <div class="fn-row">
+        <div class="fn-label">
+          <span class="fn-what">filename matches <code>*bass*</code></span>
+          <span class="fn-bar"><i style="width:89%"></i></span>
+        </div>
+        <span class="fn-n">6,637</span>
+      </div>
+      <div class="fn-row">
+        <div class="fn-label">
+          <span class="fn-what">path contains <code>ukg</code> · <code>garage</code> · <code>2step</code></span>
+          <span class="fn-bar"><i style="width:74%"></i></span>
+        </div>
+        <span class="fn-n">1,483</span>
+      </div>
+      <div class="fn-row">
+        <div class="fn-label">
+          <span class="fn-what">unique after content-MD5 dedup</span>
+          <span class="fn-bar"><i style="width:60%"></i></span>
+        </div>
+        <span class="fn-n">393</span>
+      </div>
+      <div class="fn-row">
+        <div class="fn-label">
+          <span class="fn-what">yielded a chunk with ≥ 3 notes</span>
+          <span class="fn-bar"><i style="width:59%"></i></span>
+        </div>
+        <span class="fn-n">354</span>
+      </div>
+      <div class="fn-row gain">
+        <div class="fn-label">
+          <span class="fn-what">× 12 transpositions → training examples</span>
+          <span class="fn-bar"><i style="width:82%"></i></span>
+        </div>
+        <span class="fn-n">4,248</span>
+      </div>
+    </div>
+    <p class="sub" style="font-family:var(--mono);font-size:12px;">
+      Bars are log-scaled; the counts are exact. Arp mines the same way from
+      <code>*arp* *pluck* *lead* *melody* *keys*</code> → 288 → 3,456.
+    </p>
+
+    <div class="split">
+      <div class="lane lane--rhythm">
+        <div class="lane-head">
+          <span class="name">Per file</span>
+          <span class="what">MIDI → tokens</span>
+        </div>
+        <ol class="chain">
+          <li>merge tracks, pair note-on/off</li>
+          <li>quantize to a 16th grid <span class="out">— ticks_per_beat / 4</span></li>
+          <li>mono-reduce <span class="out">— lowest for bass (reese → fundamental), highest for arp</span></li>
+          <li>octave-fit <span class="out">— median to E2 (bass) / C4 (arp)</span></li>
+          <li>split into 64-step chunks</li>
+          <li>drop chunks under 3 notes</li>
+        </ol>
+        <div class="lane-out">tokens &nbsp;[64]</div>
+      </div>
+
+      <div class="lane lane--harmony">
+        <div class="lane-head">
+          <span class="name">Labels, self-supervised</span>
+          <span class="what">Nothing was annotated by hand</span>
+        </div>
+        <ol class="chain">
+          <li>grid = the stem's own note-ons</li>
+          <li>per bar: pitch-class histogram</li>
+          <li>score against every chord template <span class="out">— on-tone mass − ½ off-tone</span></li>
+          <li>best match becomes that bar's chroma</li>
+          <li>12 transpositions rotate notes <em>and</em> chroma together</li>
+          <li><span class="out">— which is what forces the model to read the chord track</span></li>
+        </ol>
+        <div class="lane-out">grid [64] &nbsp;+&nbsp; chord [64, 12]</div>
+      </div>
+    </div>
+
+    <p class="sub">
+      Key is deliberately <em>not</em> normalized. Rotating notes and chroma together across
+      all twelve keys leaves the chroma→notes mapping as the only invariant, so absolute
+      pitch is useless to memorize.
+    </p>
+
+    <div class="callout">
+      <span class="head">The augmentation happens twice</span>
+      <p>
+        <code>genre_corpus</code> was already expanded to 12 keys by that project's own
+        <code>augment_transpose.py</code> before the miner ever saw it, and content-MD5 cannot
+        detect it — a transposed file is different bytes. Behind the 354 "unique" sources sit
+        roughly <strong>151 distinct songs</strong>, so the same material can appear up to 144
+        times at different pitches. Mining <code>data/genre_corpus</code> instead of
+        <code>genre_corpus_aug</code> would let the 12-key pass happen once.
+      </p>
+    </div>
+
+    <div class="callout">
+      <span class="head">Grid and tokens only agree 70.6%</span>
+      <p>
+        The grid records raw note-ons; the tokens record pitch changes <em>after</em>
+        mono-reduction. A note starting underneath a lower sounding note marks the grid but
+        cannot appear in the token stream. Across 300 sampled examples they match exactly in
+        <strong>90 of 300</strong>. At inference the grid is a kick pattern anyway — a
+        different signal — but it puts a ceiling on how tightly kick-lock can ever score.
+      </p>
+    </div>
+
+    <div class="callout">
+      <span class="head">The model is more staccato than its corpus</span>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th></th><th>rest</th><th>sustain</th><th>onset</th><th>mean note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="m">training data</td><td class="m">12.2%</td><td class="m">68.3%</td><td class="m">19.4%</td><td class="m">4.51 steps</td></tr>
+            <tr><td class="m">generated</td><td class="m">39.4%</td><td class="m">25.6%</td><td class="m">35.0%</td><td class="m">1.73 steps</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Training weighted pitch tokens ×3 and sustain ×0.3 to cure a sparse-drone failure, but
+        left rest at ×1. Relative to sustain the model therefore sees rest as 3.3× more
+        attractive than the corpus says, and <strong>restrikes where the source material
+        holds</strong>.
+      </p>
+    </div>
+
+    <h2>Which weights run <span class="note">resolved by --base / --&lt;role&gt;-ckpt</span></h2>
+    <p class="sub">
+      Default is the highest fine-tuned checkpoint, so generation is on-policy: new hand-edits
+      target residual taste rather than re-teaching what earlier rounds already fixed.
+    </p>
+    <div class="lineage">
+      <div class="ck"><span class="n">_notes_gpt</span><span class="d">base · mined MIDI</span></div>
+      <div class="ck"><span class="n">_ft1</span><span class="d">SFT · 2 tracks</span></div>
+      <div class="ck"><span class="n">_ft2</span><span class="d">SFT · 5 tracks</span></div>
+      <div class="ck live"><span class="n">_ft3 ←</span><span class="d">DPO · 10 pairs · β 0.1</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Deliberately not here</h2>
+    <p class="sub">
+      Every path from note to audio was removed. The drum loop stays because it is an
+      <em>input</em> — it is analyzed for its kick pocket and never mixed into anything, which is
+      why librosa and scipy are still required dependencies.
+    </p>
+    <div class="gone">
+      <span>serum_render.py</span>
+      <span>ddsp_synth.py</span>
+      <span>train_ddsp.py</span>
+      <span>inference_ui.py</span>
+      <span>inference.ipynb</span>
+      <span>track.wav</span>
+      <span>stems/*.wav</span>
+      <span>drums.wav</span>
+      <span>pedalboard</span>
+      <span>gradio</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>make_track.py is the only entry point</span>
+    <span>·</span>
+    <span>11 tests passing</span>
+    <span>·</span>
+    <span>renderers recoverable from 41f47f2</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
