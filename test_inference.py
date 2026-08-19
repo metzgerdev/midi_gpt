@@ -17,6 +17,7 @@ from config import (
     ROLE_CENTER, ROLE_MONO,
     NOTE_BOS,
     NOTE_EOS,
+    NOTE_MIDI_HI,
     NOTE_MIDI_LO,
     NOTE_PITCH0,
     NOTE_REST,
@@ -28,7 +29,9 @@ from make_track import build_progression, parse_key, parse_request
 from midi_utils import (
     midi_to_step_grid, notes_to_tokens, octave_fit, tokens_to_notes, write_midi,
 )
-from model import HarmonicNoteGPT, note_chord_cond, note_grid_cond
+from model import (
+    HarmonicNoteGPT, forbidden_next, generate_notes, note_chord_cond, note_grid_cond,
+)
 
 
 def test_note_vocabulary_is_contiguous():
@@ -71,10 +74,106 @@ def test_progression_and_model_conditioning_shapes():
 
 def test_tokens_to_notes_handles_sustain_and_rest():
     tokens = [NOTE_PITCH0, NOTE_SUSTAIN, NOTE_REST, NOTE_PITCH0 + 12]
-    assert tokens_to_notes(tokens, key_pc=0) == [
+    assert tokens_to_notes(tokens) == [
         [NOTE_MIDI_LO, 0, 2],
         [NOTE_MIDI_LO + 12, 3, 1],
     ]
+
+
+def test_tokens_to_notes_inverts_notes_to_tokens_over_the_whole_range():
+    """The decoder is unconditionally the inverse of the encoder.
+
+    It used to take a `key_pc` transpose that `notes_to_tokens` had no counterpart for,
+    so any caller passing a nonzero key silently shifted the clip on the way out.
+    """
+    pitches = np.arange(NOTE_MIDI_LO, NOTE_MIDI_HI + 1)
+    assert len(pitches) == 61, "the pitch block is C1..C6 inclusive"
+    decoded = tokens_to_notes(notes_to_tokens(pitches))
+    assert decoded == [[int(pitch), step, 1] for step, pitch in enumerate(pitches)]
+
+
+def test_tokens_to_notes_ignores_sequence_markers():
+    """BOS and EOS sit just above the pitch block, and used to decode as pitches 85 and 86."""
+    assert tokens_to_notes([NOTE_BOS, NOTE_EOS]) == []
+    assert tokens_to_notes([NOTE_BOS, NOTE_PITCH0, NOTE_EOS]) == [[NOTE_MIDI_LO, 1, 1]]
+
+
+def test_orphan_sustain_never_opens_a_note():
+    """A sustain with no note to extend is a rest, not a phantom onset."""
+    assert tokens_to_notes([NOTE_SUSTAIN, NOTE_SUSTAIN]) == []
+    assert tokens_to_notes([NOTE_PITCH0, NOTE_REST, NOTE_SUSTAIN]) == [[NOTE_MIDI_LO, 0, 1]]
+
+
+STUB_CONFIG = {"vocab_size": NOTE_VOCAB_SIZE, "context_length": NOTE_STEPS + 4,
+               "emb_dim": 32, "n_heads": 2, "n_layers": 1, "drop_rate": 0.0,
+               "qkv_bias": False}
+
+
+class ScriptedNoteModel(HarmonicNoteGPT):
+    """Wants `script[step]` at every step, so greedy sampling is fully deterministic.
+
+    Every other id sits at a uniform floor, so when the mask forbids the scripted choice
+    the lowest legal id wins — NOTE_REST. That makes an over-broad mask show up as rests
+    where a real token was expected, instead of passing as if it were correct.
+    """
+
+    def __init__(self, script):
+        super().__init__(STUB_CONFIG)
+        self.script = script
+
+    def forward(self, in_idx, **_):
+        batch, seq_len = in_idx.shape
+        logits = torch.full((batch, seq_len, NOTE_VOCAB_SIZE), -10.0)
+        logits[:, -1, self.script[min(seq_len - 1, len(self.script) - 1)]] = 10.0
+        return logits
+
+
+def sample_scripted(script, max_steps=6):
+    """The tokens a scripted model actually emits, BOS stripped."""
+    generated = generate_notes(
+        ScriptedNoteModel(script),
+        note_grid_cond(np.zeros(NOTE_STEPS, np.float32)),
+        NOTE_BOS,
+        NOTE_EOS,
+        max_steps=max_steps,
+        temperature=0.0,
+        chord_tok=note_chord_cond(np.zeros((NOTE_STEPS, 12), np.float32)),
+    )
+    return generated[0, 1:].tolist()
+
+
+@pytest.mark.parametrize("previous", [NOTE_BOS, NOTE_REST])
+def test_sustain_is_forbidden_with_nothing_to_extend(previous):
+    assert NOTE_SUSTAIN in forbidden_next(previous, NOTE_BOS)
+
+
+@pytest.mark.parametrize("previous", [NOTE_PITCH0, NOTE_SUSTAIN])
+def test_sustain_is_allowed_after_a_sounding_note(previous):
+    assert NOTE_SUSTAIN not in forbidden_next(previous, NOTE_BOS)
+
+
+@pytest.mark.parametrize("previous", [NOTE_BOS, NOTE_REST, NOTE_SUSTAIN, NOTE_PITCH0])
+def test_bos_is_never_legal_again(previous):
+    assert NOTE_BOS in forbidden_next(previous, NOTE_BOS)
+
+
+@pytest.mark.parametrize("script", [[NOTE_SUSTAIN], [NOTE_REST, NOTE_SUSTAIN]])
+def test_sampling_refuses_an_orphan_sustain(script):
+    """A sustain the decoder would have to discard must never be sampled at all.
+
+    Discarding one silently shortens the clip: the model commits its remaining steps to
+    extending a note that was never written.
+    """
+    assert NOTE_SUSTAIN not in sample_scripted(script)
+
+
+def test_sampling_still_allows_a_legitimate_sustain():
+    """The mask must block only the illegal case — a held note is how duration is spelled."""
+    assert sample_scripted([NOTE_PITCH0, NOTE_SUSTAIN]) == [NOTE_PITCH0] + [NOTE_SUSTAIN] * 5
+
+
+def test_sampling_never_re_emits_bos():
+    assert NOTE_BOS not in sample_scripted([NOTE_BOS])
 
 
 def test_write_midi_round_trips_notes(tmp_path):
@@ -135,7 +234,7 @@ def test_midi_token_round_trip_is_lossless():
     and invent preference signal from a tokenizer artifact."""
     tokens = np.array([11, 1, 1, 0, 19, 1, 1, 1, 0, 0, 14, 1, 1, 0, 0, 0])
     path = Path(tempfile.mkdtemp()) / "round.mid"
-    write_midi(tokens_to_notes(tokens, key_pc=0), path, bpm=130)
+    write_midi(tokens_to_notes(tokens), path, bpm=130)
 
     pitch = midi_to_step_grid(mido.MidiFile(path), mono="lowest")
     recovered = notes_to_tokens(pitch)

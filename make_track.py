@@ -481,7 +481,7 @@ def main():
                                       base_seed=seed * 1000 + s * 7 + role_off,
                                       device=device, n_cand=args.candidates)
             fits.append(f); locks.append(l)
-            sec_notes = tokens_to_notes(tk, 0)
+            sec_notes = tokens_to_notes(tk)
             notes += [(m, st + s * NOTE_STEPS, d) for m, st, d in sec_notes]
         metrics[role] = {"chord_fit": round(float(np.mean(fits)), 3),
                          "kick_lock": round(float(np.mean(locks)), 3),

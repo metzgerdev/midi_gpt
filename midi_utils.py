@@ -8,6 +8,7 @@ import numpy as np
 
 from config import (
     GRID_REF_BPM, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_SUSTAIN,
+    NOTE_VOCAB,
 )
 
 
@@ -75,16 +76,22 @@ def notes_to_tokens(pitch_seg: np.ndarray) -> np.ndarray:
     return tokens
 
 
-def tokens_to_notes(tokens, key_pc: int):
-    """Convert step tokens to ``(midi, start_step, duration_steps)`` notes."""
+def tokens_to_notes(tokens):
+    """Step tokens -> ``(midi, start_step, duration_steps)``. The inverse of `notes_to_tokens`.
+
+    Only the pitch block opens a note. BOS and EOS sit directly above it, so testing for
+    `>= NOTE_PITCH0` alone would decode them as phantom pitches 85 and 86.
+
+    A sustain with nothing to extend — at step 0, or after a rest — is read as a rest.
+    `generate_notes` masks that case out, so reaching it means a hand-built sequence.
+    """
     notes = []
     current = None
     for step, token in enumerate(tokens):
         if token == NOTE_SUSTAIN and current is not None:
             current[2] += 1
-        elif token >= NOTE_PITCH0:
-            midi = NOTE_MIDI_LO + (token - NOTE_PITCH0) + key_pc
-            current = [int(np.clip(midi, 0, 127)), step, 1]
+        elif NOTE_PITCH0 <= token < NOTE_VOCAB:
+            current = [NOTE_MIDI_LO + int(token) - NOTE_PITCH0, step, 1]
             notes.append(current)
         else:
             current = None
