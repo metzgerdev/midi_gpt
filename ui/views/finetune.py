@@ -9,7 +9,7 @@ from __future__ import annotations
 import streamlit as st
 
 from ui.state import (
-    capture, checkpoint_meta, checkpoints, differs_after_tokenizing, runs,
+    capture, chain_rows, checkpoints, differs_after_tokenizing, runs,
 )
 
 st.title("Fine-tune on your edits")
@@ -114,23 +114,6 @@ st.divider()
 st.subheader("3. The chain")
 st.caption("Each fine-tune writes a new checkpoint; make_track uses the highest by default.")
 
-def cell(value, fmt="{}"):
-    """Every column is text. Older checkpoints record almost nothing, so a numeric column
-    would mix numbers with the em dash and Arrow cannot type a mixed object column."""
-    return "—" if value is None else fmt.format(value)
-
-
 for role in ("bass", "arp"):
-    rows = []
-    for path in checkpoints(role):
-        meta = checkpoint_meta(path)
-        rows.append({
-            "checkpoint": path.name,
-            "method": cell(meta.get("method", "base" if "_ft" not in path.stem else None)),
-            "from": cell(meta.get("finetuned_from")),
-            "anchor": cell(meta.get("anchor")),
-            "KL": cell(meta.get("kl_final"), "{:.4f}"),
-            "pairs": cell(meta.get("pairs", meta.get("edits"))),
-        })
     st.write(f"**{role}**")
-    st.dataframe(rows, hide_index=True, width='stretch')
+    st.dataframe(chain_rows(role), hide_index=True, width='stretch')

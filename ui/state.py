@@ -68,6 +68,30 @@ def runs(root: Path = OUTPUT_DIR) -> list[Run]:
     return sorted(found, key=lambda r: r.meta.get("created", ""), reverse=True)
 
 
+def chain_rows(role: str) -> list[dict[str, str]]:
+    """The ftN chain for one role, as table rows.
+
+    Every value is text. Checkpoints written before the recipe fields existed carry no
+    kl_final or pairs, and `st.dataframe` sends rows through Arrow, which cannot type a
+    column holding both numbers and a placeholder.
+    """
+    def cell(value, fmt="{}") -> str:
+        return "—" if value is None else fmt.format(value)
+
+    rows = []
+    for path in checkpoints(role):
+        meta = checkpoint_meta(path)
+        rows.append({
+            "checkpoint": path.name,
+            "method": cell(meta.get("method", "base" if "_ft" not in path.stem else None)),
+            "from": cell(meta.get("finetuned_from")),
+            "anchor": cell(meta.get("anchor")),
+            "KL": cell(meta.get("kl_final"), "{:.4f}"),
+            "pairs": cell(meta.get("pairs", meta.get("edits"))),
+        })
+    return rows
+
+
 def differs_after_tokenizing(original: Path, edited: Path, role: str) -> bool:
     """Whether DPO will see a difference between two MIDI files.
 
