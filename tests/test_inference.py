@@ -1,6 +1,7 @@
 import importlib
 import json
 import random
+import re
 import tempfile
 from pathlib import Path
 
@@ -29,7 +30,8 @@ from utils.config import (
 )
 from inference.make_track import build_progression, parse_key, parse_request
 from utils.midi_utils import (
-    midi_to_step_grid, notes_to_tokens, octave_fit, tokens_to_notes, write_midi,
+    midi_to_step_grid, note_onsets, notes_to_tokens, octave_fit, tokens_to_notes,
+    write_midi,
 )
 from model.note_model import (
     HarmonicNoteGPT, forbidden_next, generate_notes, note_chord_cond, note_grid_cond,
@@ -302,6 +304,72 @@ def test_missing_drum_loop_is_still_reported():
     from train.finetune_dpo import find_drum_loop
 
     assert find_drum_loop("no_such_loop_9f3a.wav") is None
+
+
+def test_note_onsets_records_restrikes_that_the_pitch_array_loses():
+    """The grid's whole job: a re-struck note is a SUSTAIN in the tokens, so the only
+    place the attack survives is the onset track."""
+    path = Path(tempfile.mkdtemp()) / "restrike.mid"
+    write_midi([(40, 0, 2), (40, 2, 2), (40, 4, 2), (47, 6, 2)], path, bpm=130)
+    midi = mido.MidiFile(path)
+    pitch = midi_to_step_grid(midi, mono="lowest")
+
+    onsets = note_onsets(midi, len(pitch))
+    changes = np.array([p >= 0 and p != (pitch[i - 1] if i else -1)
+                        for i, p in enumerate(pitch)], np.float32)
+
+    assert int(onsets.sum()) == 4, "every strike is an onset"
+    assert int(changes.sum()) == 2, "the pitch array only sees two changes"
+    assert int((notes_to_tokens(pitch) >= NOTE_PITCH0).sum()) == 2, "tokens agree with pitch"
+
+
+@pytest.mark.slow          # scans for the source MIDI outside the repo
+def test_mine_corpus_grid_rule_reproduces_the_shipped_corpus():
+    """The .npz in training_data/ are the record of what the checkpoints learned from.
+
+    Deriving the grid from the mono-reduced pitch array instead of the note events made
+    it identical to the token onsets, which is both a different signal and a strictly
+    less informative one. Pinned here against the data itself.
+    """
+    import hashlib
+
+    from utils.config import ROLE_MONO
+
+    corpus = sorted((TRAINING_DATA / "bass_notes_midi").glob("*_k0.npz"))
+    if not corpus:
+        pytest.skip("mined corpus is absent (gitignored); nothing to pin against")
+
+    sources = {}
+    for candidate in Path.home().joinpath("Documents/Code").rglob("*bass*.mid*"):
+        try:
+            digest = hashlib.md5(candidate.read_bytes()).hexdigest()[:10]
+        except OSError:
+            continue
+        sources.setdefault(digest, candidate)
+
+    pattern = re.compile(r"^(?P<stem>.+)_(?P<digest>[0-9a-f]{10})__(?P<chunk>\d+)_k0$")
+    checked = 0
+    for npz_path in corpus:
+        matched = pattern.match(npz_path.stem)
+        source = sources.get(matched["digest"]) if matched else None
+        if source is None:
+            continue
+        midi = mido.MidiFile(source)
+        pitch = midi_to_step_grid(midi, mono=ROLE_MONO["bass"])
+        if pitch is None:
+            continue
+        lo = int(matched["chunk"]) * NOTE_STEPS
+        onsets = note_onsets(midi, len(pitch))
+        if lo + NOTE_STEPS > len(onsets):
+            continue
+        assert np.array_equal(onsets[lo:lo + NOTE_STEPS], np.load(npz_path)["grid"]), (
+            f"{npz_path.name} does not match the rule that produced it"
+        )
+        checked += 1
+        if checked >= 40:
+            break
+    if not checked:
+        pytest.skip("no corpus example could be matched to its source MIDI")
 
 
 def test_training_from_scratch_refuses_to_replace_an_existing_checkpoint(tmp_path):

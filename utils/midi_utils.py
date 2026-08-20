@@ -12,14 +12,8 @@ from utils.config import (
 )
 
 
-def midi_to_step_grid(midi_file: mido.MidiFile, mono: str = "lowest"):
-    """MIDI -> per-step sounding pitch (-1 = rest), reduced to a single voice.
-
-    The inverse of `write_midi`, and the same reduction the training corpus was built
-    with: `lowest` keeps the fundamental of a stacked bass, `highest` keeps the top
-    line of a chord. Fine-tuning has to reproduce it exactly, or an edited clip would
-    tokenize differently from the original it is paired against.
-    """
+def note_events(midi_file: mido.MidiFile) -> list[tuple[int, int, int]]:
+    """(pitch, start_tick, end_tick) for every note, across all tracks."""
     events, active, tick = [], {}, 0
     for message in mido.merge_tracks(midi_file.tracks):
         tick += message.time
@@ -28,6 +22,36 @@ def midi_to_step_grid(midi_file: mido.MidiFile, mono: str = "lowest"):
         elif message.type == "note_off" or (message.type == "note_on" and not message.velocity):
             if active.get(message.note):
                 events.append((message.note, active[message.note].pop(0), tick))
+    return events
+
+
+def note_onsets(midi_file: mido.MidiFile, n_steps: int) -> np.ndarray:
+    """Per-step attack flags: 1.0 wherever a note is struck.
+
+    Not derivable from `midi_to_step_grid`, which returns the *sounding* pitch — a note
+    re-struck at the same pitch leaves no trace there, and re-strikes are 93% of what
+    separates an attack from a change of pitch. That is the whole point of the channel:
+    `notes_to_tokens` spells a re-strike as SUSTAIN, so the grid is the only place it
+    survives.
+    """
+    onsets = np.zeros(n_steps, np.float32)
+    step_ticks = midi_file.ticks_per_beat / 4
+    for _, start, _ in note_events(midi_file):
+        step = int(round(start / step_ticks))
+        if 0 <= step < n_steps:
+            onsets[step] = 1.0
+    return onsets
+
+
+def midi_to_step_grid(midi_file: mido.MidiFile, mono: str = "lowest"):
+    """MIDI -> per-step sounding pitch (-1 = rest), reduced to a single voice.
+
+    The inverse of `write_midi`, and the same reduction the training corpus was built
+    with: `lowest` keeps the fundamental of a stacked bass, `highest` keeps the top
+    line of a chord. Fine-tuning has to reproduce it exactly, or an edited clip would
+    tokenize differently from the original it is paired against.
+    """
+    events = note_events(midi_file)
     if not events:
         return None
 
