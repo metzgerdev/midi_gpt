@@ -90,12 +90,23 @@ def main(argv=None) -> int:
     ap.add_argument("--val-split", type=float, default=0.15)
     ap.add_argument("--out", type=Path, default=None,
                     help="default: checkpoints/<role>_notes_gpt.pt")
+    ap.add_argument("--force", action="store_true",
+                    help="overwrite --out if it already exists")
     ap.add_argument("--device", default=None, choices=("cpu", "mps", "cuda", "auto"))
     args = ap.parse_args(argv)
 
     device = pick_device(args.device)
     data_dir = args.data_dir or TRAINING_DATA / f"{args.role}_notes_midi"
     out = args.out or CKPT_DIR / f"{args.role}_notes_gpt.pt"
+
+    # Checked before the corpus loads, so a refusal costs a second rather than an epoch.
+    if out.exists() and not args.force:
+        raise SystemExit(
+            f"{out} already exists. Training from scratch would replace the checkpoint "
+            f"every other script loads by default.\n"
+            f"    --out <path>   write somewhere else\n"
+            f"    --force        overwrite it"
+        )
 
     dataset = NoteCorpus(data_dir, min_notes=args.min_notes)
     n_val = max(1, int(args.val_split * len(dataset)))
@@ -121,7 +132,13 @@ def main(argv=None) -> int:
         return F.cross_entropy(logits.flatten(0, 1), y.flatten(), weight=weights)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.05)
-    CKPT_DIR.mkdir(exist_ok=True)
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    # Best-so-far goes to a sidecar and is moved into place only once training finishes,
+    # so an interrupted run leaves the existing checkpoint untouched rather than a
+    # half-trained one in its place. The sidecar keeps the crash resilience of saving
+    # every improvement.
+    partial = out.with_name(out.name + ".partial")
     best = float("inf")
     for epoch in range(args.epochs):
         model.train()
@@ -134,11 +151,15 @@ def main(argv=None) -> int:
             val = float(np.mean([loss_of(b).item() for b in val_loader]))
         if val < best:
             best = val
-            torch.save({"model": model.state_dict(), "config": NOTE_CONFIG, "best": best}, out)
+            torch.save({"model": model.state_dict(), "config": NOTE_CONFIG, "best": best},
+                       partial)
         if epoch == 0 or (epoch + 1) % 25 == 0:
             print(f"  epoch {epoch + 1}/{args.epochs}   val {val:.3f}   best {best:.3f}",
                   flush=True)
 
+    if not partial.exists():
+        raise SystemExit(f"no epoch completed, so nothing was written to {out}")
+    partial.replace(out)
     print(f"done. best val {best:.3f} -> {out}")
     return 0
 

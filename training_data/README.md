@@ -63,5 +63,10 @@ uv run --frozen python -m train.train_notes --role bass
 uv run --frozen python -m train.train_notes --role arp
 ```
 
+`train_notes` refuses to run if its target checkpoint already exists — retraining would
+replace the weights every other script loads by default. Pass `--out <path>` to write
+elsewhere, or `--force` to overwrite.
+
+
 The corpus these examples came from is a multitrack MIDI collection outside this
 project; `mine_corpus.py` takes its location as `--corpus` rather than assuming it.

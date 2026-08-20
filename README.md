@@ -185,6 +185,11 @@ uv run --frozen python -m train.finetune_sft
 uv run --frozen python -m train.finetune_dpo
 ```
 
+`train_notes` refuses to run if its target checkpoint already exists — retraining would
+replace the weights every other script loads by default. Pass `--out <path>` to write
+elsewhere, or `--force` to overwrite.
+
+
 `mine_corpus.py` searches recursively for filenames matching the role — `*bass*`, or
 `*arp* *pluck* *lead* *melody* *keys*` — and by default keeps only paths mentioning
 `ukg`, `garage` or `2step`. Pass `--filter all` to mine everything it finds. Files are

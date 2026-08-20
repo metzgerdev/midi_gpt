@@ -304,6 +304,36 @@ def test_missing_drum_loop_is_still_reported():
     assert find_drum_loop("no_such_loop_9f3a.wav") is None
 
 
+def test_training_from_scratch_refuses_to_replace_an_existing_checkpoint(tmp_path):
+    """Training writes to the checkpoint every other script loads by default.
+
+    It used to save on every validation improvement, so an interrupted run left a
+    half-trained model where the finished one belonged — and said nothing.
+    """
+    from train.train_notes import main
+
+    existing = tmp_path / "bass_notes_gpt.pt"
+    existing.write_bytes(b"not really a checkpoint")
+    with pytest.raises(SystemExit) as excinfo:
+        main(["--role", "bass", "--out", str(existing), "--data-dir", str(tmp_path)])
+    assert "already exists" in str(excinfo.value)
+    assert existing.read_bytes() == b"not really a checkpoint", "the file was touched"
+
+
+def test_training_checks_the_checkpoint_before_loading_the_corpus(tmp_path):
+    """The refusal must come first, or it costs an epoch to find out."""
+    from train.train_notes import main
+
+    existing = tmp_path / "taken.pt"
+    existing.write_bytes(b"x")
+    missing_corpus = tmp_path / "no_such_corpus"
+    with pytest.raises(SystemExit) as excinfo:
+        main(["--role", "bass", "--out", str(existing), "--data-dir", str(missing_corpus)])
+    assert "already exists" in str(excinfo.value), (
+        "the corpus error won the race, so the guard runs after the data loads"
+    )
+
+
 def test_inferred_chord_matches_the_notes_it_was_built_from():
     """Self-supervised harmony: a C minor line must label itself C minor."""
     line = np.full(16, -1)
