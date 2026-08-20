@@ -188,3 +188,33 @@ def test_generate_view_offers_the_controls_a_run_needs():
     labels = {w.label for w in list(app.selectbox) + list(app.slider) + list(app.radio)}
     assert {"Key", "Mode", "Genre", "Drum loop", "Checkpoint"} <= labels
     assert any(b.label == "Generate" for b in app.button)
+
+
+def test_page_finishes_rendering_after_an_upload(tmp_path):
+    """The bug behind a Run DPO button that did nothing, silently.
+
+    An uploader keeps its value across reruns, so the branch that saves the file runs
+    again on the rerun a button click triggers. Calling st.rerun() there restarts the
+    script before the button handler is reached, and the click is lost — no output, no
+    error, no network activity, because widget events travel over a websocket.
+
+    Asserting the page renders to the bottom after an upload catches it without running
+    a real training round: an aborted script never reaches the chain tables.
+    """
+    from streamlit.testing.v1 import AppTest
+
+    app = AppTest.from_file(str(BASE / "ui/views/finetune.py"), default_timeout=120).run()
+    if not app.file_uploader or not any(b.label == "Run DPO" for b in app.button):
+        pytest.skip("needs a generated run on disk")
+
+    midi = tmp_path / "bass_edited.mid"
+    write_midi([(45, 0, 4), (43, 8, 4)], midi, bpm=130)
+    app.file_uploader[0].upload("bass_edited.mid", midi.read_bytes(), "audio/midi")
+    app.run()
+
+    assert not app.exception, f"raised after upload: {app.exception}"
+    assert any(b.label == "Run DPO" for b in app.button), "the button never rendered"
+    assert len(app.dataframe) == 2, (
+        "the chain tables below the uploader are missing, so the script aborted "
+        "partway — a click would be swallowed the same way"
+    )

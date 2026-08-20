@@ -40,10 +40,16 @@ with col_a:
                        file_name=f"{run.name}_{role}.mid", mime="audio/midi")
 with col_b:
     upload = st.file_uploader(f"Upload the edited {role}.mid", type=["mid", "midi"])
+    # An uploader keeps its value across reruns, so this branch runs again on the rerun a
+    # button click triggers. Calling st.rerun() here restarted the script before the Run
+    # DPO handler below was reached, which swallowed the click: the button did nothing,
+    # with no error anywhere. Write once per file and let the rerun finish normally.
     if upload is not None:
-        run.edit(role).write_bytes(upload.getvalue())
+        token = (run.name, role, upload.file_id)
+        if st.session_state.get("saved_upload") != token:
+            run.edit(role).write_bytes(upload.getvalue())
+            st.session_state["saved_upload"] = token
         st.success(f"Saved as `stems/{role}_edited.mid`")
-        st.rerun()
 
 edited = run.edited_roles()
 st.write(f"Edits present in this run: **{', '.join(edited) if edited else 'none'}**")
