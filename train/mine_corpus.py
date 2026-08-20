@@ -1,5 +1,10 @@
 """Build the training corpus: a folder of MIDI in, .npz training examples out.
 
+ARCHIVAL. Needs a multitrack MIDI collection this repo does not ship — the corpus is a
+licensed sample-pack derivative — and the grid it writes does not match the one the
+shipped checkpoints were trained on. To adapt the models, fine-tune the checkpoints with
+`python -m train.finetune_dpo` instead.
+
 Each example is one 4-bar chunk of a single melodic line, reduced to the representation
 the model is trained on:
 

@@ -1,5 +1,10 @@
 """Train a note model from scratch on the mined corpus.
 
+ARCHIVAL. Requires a mined corpus, which this repo does not ship, so it exits immediately
+on a fresh clone. Building one needs `mine_corpus`, which is archival for the same reason.
+To adapt the models, fine-tune the shipped checkpoints with `python -m train.finetune_dpo`
+instead.
+
 There is no pretraining stage. The model is trained directly on the target distribution:
 next-token cross-entropy over one token per sixteenth note, conditioned at every step on
 the kick grid and the chord chroma stored alongside each example.

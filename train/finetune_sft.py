@@ -1,5 +1,10 @@
 """Supervised fine-tuning on your edits: pull the model toward what you kept.
 
+ARCHIVAL. This runs without the mined corpus, but the corpus is its only anchor: without
+it the replay mix and the regression check both fall away silently, and the edits are free
+to overwrite the base distribution. `python -m train.finetune_dpo` is the supported path —
+its KL guard is measured against a checkpoint, so it needs nothing this repo does not ship.
+
 The lighter of the two fine-tuning levers. SFT trains on the edited MIDI alone, so it
 learns what you wanted; DPO (finetune_dpo.py) also uses the original as a negative, so it
 learns what you rejected. SFT needs only an edit, not a pair, which makes it the one to
