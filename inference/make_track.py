@@ -247,7 +247,13 @@ def prompt_spec() -> dict:
             "mood": GENRES[genre]["mood"], "drum": GENRES[genre]["drum"], "use_sft": use_sft}
 
 
-def main():
+def main(argv=None) -> Path:
+    """Generate a track and return the run folder it was written to.
+
+    `argv` defaults to the command line. Callers that are not the CLI — the notebook,
+    the Streamlit app — pass a list instead of swapping sys.argv, and take the returned
+    path rather than guessing at the newest folder in output/.
+    """
     ap = argparse.ArgumentParser()
     ap.add_argument("-i", "--interactive", action="store_true",
                     help="prompt for genre / key / bpm (default when run with no args in a terminal)")
@@ -280,9 +286,10 @@ def main():
                     help="override the sampling device (default: cpu — ~10x faster here)")
     ap.add_argument("--out-root", type=Path, default=OUTPUT_DIR,
                     help="where generated MIDI folders are written (default: output/)")
-    args = ap.parse_args()
+    argv = sys.argv[1:] if argv is None else list(argv)
+    args = ap.parse_args(argv)
 
-    interactive = args.interactive or (not sys.argv[1:] and sys.stdin.isatty())
+    interactive = args.interactive or (not argv and sys.stdin.isatty())
     if interactive:
         if not sys.stdin.isatty():
             raise SystemExit("--interactive needs a terminal (no tty). Use --request/--genre/--bpm instead.")
@@ -429,6 +436,7 @@ def main():
     written = "  ".join(f"{r}.mid" for r, *_ in roles)
     print(f"\nmidi -> {out / 'stems'}  ({written})")
     print(f"  {total_sec:.1f}s, {req['bars']} bars @ {bpm:.0f}   metadata.json written")
+    return out
 
 
 if __name__ == "__main__":

@@ -16,6 +16,7 @@ from utils.chords import (
     progression_to_track, scale_pcs,
 )
 from utils.config import (
+    CKPT_DIR,
     ROLE_CENTER, ROLE_MONO,
     NOTE_BOS,
     NOTE_EOS,
@@ -304,6 +305,24 @@ def test_missing_drum_loop_is_still_reported():
     from train.finetune_dpo import find_drum_loop
 
     assert find_drum_loop("no_such_loop_9f3a.wav") is None
+
+
+def test_make_track_takes_argv_and_returns_the_run_folder(tmp_path):
+    """Callers that are not the CLI need both halves of this.
+
+    Without them the notebook had to swap sys.argv and then guess at the newest folder
+    in output/, which is a race as soon as two runs overlap.
+    """
+    from inference.make_track import main
+
+    if not (CKPT_DIR / "bass_notes_gpt.pt").exists():
+        pytest.skip("local inference asset is absent")
+
+    run = main(["--request", "4 bar UKG track in A minor, dark", "--seed", "7",
+                "--candidates", "1", "--no-arp", "--out-root", str(tmp_path)])
+    assert run.parent == tmp_path, "wrote outside --out-root"
+    assert (run / "stems" / "bass.mid").exists()
+    assert json.loads((run / "metadata.json").read_text())["parsed"]["bars"] == 4
 
 
 def test_note_onsets_records_restrikes_that_the_pitch_array_loses():
