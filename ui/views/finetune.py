@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import streamlit as st
 
-from ui.state import capture, checkpoint_meta, checkpoints, runs
+from ui.state import (
+    capture, checkpoint_meta, checkpoints, differs_after_tokenizing, runs,
+)
 
 st.title("Fine-tune on your edits")
 
@@ -46,6 +48,16 @@ with col_b:
 edited = run.edited_roles()
 st.write(f"Edits present in this run: **{', '.join(edited) if edited else 'none'}**")
 
+# Say so here rather than after a training run that does nothing. The comparison is the
+# same tokenizer DPO uses, so it agrees with what the pairing will decide.
+for present in edited:
+    if not differs_after_tokenizing(run.stem(present), run.edit(present), present):
+        st.warning(
+            f"`{present}_edited.mid` tokenizes identically to `{present}.mid`, so DPO "
+            f"will find no pair in it. Change a note's **pitch** or **step position** — "
+            f"velocity and sub-16th timing cannot be represented."
+        )
+
 st.divider()
 st.subheader("2. Train")
 
@@ -79,13 +91,24 @@ if st.button("Run DPO", type="primary", width='stretch'):
 
 if st.session_state.get("dpo_log"):
     log = st.session_state["dpo_log"]
+    if "nothing to learn from" in log:
+        st.warning(
+            "**No pairs to train on.** DPO learns from the difference between what the "
+            "model produced and what you changed it into. An unedited file gives a zero "
+            "margin and no gradient, so there is nothing to move toward.\n\n"
+            "Change a note's **pitch** or **step position**. Velocity and sub-16th timing "
+            "are not representable in the token vocabulary, so those edits tokenize "
+            "identically to the original."
+        )
+    # Show every line. Filtering to a keyword allowlist hid exactly the messages that
+    # explain a run doing nothing, which is when the user most needs them.
     for line in log.splitlines():
+        if not line.strip():
+            continue
         if "WARNING" in line:
             st.warning(line)
-        elif "KL from" in line or "reward margin" in line or "saved" in line:
+        else:
             st.write(f"`{line}`")
-    with st.expander("Full log"):
-        st.code(log)
 
 st.divider()
 st.subheader("3. The chain")

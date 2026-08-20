@@ -68,6 +68,30 @@ def runs(root: Path = OUTPUT_DIR) -> list[Run]:
     return sorted(found, key=lambda r: r.meta.get("created", ""), reverse=True)
 
 
+def differs_after_tokenizing(original: Path, edited: Path, role: str) -> bool:
+    """Whether DPO will see a difference between two MIDI files.
+
+    The same reduction the pairing uses, so this agrees with it: velocity and sub-16th
+    timing are gone by the time the tokens exist, and so is a note re-struck at the same
+    pitch. An edit that only touches those produces no pair.
+    """
+    import mido
+
+    from utils.config import ROLE_CENTER, ROLE_MONO
+    from utils.midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
+
+    def tokens(path: Path):
+        pitch = midi_to_step_grid(mido.MidiFile(path), mono=ROLE_MONO[role])
+        if pitch is None:
+            return None
+        return notes_to_tokens(octave_fit(pitch, 0, ROLE_CENTER[role])).tolist()
+
+    try:
+        return tokens(original) != tokens(edited)
+    except Exception:                       # unreadable MIDI is the training run's problem
+        return True
+
+
 def capture(fn, *args, **kwargs):
     """Run something that prints, and hand back (result, what it printed).
 
