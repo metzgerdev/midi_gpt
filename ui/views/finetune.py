@@ -114,17 +114,23 @@ st.divider()
 st.subheader("3. The chain")
 st.caption("Each fine-tune writes a new checkpoint; make_track uses the highest by default.")
 
+def cell(value, fmt="{}"):
+    """Every column is text. Older checkpoints record almost nothing, so a numeric column
+    would mix numbers with the em dash and Arrow cannot type a mixed object column."""
+    return "—" if value is None else fmt.format(value)
+
+
 for role in ("bass", "arp"):
     rows = []
     for path in checkpoints(role):
         meta = checkpoint_meta(path)
         rows.append({
             "checkpoint": path.name,
-            "method": meta.get("method", "base" if "_ft" not in path.stem else "—"),
-            "from": meta.get("finetuned_from", "—"),
-            "anchor": meta.get("anchor", "—"),
-            "KL": round(meta["kl_final"], 4) if meta.get("kl_final") is not None else "—",
-            "pairs": meta.get("pairs", meta.get("edits", "—")),
+            "method": cell(meta.get("method", "base" if "_ft" not in path.stem else None)),
+            "from": cell(meta.get("finetuned_from")),
+            "anchor": cell(meta.get("anchor")),
+            "KL": cell(meta.get("kl_final"), "{:.4f}"),
+            "pairs": cell(meta.get("pairs", meta.get("edits"))),
         })
     st.write(f"**{role}**")
     st.dataframe(rows, hide_index=True, width='stretch')
