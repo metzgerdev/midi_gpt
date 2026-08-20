@@ -1,0 +1,5 @@
+# Streamlit posts usage statistics to webhooks.fivetran.com and data.streamlit.io by
+# default, on every session. This is a local tool for your own music; nothing about how
+# you use it needs to leave the machine.
+[browser]
+gatherUsageStats = false

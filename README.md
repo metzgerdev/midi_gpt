@@ -437,3 +437,7 @@ and lists the checkpoint chain each role has accumulated.
 
 There is no audio playback and no piano roll — the stems go into a DAW, which does both
 better.
+
+`.streamlit/config.toml` turns off Streamlit's usage telemetry, which otherwise posts to
+`webhooks.fivetran.com` and `data.streamlit.io` on every session. With it in place the UI
+makes no external requests.
