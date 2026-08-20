@@ -1,11 +1,16 @@
 """Train a note model from scratch on the mined corpus.
 
+ARCHIVAL. Requires a mined corpus, which this repo does not ship, so it exits immediately
+on a fresh clone. Building one needs `mine_corpus`, which is archival for the same reason.
+To adapt the models, fine-tune the shipped checkpoints with `python -m train.finetune_dpo`
+instead.
+
 There is no pretraining stage. The model is trained directly on the target distribution:
 next-token cross-entropy over one token per sixteenth note, conditioned at every step on
 the kick grid and the chord chroma stored alongside each example.
 
-    python train_notes.py --role bass
-    python train_notes.py --role arp --epochs 200
+    python -m train.train_notes --role bass
+    python -m train.train_notes --role arp --epochs 200
 
 Training is teacher-forced — a single forward pass covers all 65 positions at once, with
 a causal mask preventing lookahead — so an epoch is fast even on a laptop CPU.
@@ -29,15 +34,14 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, random_split
 
-from config import (
-    NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_STEPS,
-    NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+from utils.config import (
+    CKPT_DIR, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0,
+    NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    TRAINING_DATA,
 )
-from make_track import CKPT_DIR, pick_device
-from model import HarmonicNoteGPT, note_chord_cond, note_grid_cond
+from utils.device import pick_device
+from model.note_model import HarmonicNoteGPT, note_chord_cond, note_grid_cond
 
-BASE = Path(__file__).parent
-TRAINING_DATA = BASE / "training_data"
 
 # context_length allows BOS + NOTE_STEPS + EOS with room to spare
 NOTE_CONFIG = {"vocab_size": NOTE_VOCAB_SIZE, "context_length": NOTE_STEPS + 4,
@@ -53,7 +57,7 @@ class NoteCorpus(Dataset):
         if not files:
             raise SystemExit(
                 f"no .npz in {data_dir}. Build the corpus first:\n"
-                f"    python mine_corpus.py --corpus <folder of MIDI> --role <role>"
+                f"    python -m train.mine_corpus --corpus <folder of MIDI> --role <role>"
             )
         xs, ys, grids, chords = [], [], [], []
         for path in files:
@@ -91,12 +95,23 @@ def main(argv=None) -> int:
     ap.add_argument("--val-split", type=float, default=0.15)
     ap.add_argument("--out", type=Path, default=None,
                     help="default: checkpoints/<role>_notes_gpt.pt")
+    ap.add_argument("--force", action="store_true",
+                    help="overwrite --out if it already exists")
     ap.add_argument("--device", default=None, choices=("cpu", "mps", "cuda", "auto"))
     args = ap.parse_args(argv)
 
     device = pick_device(args.device)
     data_dir = args.data_dir or TRAINING_DATA / f"{args.role}_notes_midi"
     out = args.out or CKPT_DIR / f"{args.role}_notes_gpt.pt"
+
+    # Checked before the corpus loads, so a refusal costs a second rather than an epoch.
+    if out.exists() and not args.force:
+        raise SystemExit(
+            f"{out} already exists. Training from scratch would replace the checkpoint "
+            f"every other script loads by default.\n"
+            f"    --out <path>   write somewhere else\n"
+            f"    --force        overwrite it"
+        )
 
     dataset = NoteCorpus(data_dir, min_notes=args.min_notes)
     n_val = max(1, int(args.val_split * len(dataset)))
@@ -122,7 +137,13 @@ def main(argv=None) -> int:
         return F.cross_entropy(logits.flatten(0, 1), y.flatten(), weight=weights)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.05)
-    CKPT_DIR.mkdir(exist_ok=True)
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    # Best-so-far goes to a sidecar and is moved into place only once training finishes,
+    # so an interrupted run leaves the existing checkpoint untouched rather than a
+    # half-trained one in its place. The sidecar keeps the crash resilience of saving
+    # every improvement.
+    partial = out.with_name(out.name + ".partial")
     best = float("inf")
     for epoch in range(args.epochs):
         model.train()
@@ -135,11 +156,15 @@ def main(argv=None) -> int:
             val = float(np.mean([loss_of(b).item() for b in val_loader]))
         if val < best:
             best = val
-            torch.save({"model": model.state_dict(), "config": NOTE_CONFIG, "best": best}, out)
+            torch.save({"model": model.state_dict(), "config": NOTE_CONFIG, "best": best},
+                       partial)
         if epoch == 0 or (epoch + 1) % 25 == 0:
             print(f"  epoch {epoch + 1}/{args.epochs}   val {val:.3f}   best {best:.3f}",
                   flush=True)
 
+    if not partial.exists():
+        raise SystemExit(f"no epoch completed, so nothing was written to {out}")
+    partial.replace(out)
     print(f"done. best val {best:.3f} -> {out}")
     return 0
 

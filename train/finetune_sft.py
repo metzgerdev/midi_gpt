@@ -1,12 +1,17 @@
 """Supervised fine-tuning on your edits: pull the model toward what you kept.
 
+ARCHIVAL. This runs without the mined corpus, but the corpus is its only anchor: without
+it the replay mix and the regression check both fall away silently, and the edits are free
+to overwrite the base distribution. `python -m train.finetune_dpo` is the supported path —
+its KL guard is measured against a checkpoint, so it needs nothing this repo does not ship.
+
 The lighter of the two fine-tuning levers. SFT trains on the edited MIDI alone, so it
 learns what you wanted; DPO (finetune_dpo.py) also uses the original as a negative, so it
 learns what you rejected. SFT needs only an edit, not a pair, which makes it the one to
 reach for when you have changed a clip beyond recognition.
 
-    python finetune_sft.py                    # both roles, every edited run in output/
-    python finetune_sft.py --role bass --epochs 12
+    python -m train.finetune_sft                    # both roles, every edited run in output/
+    python -m train.finetune_sft --role bass --epochs 12
 
 Same convention as DPO: export the edit into the run folder as stems/<role>_edited.mid.
 The conditioning is rebuilt from the run's metadata.json.
@@ -26,14 +31,16 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-from config import (
-    NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+from utils.config import (
+    CKPT_DIR, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    OUTPUT_DIR,
 )
-from finetune_dpo import (
+from model.checkpoints import latest_ckpt
+from utils.device import pick_device
+from train.finetune_dpo import (
     base_corpus_loader, next_ft_path, run_conditioning, tokenize_sections,
 )
-from make_track import CKPT_DIR, OUTPUT_DIR, latest_ckpt, pick_device
-from model import HarmonicNoteGPT
+from model.note_model import HarmonicNoteGPT
 
 
 def edit_examples(run_dir, role: str, min_notes: int = 3):

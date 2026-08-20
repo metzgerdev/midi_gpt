@@ -144,17 +144,17 @@ In practice:
 
 ```bash
 # 1. generate
-uv run --frozen python make_track.py --request "8 bar UKG track in A minor, dark"
+uv run --frozen python -m inference.make_track --request "8 bar UKG track in A minor, dark"
 
 # 2. open output/<run>/stems/bass.mid in a DAW, change it, and export it back
 #    into the same folder as bass_edited.mid, leaving bass.mid in place
 
 # 3. see what would be learned, without training
-uv run --frozen python finetune_dpo.py --dry-run
+uv run --frozen python -m train.finetune_dpo --dry-run
 
 # 4. train
-uv run --frozen python finetune_dpo.py
-uv run --frozen python finetune_dpo.py --role bass --beta 0.2 --epochs 20
+uv run --frozen python -m train.finetune_dpo
+uv run --frozen python -m train.finetune_dpo --role bass --beta 0.2 --epochs 20
 ```
 
 The run reports a reward margin and preference accuracy — both should rise — and, if the
@@ -173,17 +173,22 @@ rebuild the models.
 
 ```bash
 # 1. corpus of MIDI -> training examples
-uv run --frozen python mine_corpus.py --corpus ~/path/to/midi --role bass
-uv run --frozen python mine_corpus.py --corpus ~/path/to/midi --role arp
+uv run --frozen python -m train.mine_corpus --corpus ~/path/to/midi --role bass
+uv run --frozen python -m train.mine_corpus --corpus ~/path/to/midi --role arp
 
 # 2. examples -> base checkpoints
-uv run --frozen python train_notes.py --role bass
-uv run --frozen python train_notes.py --role arp
+uv run --frozen python -m train.train_notes --role bass
+uv run --frozen python -m train.train_notes --role arp
 
 # 3. optional: fine-tune on your edits
-uv run --frozen python finetune_sft.py
-uv run --frozen python finetune_dpo.py
+uv run --frozen python -m train.finetune_sft
+uv run --frozen python -m train.finetune_dpo
 ```
+
+`train_notes` refuses to run if its target checkpoint already exists — retraining would
+replace the weights every other script loads by default. Pass `--out <path>` to write
+elsewhere, or `--force` to overwrite.
+
 
 `mine_corpus.py` searches recursively for filenames matching the role — `*bass*`, or
 `*arp* *pluck* *lead* *melody* *keys*` — and by default keeps only paths mentioning
@@ -242,13 +247,13 @@ weights. A bare invocation in a terminal does this; `-i` / `--interactive` force
 when other arguments are present.
 
 ```bash
-uv run --frozen python make_track.py
+uv run --frozen python -m inference.make_track
 ```
 
 From a request:
 
 ```bash
-uv run --frozen python make_track.py \
+uv run --frozen python -m inference.make_track \
   --request "8 bar UKG track in A minor, dark" \
   --seed 7
 ```
@@ -257,39 +262,39 @@ Controls:
 
 ```bash
 # Untuned checkpoints, as a control
-uv run --frozen python make_track.py --base
+uv run --frozen python -m inference.make_track --base
 
 # Bass only
-uv run --frozen python make_track.py --no-arp
+uv run --frozen python -m inference.make_track --no-arp
 
 # Genre preset and tempo
-uv run --frozen python make_track.py --genre ukg-classic --bpm 138
+uv run --frozen python -m inference.make_track --genre ukg-classic --bpm 138
 
 # A different drum loop
-uv run --frozen python make_track.py --drum path/to/loop.wav --drum-bpm 127
+uv run --frozen python -m inference.make_track --drum path/to/loop.wav --drum-bpm 127
 
 # Either role's checkpoint
-uv run --frozen python make_track.py \
+uv run --frozen python -m inference.make_track \
   --bass-ckpt checkpoints/bass_notes_gpt_ft3.pt \
   --arp-ckpt checkpoints/arp_notes_gpt_ft3.pt
 
 # Somewhere other than output/
-uv run --frozen python make_track.py --out-root /tmp/takes
+uv run --frozen python -m inference.make_track --out-root /tmp/takes
 
 # Sample on the GPU
-uv run --frozen python make_track.py --device auto
+uv run --frozen python -m inference.make_track --device auto
 
 # Reproduce a run: its seed, on the same device
-uv run --frozen python make_track.py --seed 424242
+uv run --frozen python -m inference.make_track --seed 424242
 
 # More candidates per section
-uv run --frozen python make_track.py --candidates 20
+uv run --frozen python -m inference.make_track --candidates 20
 
 # Looser sampling
-uv run --frozen python make_track.py --bass-temp 1.5 --arp-temp 1.6
+uv run --frozen python -m inference.make_track --bass-temp 1.5 --arp-temp 1.6
 
 # In-key 7ths and suspensions, drawn fresh per section
-uv run --frozen python make_track.py --chords color
+uv run --frozen python -m inference.make_track --chords color
 ```
 
 `inference.ipynb` runs the same pipeline in a notebook and shows the generated notes
@@ -375,23 +380,42 @@ The DPO pairs are tracked — they are the only human-authored data in the proje
 
 | File | Responsibility |
 |---|---|
+| **`inference/`** | |
 | `make_track.py` | CLI and end-to-end MIDI generation pipeline |
-| `model.py` | conditioned GPT note model and sampler |
+| `inference.ipynb` | notebook front end |
+| **`model/`** | |
+| `note_model.py` | conditioned GPT note model and sampler |
 | `gpt_model.py` | GPT backbone |
-| `config.py` | token, rhythm, and conditioning constants |
+| `checkpoints.py` | finding and loading trained checkpoints |
+| **`utils/`** | |
+| `config.py` | paths, token, rhythm, and conditioning constants |
 | `chords.py` | chord parsing, per-step chroma, in-key coloring |
-| `audio_features.py` | drum-loop kick-pocket onset grid |
 | `midi_utils.py` | conversion between note tokens and MIDI, both directions |
+| `audio_features.py` | drum-loop kick-pocket onset grid, tempo alignment |
+| `device.py` | device selection |
+| `scoring.py` | chord-tone fit and kick lock for a generated section |
+| **`train/`** | |
 | `finetune_dpo.py` | fine-tune on preference pairs |
 | `finetune_sft.py` | fine-tune on edits alone |
 | `mine_corpus.py` | MIDI corpus -> training examples |
 | `train_notes.py` | training examples -> base checkpoint |
-| `inference.ipynb` | notebook front end |
+| **`tests/`** | |
 | `test_inference.py` | tokenizer, conditioning, chord and checkpoint tests |
+| `test_finetune_dpo.py` | iterated DPO: distribution moves, KL stays bounded (slow) |
+| **root** | |
 | `pipeline.html` | standalone diagram |
 
 ## Test
 
 ```bash
-uv run --frozen pytest
+uv run --frozen pytest              # fast suite, ~1.5s
+uv run --frozen pytest -m slow      # iterated DPO, runs real training rounds
+```
+
+Modules are namespace packages under the repo root, so entry points run with `-m`
+from the project directory:
+
+```bash
+uv run --frozen python -m inference.make_track --request "8 bar UKG track in A minor"
+uv run --frozen python -m train.finetune_dpo --role bass
 ```

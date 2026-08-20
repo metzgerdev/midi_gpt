@@ -1,5 +1,9 @@
 """Build the training corpus: a folder of MIDI in, .npz training examples out.
 
+ARCHIVAL. Needs a multitrack MIDI collection this repo does not ship, since the corpus is
+a licensed sample-pack derivative. To adapt the models, fine-tune the checkpoints with
+`python -m train.finetune_dpo` instead.
+
 Each example is one 4-bar chunk of a single melodic line, reduced to the representation
 the model is trained on:
 
@@ -7,18 +11,20 @@ the model is trained on:
     grid   (64,)      onset positions — the rhythm skeleton
     chord  (64, 12)   pitch classes of the chord — the harmony skeleton
 
-Both conditioning tracks are self-supervised. The grid is the stem's own note-ons; the
-chroma is inferred per bar by matching a pitch-class histogram against chord templates.
-Nothing is annotated by hand.
+Both conditioning tracks are self-supervised. The grid is every one of the stem's note-ons
+— including a note re-struck at the same pitch, which `notes_to_tokens` can only spell as
+a SUSTAIN, so the grid is the one place that attack survives. The chroma is inferred per
+bar by matching a pitch-class histogram against chord templates. Nothing is annotated by
+hand.
 
 Every chunk is written twelve times, transposed through all keys, with the notes and the
 chroma rotated together. That is the point of the augmentation: across the twelve copies
 the rhythm is identical and only the chroma predicts which pitches appear, so the model
 cannot use absolute pitch and must read the chord track instead.
 
-    python mine_corpus.py --corpus ~/path/to/midi                 # bass
-    python mine_corpus.py --corpus ~/path/to/midi --role arp
-    python mine_corpus.py --corpus ~/path/to/midi --filter all    # skip the genre filter
+    python -m train.mine_corpus --corpus ~/path/to/midi                 # bass
+    python -m train.mine_corpus --corpus ~/path/to/midi --role arp
+    python -m train.mine_corpus --corpus ~/path/to/midi --filter all    # skip the genre filter
 """
 
 from __future__ import annotations
@@ -31,14 +37,13 @@ from pathlib import Path
 import mido
 import numpy as np
 
-from chords import infer_chord_track
-from config import (
+from utils.chords import infer_chord_track
+from utils.config import (
     GRID_STEPS_PER_BAR, NOTE_BARS, NOTE_PITCH0, NOTE_STEPS, ROLE_CENTER, ROLE_MONO,
+    TRAINING_DATA,
 )
-from midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
+from utils.midi_utils import midi_to_step_grid, note_onsets, notes_to_tokens, octave_fit
 
-BASE = Path(__file__).parent
-TRAINING_DATA = BASE / "training_data"
 
 # Which filenames belong to which role. Bass is one pattern; the melodic role covers the
 # several names a multitrack corpus tends to use for the same thing.
@@ -103,12 +108,7 @@ def main(argv=None) -> int:
         pitch = midi_to_step_grid(midi, mono=mono)
         if pitch is None:
             continue
-        onsets = np.zeros(len(pitch), np.float32)
-        previous = -1
-        for step, note in enumerate(pitch):
-            if note >= 0 and note != previous:
-                onsets[step] = 1.0
-            previous = note
+        onsets = note_onsets(midi, len(pitch))
 
         stem = Path(path).stem[:28]
         for chunk in range(len(pitch) // NOTE_STEPS):

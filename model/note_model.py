@@ -5,8 +5,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from config import CHORD_DIM, CLAP_DIM
-from gpt_model import GPTModel
+from utils.config import CHORD_DIM, CLAP_DIM, NOTE_REST, NOTE_SUSTAIN
+from model.gpt_model import GPTModel
 
 
 def note_grid_cond(grid) -> np.ndarray:
@@ -49,6 +49,19 @@ class HarmonicNoteGPT(GPTModel):
         return self.out_head(x)
 
 
+def forbidden_next(previous_token: int, bos_id: int) -> list[int]:
+    """Token ids that cannot legally follow `previous_token`.
+
+    BOS opens the sequence and never recurs. SUSTAIN extends the note before it, so it is
+    illegal at the start and after a rest: `tokens_to_notes` has to discard such a token,
+    which silently shortens the clip the model thought it was writing.
+    """
+    forbidden = [bos_id]
+    if previous_token in (bos_id, NOTE_REST):
+        forbidden.append(NOTE_SUSTAIN)
+    return forbidden
+
+
 @torch.no_grad()
 def generate_notes(
     model,
@@ -82,6 +95,7 @@ def generate_notes(
             cond_seq=grid_t[:pos].view(1, pos),
             **kwargs,
         )[:, -1, :]
+        logits[:, forbidden_next(int(idx[0, -1]), bos_id)] = float("-inf")
 
         if temperature <= 0.0:
             nxt = torch.argmax(logits, dim=-1, keepdim=True)

@@ -1,5 +1,13 @@
 """Constants shared by the retained track-generation inference path."""
 
+from pathlib import Path
+
+BASE = Path(__file__).resolve().parent.parent           # repo root, one level above utils/
+CKPT_DIR = BASE / "checkpoints"
+DRUM_DIR = BASE / "drum_samples"                        # conditioning loops live here
+OUTPUT_DIR = BASE / "output"                            # generated MIDI lands here
+TRAINING_DATA = BASE / "training_data"                  # corpus and preference pairs
+
 # Drum-loop analysis. SAMPLE_RATE and FRAME_RATE are inherited from EnCodec-24k,
 # which framed audio at 75 fps; the codec is long gone but the numbers stayed.
 SAMPLE_RATE = 24_000
