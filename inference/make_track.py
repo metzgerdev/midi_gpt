@@ -1,12 +1,12 @@
 """Specialist 2-step UKG track generator — the top-level UX.
 
-    python make_track.py -i          # interactive: asks genre, key, bpm, weights
-    python make_track.py --genre ukg-dark --bpm 140   # scriptable flags
-    python make_track.py --base      # force the un-tuned base models
-    python make_track.py --request "make a 2 step ukg beat in A minor, dark, \
+    python -m inference.make_track -i          # interactive: asks genre, key, bpm, weights
+    python -m inference.make_track --genre ukg-dark --bpm 140   # scriptable flags
+    python -m inference.make_track --base      # force the un-tuned base models
+    python -m inference.make_track --request "make a 2 step ukg beat in A minor, dark, \
 moody, night time in london, 8 bars long"
 
-Bare `python make_track.py` in a terminal drops into the interactive prompts;
+Bare `python -m inference.make_track` in a terminal drops into the interactive prompts;
 with any args (or no tty) it runs non-interactively from --request/--genre/--bpm.
 
 Weights default to the LATEST fine-tuned checkpoint (checkpoints/<role>_notes_gpt_ftN.pt,
@@ -44,17 +44,17 @@ import librosa
 import numpy as np
 import torch
 
-from audio_features import align_to_grid_tempo, detect_bpm, onset_grid
-from checkpoints import latest_ckpt, load_note_model
-from chords import NAMES, color_progression, progression_to_track
-from config import (
+from utils.audio_features import align_to_grid_tempo, detect_bpm, onset_grid
+from model.checkpoints import latest_ckpt, load_note_model
+from utils.chords import NAMES, color_progression, progression_to_track
+from utils.config import (
     CKPT_DIR, DRUM_DIR, GRID_BARS, GRID_REF_BPM, GRID_STEPS, NOTE_BARS, NOTE_BOS,
     NOTE_EOS, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS, OUTPUT_DIR, SAMPLE_RATE,
 )
-from device import pick_device
-from midi_utils import tokens_to_notes, write_midi
-from model import generate_notes, note_chord_cond, note_grid_cond
-from scoring import fit_and_lock
+from utils.device import pick_device
+from utils.midi_utils import tokens_to_notes, write_midi
+from model.note_model import generate_notes, note_chord_cond, note_grid_cond
+from utils.scoring import fit_and_lock
 
 
 def drum_loops() -> list[Path]:

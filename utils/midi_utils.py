@@ -6,7 +6,7 @@ from pathlib import Path
 import mido
 import numpy as np
 
-from config import (
+from utils.config import (
     GRID_REF_BPM, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_SUSTAIN,
     NOTE_VOCAB,
 )

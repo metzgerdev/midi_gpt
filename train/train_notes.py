@@ -4,8 +4,8 @@ There is no pretraining stage. The model is trained directly on the target distr
 next-token cross-entropy over one token per sixteenth note, conditioned at every step on
 the kick grid and the chord chroma stored alongside each example.
 
-    python train_notes.py --role bass
-    python train_notes.py --role arp --epochs 200
+    python -m train.train_notes --role bass
+    python -m train.train_notes --role arp --epochs 200
 
 Training is teacher-forced — a single forward pass covers all 65 positions at once, with
 a causal mask preventing lookahead — so an epoch is fast even on a laptop CPU.
@@ -29,15 +29,14 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, random_split
 
-from config import (
+from utils.config import (
     CKPT_DIR, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0,
     NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    TRAINING_DATA,
 )
-from device import pick_device
-from model import HarmonicNoteGPT, note_chord_cond, note_grid_cond
+from utils.device import pick_device
+from model.note_model import HarmonicNoteGPT, note_chord_cond, note_grid_cond
 
-BASE = Path(__file__).parent
-TRAINING_DATA = BASE / "training_data"
 
 # context_length allows BOS + NOTE_STEPS + EOS with room to spare
 NOTE_CONFIG = {"vocab_size": NOTE_VOCAB_SIZE, "context_length": NOTE_STEPS + 4,
@@ -53,7 +52,7 @@ class NoteCorpus(Dataset):
         if not files:
             raise SystemExit(
                 f"no .npz in {data_dir}. Build the corpus first:\n"
-                f"    python mine_corpus.py --corpus <folder of MIDI> --role <role>"
+                f"    python -m train.mine_corpus --corpus <folder of MIDI> --role <role>"
             )
         xs, ys, grids, chords = [], [], [], []
         for path in files:

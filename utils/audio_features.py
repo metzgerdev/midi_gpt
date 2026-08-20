@@ -8,7 +8,7 @@ import librosa
 import numpy as np
 from scipy.signal import butter, sosfiltfilt
 
-from config import (
+from utils.config import (
     GRID_FRAMES,
     GRID_REF_BPM,
     GRID_STEPS,

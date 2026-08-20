@@ -5,8 +5,8 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from config import CHORD_DIM, CLAP_DIM, NOTE_REST, NOTE_SUSTAIN
-from gpt_model import GPTModel
+from utils.config import CHORD_DIM, CLAP_DIM, NOTE_REST, NOTE_SUSTAIN
+from model.gpt_model import GPTModel
 
 
 def note_grid_cond(grid) -> np.ndarray:

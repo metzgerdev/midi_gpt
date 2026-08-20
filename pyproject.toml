@@ -23,6 +23,10 @@ dev = [
 package = false
 
 [tool.pytest.ini_options]
+# The packages are namespace packages under the repo root rather than an installed
+# distribution, so the root has to be importable for `utils.config` and friends.
+pythonpath = ["."]
+testpaths = ["tests"]
 # `slow` covers the fine-tuning tests, which run real training rounds and take minutes.
 # `uv run --frozen pytest` skips them; `-m slow` or `-m ""` runs them.
 markers = ["slow: runs real training rounds (minutes, not seconds)"]

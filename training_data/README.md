@@ -57,10 +57,10 @@ objective and get skipped. Eight pairs carry real signal.
 Everything needed is in the repository:
 
 ```bash
-uv run --frozen python mine_corpus.py --corpus <folder of MIDI> --role bass
-uv run --frozen python mine_corpus.py --corpus <folder of MIDI> --role arp
-uv run --frozen python train_notes.py --role bass
-uv run --frozen python train_notes.py --role arp
+uv run --frozen python -m train.mine_corpus --corpus <folder of MIDI> --role bass
+uv run --frozen python -m train.mine_corpus --corpus <folder of MIDI> --role arp
+uv run --frozen python -m train.train_notes --role bass
+uv run --frozen python -m train.train_notes --role arp
 ```
 
 The corpus these examples came from is a multitrack MIDI collection outside this

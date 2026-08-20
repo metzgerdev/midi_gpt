@@ -5,8 +5,8 @@ learns what you wanted; DPO (finetune_dpo.py) also uses the original as a negati
 learns what you rejected. SFT needs only an edit, not a pair, which makes it the one to
 reach for when you have changed a clip beyond recognition.
 
-    python finetune_sft.py                    # both roles, every edited run in output/
-    python finetune_sft.py --role bass --epochs 12
+    python -m train.finetune_sft                    # both roles, every edited run in output/
+    python -m train.finetune_sft --role bass --epochs 12
 
 Same convention as DPO: export the edit into the run folder as stems/<role>_edited.mid.
 The conditioning is rebuilt from the run's metadata.json.
@@ -26,16 +26,16 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-from config import (
+from utils.config import (
     CKPT_DIR, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
     OUTPUT_DIR,
 )
-from checkpoints import latest_ckpt
-from device import pick_device
-from finetune_dpo import (
+from model.checkpoints import latest_ckpt
+from utils.device import pick_device
+from train.finetune_dpo import (
     base_corpus_loader, next_ft_path, run_conditioning, tokenize_sections,
 )
-from model import HarmonicNoteGPT
+from model.note_model import HarmonicNoteGPT
 
 
 def edit_examples(run_dir, role: str, min_notes: int = 3):

@@ -6,8 +6,8 @@ from pathlib import Path
 
 import torch
 
-from config import CKPT_DIR
-from model import HarmonicNoteGPT
+from utils.config import CKPT_DIR
+from model.note_model import HarmonicNoteGPT
 
 
 def latest_ckpt(role: str) -> Path:

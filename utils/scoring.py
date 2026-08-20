@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from config import NOTE_BARS, NOTE_MIDI_LO, NOTE_PITCH0
+from utils.config import NOTE_BARS, NOTE_MIDI_LO, NOTE_PITCH0
 
 
 def fit_and_lock(tokens, chroma, grid):

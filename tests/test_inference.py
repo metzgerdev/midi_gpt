@@ -9,12 +9,12 @@ import numpy as np
 import pytest
 import torch
 
-from chords import (
+from utils.chords import (
     infer_chord, infer_chord_track,
     NAMES, PC, chord_chroma, color_progression, parse_progression,
     progression_to_track, scale_pcs,
 )
-from config import (
+from utils.config import (
     ROLE_CENTER, ROLE_MONO,
     NOTE_BOS,
     NOTE_EOS,
@@ -25,12 +25,13 @@ from config import (
     NOTE_STEPS,
     NOTE_SUSTAIN,
     NOTE_VOCAB_SIZE,
+    TRAINING_DATA,
 )
-from make_track import build_progression, parse_key, parse_request
-from midi_utils import (
+from inference.make_track import build_progression, parse_key, parse_request
+from utils.midi_utils import (
     midi_to_step_grid, notes_to_tokens, octave_fit, tokens_to_notes, write_midi,
 )
-from model import (
+from model.note_model import (
     HarmonicNoteGPT, forbidden_next, generate_notes, note_chord_cond, note_grid_cond,
 )
 
@@ -270,7 +271,8 @@ def test_octave_fit_centres_without_changing_intervals():
     assert abs(int(np.median(fitted[voiced])) - 40) <= 6
 
 
-@pytest.mark.parametrize("module", ["mine_corpus", "train_notes", "finetune_sft", "finetune_dpo"])
+@pytest.mark.parametrize("module", ["train.mine_corpus", "train.train_notes",
+                                    "train.finetune_sft", "train.finetune_dpo"])
 def test_training_scripts_import(module):
     """The retraining path must not rot when the inference code is refactored."""
     importlib.import_module(module)
@@ -283,9 +285,9 @@ def test_every_shipped_preference_run_can_rebuild_its_conditioning():
     drum_samples/, so looking in one place alone left every one of them unusable in a
     fresh clone — `run_conditioning` raised before a single pair was built.
     """
-    from finetune_dpo import find_drum_loop
+    from train.finetune_dpo import find_drum_loop
 
-    runs = sorted(Path("training_data/dpo").glob("*/metadata.json"))
+    runs = sorted((TRAINING_DATA / "dpo").glob("*/metadata.json"))
     if not runs:
         pytest.skip("no tracked preference runs")
     for metadata_path in runs:
@@ -297,7 +299,7 @@ def test_every_shipped_preference_run_can_rebuild_its_conditioning():
 
 def test_missing_drum_loop_is_still_reported():
     """Searching two directories must not turn a missing loop into a silent pass."""
-    from finetune_dpo import find_drum_loop
+    from train.finetune_dpo import find_drum_loop
 
     assert find_drum_loop("no_such_loop_9f3a.wav") is None
 

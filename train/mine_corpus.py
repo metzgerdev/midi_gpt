@@ -16,9 +16,9 @@ chroma rotated together. That is the point of the augmentation: across the twelv
 the rhythm is identical and only the chroma predicts which pitches appear, so the model
 cannot use absolute pitch and must read the chord track instead.
 
-    python mine_corpus.py --corpus ~/path/to/midi                 # bass
-    python mine_corpus.py --corpus ~/path/to/midi --role arp
-    python mine_corpus.py --corpus ~/path/to/midi --filter all    # skip the genre filter
+    python -m train.mine_corpus --corpus ~/path/to/midi                 # bass
+    python -m train.mine_corpus --corpus ~/path/to/midi --role arp
+    python -m train.mine_corpus --corpus ~/path/to/midi --filter all    # skip the genre filter
 """
 
 from __future__ import annotations
@@ -31,14 +31,13 @@ from pathlib import Path
 import mido
 import numpy as np
 
-from chords import infer_chord_track
-from config import (
+from utils.chords import infer_chord_track
+from utils.config import (
     GRID_STEPS_PER_BAR, NOTE_BARS, NOTE_PITCH0, NOTE_STEPS, ROLE_CENTER, ROLE_MONO,
+    TRAINING_DATA,
 )
-from midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
+from utils.midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
 
-BASE = Path(__file__).parent
-TRAINING_DATA = BASE / "training_data"
 
 # Which filenames belong to which role. Bass is one pattern; the melodic role covers the
 # several names a multitrack corpus tends to use for the same thing.

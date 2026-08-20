@@ -10,8 +10,8 @@ original `stems/<role>.mid` where it is. That pair is the training signal:
 Both are evaluated under identical conditioning, rebuilt from the run's metadata.json —
 the same kick grid and chord chroma the original was generated with.
 
-    python finetune_dpo.py                      # both roles, every edited run in output/
-    python finetune_dpo.py --role bass --beta 0.2
+    python -m train.finetune_dpo                      # both roles, every edited run in output/
+    python -m train.finetune_dpo --role bass --beta 0.2
 
 Given a frozen ANCHOR and a trainable POLICY:
 
@@ -48,19 +48,19 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-from audio_features import align_to_grid_tempo, onset_grid
-from checkpoints import latest_ckpt
-from chords import progression_to_track
-from config import (
+from utils.audio_features import align_to_grid_tempo, onset_grid
+from model.checkpoints import latest_ckpt
+from utils.chords import progression_to_track
+from utils.config import (
     CKPT_DIR, DRUM_DIR, GRID_REF_BPM, GRID_STEPS, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI,
     NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
     OUTPUT_DIR, ROLE_CENTER, ROLE_MONO, SAMPLE_RATE,
+    TRAINING_DATA,
 )
-from device import pick_device
-from midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
-from model import HarmonicNoteGPT, generate_notes, note_chord_cond, note_grid_cond
+from utils.device import pick_device
+from utils.midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
+from model.note_model import HarmonicNoteGPT, generate_notes, note_chord_cond, note_grid_cond
 
-TRAINING_DATA = Path(__file__).parent / "training_data"
 
 
 def next_ft_path(role: str) -> Path:
