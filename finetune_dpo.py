@@ -48,16 +48,15 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
-from audio_features import onset_grid
+from audio_features import align_to_grid_tempo, onset_grid
+from checkpoints import latest_ckpt
 from chords import progression_to_track
 from config import (
-    GRID_REF_BPM, GRID_STEPS, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO,
-    NOTE_PITCH0, NOTE_REST, NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE, ROLE_CENTER,
-    ROLE_MONO, SAMPLE_RATE,
+    CKPT_DIR, DRUM_DIR, GRID_REF_BPM, GRID_STEPS, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI,
+    NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    OUTPUT_DIR, ROLE_CENTER, ROLE_MONO, SAMPLE_RATE,
 )
-from make_track import (
-    CKPT_DIR, DRUM_DIR, OUTPUT_DIR, align_to_grid_tempo, latest_ckpt, pick_device,
-)
+from device import pick_device
 from midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
 from model import HarmonicNoteGPT, generate_notes, note_chord_cond, note_grid_cond
 

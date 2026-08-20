@@ -16,14 +16,16 @@ import numpy as np
 import pytest
 import torch
 
-from chords import parse_progression, progression_to_track
+from checkpoints import load_note_model
+from chords import progression_to_track
 from config import (
-    NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS,
-    NOTE_SUSTAIN,
+    CKPT_DIR, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST,
+    NOTE_STEPS, NOTE_SUSTAIN,
 )
+from device import pick_device
 from finetune_dpo import anchor_contexts, kl_to_anchor, to_loader, train_dpo
-from make_track import CKPT_DIR, fit_and_lock, load_note_model, pick_device
 from model import generate_notes, note_chord_cond, note_grid_cond
+from scoring import fit_and_lock
 
 ROUNDS = 5
 SECTIONS = 4

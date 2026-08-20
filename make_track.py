@@ -44,19 +44,17 @@ import librosa
 import numpy as np
 import torch
 
-from audio_features import onset_grid
+from audio_features import align_to_grid_tempo, detect_bpm, onset_grid
+from checkpoints import latest_ckpt, load_note_model
 from chords import NAMES, color_progression, progression_to_track
 from config import (
-    GRID_BARS, GRID_REF_BPM, GRID_STEPS, NOTE_BARS, NOTE_BOS, NOTE_EOS,
-    NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS, SAMPLE_RATE,
+    CKPT_DIR, DRUM_DIR, GRID_BARS, GRID_REF_BPM, GRID_STEPS, NOTE_BARS, NOTE_BOS,
+    NOTE_EOS, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST, NOTE_STEPS, OUTPUT_DIR, SAMPLE_RATE,
 )
+from device import pick_device
 from midi_utils import tokens_to_notes, write_midi
-from model import HarmonicNoteGPT, generate_notes, note_chord_cond, note_grid_cond
-
-BASE = Path(__file__).parent
-CKPT_DIR = BASE / "checkpoints"
-DRUM_DIR = BASE / "drum_samples"                        # conditioning loops live here
-OUTPUT_DIR = BASE / "output"                            # generated MIDI lands here
+from model import generate_notes, note_chord_cond, note_grid_cond
+from scoring import fit_and_lock
 
 
 def drum_loops() -> list[Path]:
@@ -77,36 +75,6 @@ def default_drum() -> Path:
         )
     return loops[0]
 
-
-def detect_bpm(path: Path) -> float | None:
-    """Read a tempo out of the filename: 'house_drums_loop_127bpm' -> 127.
-
-    Filename rather than beat tracking, which is unreliable on two bars of drums and
-    would fail silently. Returns None when there is nothing to go on, and the caller
-    then assumes the loop is already at GRID_REF_BPM.
-    """
-    stem = Path(path).stem.lower()
-    m = re.search(r"(\d{2,3})\s*bpm", stem) or re.search(r"(?<!\d)(\d{2,3})(?!\d)", stem)
-    if m and 60 <= int(m.group(1)) <= 200:
-        return float(m.group(1))
-    return None
-
-
-def align_to_grid_tempo(audio: np.ndarray, loop_bpm: float) -> np.ndarray:
-    """Time-stretch a loop so two of its bars fill the fixed analysis window.
-
-    `onset_grid` always reads the first GRID_FRAMES frames — 3.693 s, which is exactly
-    two bars at GRID_REF_BPM — and splits that into 32 sixteenth bins. A loop at any other
-    tempo has bars of a different length, so its onsets land in the wrong bins and the
-    error compounds across the bar. On a 127 BPM house loop that misplaced 9 of 32
-    steps, including the downbeat kick.
-
-    Stretching only aligns the analysis; the grid is tempo-agnostic in step space, and
-    the output tempo is set separately by --bpm.
-    """
-    if abs(loop_bpm - GRID_REF_BPM) < 0.01:
-        return audio
-    return librosa.effects.time_stretch(audio, rate=GRID_REF_BPM / loop_bpm)
 
 PC = {"C": 0, "C#": 1, "DB": 1, "D": 2, "D#": 3, "EB": 3, "E": 4, "F": 5,
       "F#": 6, "GB": 6, "G": 7, "G#": 8, "AB": 8, "A": 9, "A#": 10, "BB": 10, "B": 11}
@@ -160,29 +128,6 @@ def run_folder(root: Path, slug: str) -> Path:
         out = root / f"{stamp}_{slug}-{attempt}"
         attempt += 1
     return out
-
-
-def pick_device(name: str | None = None) -> torch.device:
-    """CPU by default — measured ~10x faster than MPS for this model.
-
-    Generation is 64 sequential single-token passes through a 0.70M-parameter model.
-    The tensors are small enough that accelerator launch and sync overhead dominates
-    the arithmetic: 632 ms per candidate on MPS against 60 ms on CPU, so an 8-bar run
-    costs ~25 s on GPU and ~2.4 s on CPU.
-
-    The accelerator branch is kept rather than deleted because the trade flips if the
-    sampler is ever batched or the model grows. `--device auto` restores the old
-    behavior. Note that a seed does not carry across devices: MPS and CPU diverge
-    within a few steps, so runs are reproducible on one device, not between two.
-    """
-    if name in ("cpu", "mps", "cuda"):
-        return torch.device(name)
-    if name == "auto":
-        if torch.cuda.is_available():
-            return torch.device("cuda")
-        if torch.backends.mps.is_available():
-            return torch.device("mps")
-    return torch.device("cpu")
 
 
 def parse_key(text: str) -> tuple[str, str]:
@@ -243,44 +188,11 @@ def best_section(model, grid_tok, chord_tok, chroma, grid, temp, base_seed, devi
     return best, best_fl
 
 
-def fit_and_lock(tokens, chroma, grid):
-    """Validation: chord-tone fit + kick-lock for one 4-bar section."""
-    fit = tot = 0
-    for b in range(NOTE_BARS):
-        ch = chroma[b * 16]
-        for t in tokens[b * 16:(b + 1) * 16]:
-            if t >= NOTE_PITCH0:
-                tot += 1; fit += ch[(NOTE_MIDI_LO + (t - NOTE_PITCH0)) % 12] > 0
-    on = np.array([1.0 if t >= NOTE_PITCH0 else 0.0 for t in tokens])
-    def z(x):
-        x = x - x.mean(); s = x.std(); return x / s if s > 1e-8 else x
-    lock = float(np.dot(z(on), z(grid)) / len(grid)) if on.sum() else 0.0
-    return (fit / tot if tot else 0.0), lock
-
-
-def latest_ckpt(role: str) -> Path:
-    """Newest fine-tuned <role>_notes_gpt_ftN.pt (highest N), or the base checkpoint if none.
-
-    On-policy default: generate from the model that already absorbed prior edits, so new
-    hand-edits target the residual taste instead of re-teaching what SFT already learned."""
-    base = CKPT_DIR / f"{role}_notes_gpt.pt"
-    fts = [(int(m.group(1)), p) for p in CKPT_DIR.glob(f"{role}_notes_gpt_ft*.pt")
-           if (m := re.search(r"_ft(\d+)$", p.stem))]
-    return max(fts)[1] if fts else base
-
-
 def resolve_ckpt(role: str, explicit: Path | None, use_sft: bool) -> Path:
     """--<role>-ckpt wins; else latest SFT (default) or the base checkpoint under --base."""
     if explicit is not None:
         return explicit
     return latest_ckpt(role) if use_sft else CKPT_DIR / f"{role}_notes_gpt.pt"
-
-
-def load_note_model(ckpt: Path, device):
-    ck = torch.load(ckpt, map_location=device, weights_only=False)
-    m = HarmonicNoteGPT(ck["config"]).to(device).eval()
-    m.load_state_dict(ck["model"])
-    return m
 
 
 def _ask(prompt: str, default: str, parse):

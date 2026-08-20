@@ -27,12 +27,14 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
 from config import (
-    NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    CKPT_DIR, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    OUTPUT_DIR,
 )
+from checkpoints import latest_ckpt
+from device import pick_device
 from finetune_dpo import (
     base_corpus_loader, next_ft_path, run_conditioning, tokenize_sections,
 )
-from make_track import CKPT_DIR, OUTPUT_DIR, latest_ckpt, pick_device
 from model import HarmonicNoteGPT
 
 

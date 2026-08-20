@@ -30,10 +30,10 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, random_split
 
 from config import (
-    NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_STEPS,
-    NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
+    CKPT_DIR, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0,
+    NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
 )
-from make_track import CKPT_DIR, pick_device
+from device import pick_device
 from model import HarmonicNoteGPT, note_chord_cond, note_grid_cond
 
 BASE = Path(__file__).parent
