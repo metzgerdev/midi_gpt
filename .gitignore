@@ -48,3 +48,4 @@ stem_renders/
 !training_data/dpo/**/stems/
 !training_data/dpo/**/stems/*.mid
 !training_data/drum_loops/*.wav
+.gstack/

@@ -419,3 +419,21 @@ from the project directory:
 uv run --frozen python -m inference.make_track --request "8 bar UKG track in A minor"
 uv run --frozen python -m train.finetune_dpo --role bass
 ```
+
+## UI
+
+A local Streamlit front end for generating and for the fine-tuning loop.
+
+```bash
+uv run --frozen streamlit run ui/app.py
+```
+
+**Generate** maps the CLI flags to controls and shows the run's progression, seed and
+validation scores, with the stems as downloads.
+
+**Fine-tune** is the taste loop: download a stem, edit it in a DAW, upload it back, and
+run DPO. It reports the reward margin and how much KL the run added against its anchor,
+and lists the checkpoint chain each role has accumulated.
+
+There is no audio playback and no piano roll — the stems go into a DAW, which does both
+better.
