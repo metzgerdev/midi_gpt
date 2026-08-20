@@ -21,3 +21,9 @@ dev = [
 
 [tool.uv]
 package = false
+
+[tool.pytest.ini_options]
+# `slow` covers the fine-tuning tests, which run real training rounds and take minutes.
+# `uv run --frozen pytest` skips them; `-m slow` or `-m ""` runs them.
+markers = ["slow: runs real training rounds (minutes, not seconds)"]
+addopts = "-m 'not slow'"

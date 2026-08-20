@@ -1,4 +1,5 @@
 import importlib
+import json
 import random
 import tempfile
 from pathlib import Path
@@ -273,6 +274,32 @@ def test_octave_fit_centres_without_changing_intervals():
 def test_training_scripts_import(module):
     """The retraining path must not rot when the inference code is refactored."""
     importlib.import_module(module)
+
+
+def test_every_shipped_preference_run_can_rebuild_its_conditioning():
+    """The tracked example pairs are the only worked example of the fine-tuning loop.
+
+    Their loop is archived under training_data/drum_loops/ while DRUM_DIR points at
+    drum_samples/, so looking in one place alone left every one of them unusable in a
+    fresh clone — `run_conditioning` raised before a single pair was built.
+    """
+    from finetune_dpo import find_drum_loop
+
+    runs = sorted(Path("training_data/dpo").glob("*/metadata.json"))
+    if not runs:
+        pytest.skip("no tracked preference runs")
+    for metadata_path in runs:
+        name = json.loads(metadata_path.read_text())["drum_loop"]
+        assert find_drum_loop(name) is not None, (
+            f"{metadata_path.parent.name} needs {name}, which is in neither loop directory"
+        )
+
+
+def test_missing_drum_loop_is_still_reported():
+    """Searching two directories must not turn a missing loop into a silent pass."""
+    from finetune_dpo import find_drum_loop
+
+    assert find_drum_loop("no_such_loop_9f3a.wav") is None
 
 
 def test_inferred_chord_matches_the_notes_it_was_built_from():
