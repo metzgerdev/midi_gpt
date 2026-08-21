@@ -6,6 +6,9 @@ pre-fix code passes the "moves" half and fails the "contained" half.
 
 Pairs are synthesised rather than read from training_data/dpo/, so the test does not depend
 on run folders, drum loops, or a mined corpus.
+
+The measure_pairs tests at the bottom are unmarked and run in seconds; everything above
+them is marked slow.
 """
 from __future__ import annotations
 
@@ -20,11 +23,15 @@ from model.checkpoints import load_note_model
 from utils.chords import progression_to_track
 from utils.config import (
     CKPT_DIR, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_REST,
-    NOTE_STEPS, NOTE_SUSTAIN,
+    NOTE_STEPS, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
 )
 from utils.device import pick_device
-from train.finetune_dpo import anchor_contexts, kl_to_anchor, to_loader, train_dpo
-from model.note_model import generate_notes, note_chord_cond, note_grid_cond
+from train.finetune_dpo import (
+    anchor_contexts, kl_to_anchor, measure_pairs, to_loader, train_dpo,
+)
+from model.note_model import (
+    HarmonicNoteGPT, generate_notes, note_chord_cond, note_grid_cond,
+)
 from utils.scoring import fit_and_lock
 
 ROUNDS = 5
@@ -240,3 +247,107 @@ def test_kl_term_is_what_bounds_the_drift():
     assert kls["kl_on"] < kls["kl_off"], (
         f"the KL term did not reduce drift: on={kls['kl_on']:.4f} off={kls['kl_off']:.4f}"
     )
+
+
+# --- measure_pairs: the margin, and the two halves it is built from -------------------
+
+TINY_CFG = {"vocab_size": NOTE_VOCAB_SIZE, "context_length": NOTE_STEPS + 4, "emb_dim": 32,
+            "n_heads": 2, "n_layers": 1, "drop_rate": 0.0, "qkv_bias": False}
+
+
+class SuppressedNoteModel(HarmonicNoteGPT):
+    """A policy that has learned to avoid one pitch, and nothing else.
+
+    `out_head` carries no bias, so shifting a single token's logit after the fact is the
+    cleanest way to move exactly one thing and leave the rest of the model alone.
+    """
+
+    def __init__(self, cfg, token, amount):
+        super().__init__(cfg)
+        self.token, self.amount = token, amount
+
+    def forward(self, *args, **kwargs):
+        logits = super().forward(*args, **kwargs)
+        shift = torch.zeros_like(logits)
+        shift[..., self.token] = self.amount
+        return logits - shift
+
+
+def steady_sequence(pitch_token: int) -> np.ndarray:
+    """BOS, a note struck every fourth step and held, EOS."""
+    tokens = np.full(NOTE_STEPS, NOTE_SUSTAIN, np.int64)
+    tokens[::4] = pitch_token
+    return np.concatenate([[NOTE_BOS], tokens, [NOTE_EOS]]).astype(np.int64)
+
+
+def disjoint_pairs(chosen_token: int, rejected_token: int):
+    """Pairs whose sides share no pitch, so a change to one shows up in isolation."""
+    grid_tok = note_grid_cond(four_on_the_floor())
+    pairs = []
+    for progression in PROGRESSIONS:
+        chord_tok = note_chord_cond(progression_to_track(progression, NOTE_STEPS))
+        sides = []
+        for token in (chosen_token, rejected_token):
+            seq = steady_sequence(token)
+            sides.append((seq[:-1], seq[1:], grid_tok, chord_tok))
+        pairs.append(tuple(sides))
+    return pairs
+
+
+def anchor_and_suppressor(token, amount, seed):
+    """A frozen anchor and a policy identical to it but for one suppressed pitch."""
+    torch.manual_seed(seed)
+    reference = HarmonicNoteGPT(TINY_CFG).eval().requires_grad_(False)
+    policy = SuppressedNoteModel(TINY_CFG, token, amount)
+    policy.load_state_dict(reference.state_dict())
+    return reference, policy.eval().requires_grad_(False)
+
+
+CHOSEN_PITCH, REJECTED_PITCH = NOTE_PITCH0 + 12, NOTE_PITCH0 + 24
+
+
+def test_measure_pairs_reports_zero_when_the_policy_is_the_anchor():
+    torch.manual_seed(0)
+    reference = HarmonicNoteGPT(TINY_CFG).eval().requires_grad_(False)
+    policy = copy.deepcopy(reference)
+    loader = to_loader(disjoint_pairs(CHOSEN_PITCH, REJECTED_PITCH), 2, shuffle=False)
+
+    report = measure_pairs(policy, reference, loader)
+
+    assert report.chosen == pytest.approx(0.0, abs=1e-4)
+    assert report.rejected == pytest.approx(0.0, abs=1e-4)
+    assert report.margin == pytest.approx(0.0, abs=1e-4)
+    assert report.base_loss is None, "no base loader was passed"
+
+
+def test_the_margin_is_exactly_the_difference_of_the_two_reported_halves():
+    """The halves have to explain the number they are printed beside, or they mislead."""
+    reference, policy = anchor_and_suppressor(REJECTED_PITCH, 3.0, seed=1)
+    loader = to_loader(disjoint_pairs(CHOSEN_PITCH, REJECTED_PITCH), 2, shuffle=False)
+
+    report = measure_pairs(policy, reference, loader)
+
+    assert report.margin == pytest.approx(report.chosen - report.rejected, abs=1e-3)
+
+
+def test_the_split_exposes_a_margin_won_by_suppressing_the_rejected_side():
+    """The case the combined margin cannot show.
+
+    This policy has learned nothing about the chosen pitch. It has only pushed down the
+    one the rejected side is built from — which is what DPO does when it takes the cheap
+    route, and what degrades the base distribution, since rejected samples here are drawn
+    on-policy. The margin rises anyway and on its own reads as progress.
+    """
+    reference, policy = anchor_and_suppressor(REJECTED_PITCH, 5.0, seed=2)
+    loader = to_loader(disjoint_pairs(CHOSEN_PITCH, REJECTED_PITCH), 2, shuffle=False)
+
+    report = measure_pairs(policy, reference, loader)
+
+    assert report.margin > 1.0, "the margin should look like progress"
+    assert report.rejected < -1.0, "but the rejected side is what actually moved"
+
+    # main() measures against a `before` of all zeros here, so these are its lifted,
+    # suppressed and moved, and this is the ratio its second warning tests.
+    lifted, suppressed = report.chosen, -report.rejected
+    assert lifted > 0, "renormalisation alone lifts the chosen side a little"
+    assert suppressed / (lifted + suppressed) > 0.7
