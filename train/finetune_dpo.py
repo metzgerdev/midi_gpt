@@ -271,6 +271,37 @@ def train_dpo(policy, anchor, loader, contexts, beta, lr, epochs,
     return kl, lam
 
 
+def measure_pairs(policy, reference, eval_loader, base_loader=None, weights=None,
+                  device=None):
+    """Reward margin and preference accuracy, plus base-corpus loss if available.
+
+    Module level rather than a closure for the same reason `train_dpo` is: so tests can
+    drive it without standing up a run folder.
+    """
+    device = device or next(policy.parameters()).device
+    was_training = policy.training
+    policy.eval()
+    margins, base, batches = [], 0.0, 0
+    with torch.no_grad():
+        for xc, yc, xr, yr, g, c in eval_loader:
+            xc, yc, xr, yr, g, c = (t.to(device) for t in (xc, yc, xr, yr, g, c))
+            margins.append(
+                (sequence_logprob(policy, xc, yc, g, c) - sequence_logprob(reference, xc, yc, g, c))
+                - (sequence_logprob(policy, xr, yr, g, c) - sequence_logprob(reference, xr, yr, g, c))
+            )
+        if base_loader is not None:
+            for xb, yb, gb, cb in base_loader:
+                xb, yb, gb, cb = (t.to(device) for t in (xb, yb, gb, cb))
+                base += F.cross_entropy(
+                    policy(xb, cond=None, cond_seq=gb, chord_seq=cb).flatten(0, 1),
+                    yb.flatten(), weight=weights).item()
+                batches += 1
+    policy.train(was_training)
+    margins = torch.cat(margins)
+    return (margins.mean().item(), (margins > 0).float().mean().item(),
+            base / batches if batches else None)
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -359,30 +390,8 @@ def main(argv=None) -> int:
             print(f"[{role}] no mined corpus in training_data/ — skipping the regression check",
                   flush=True)
 
-        def measure():
-            """Reward margin and preference accuracy, plus base-corpus loss if available."""
-            policy.eval()
-            margins, base, batches = [], 0.0, 0
-            with torch.no_grad():
-                for xc, yc, xr, yr, g, c in eval_loader:
-                    xc, yc, xr, yr, g, c = (t.to(device) for t in (xc, yc, xr, yr, g, c))
-                    margins.append(
-                        (sequence_logprob(policy, xc, yc, g, c) - sequence_logprob(reference, xc, yc, g, c))
-                        - (sequence_logprob(policy, xr, yr, g, c) - sequence_logprob(reference, xr, yr, g, c))
-                    )
-                if base_loader is not None:
-                    for xb, yb, gb, cb in base_loader:
-                        xb, yb, gb, cb = (t.to(device) for t in (xb, yb, gb, cb))
-                        base += F.cross_entropy(
-                            policy(xb, cond=None, cond_seq=gb, chord_seq=cb).flatten(0, 1),
-                            yb.flatten(), weight=weights).item()
-                        batches += 1
-            policy.train()
-            margins = torch.cat(margins)
-            return (margins.mean().item(), (margins > 0).float().mean().item(),
-                    base / batches if batches else None)
-
-        margin0, acc0, base0 = measure()
+        before = measure_pairs(policy, reference, eval_loader,
+                               base_loader, weights, device)
 
         # Budget what this run adds, not the gap earlier rounds already opened.
         kl_start = 0.0
@@ -393,7 +402,8 @@ def main(argv=None) -> int:
         kl, _ = train_dpo(policy, reference, loader, contexts, beta=args.beta, lr=args.lr,
                           epochs=args.epochs, kl_target=kl_start + args.kl_target,
                           kl_lambda=args.kl_lambda, device=device)
-        margin1, acc1, base1 = measure()
+        after = measure_pairs(policy, reference, eval_loader,
+                              base_loader, weights, device)
 
         out_path = next_ft_path(role)
         torch.save({"model": policy.state_dict(), "config": saved["config"], "method": "dpo",
@@ -402,17 +412,18 @@ def main(argv=None) -> int:
                     "seed": args.seed, "kl_target": args.kl_target, "kl_final": kl,
                     "pairs": len(pairs) // 12}, out_path)
 
-        print(f"[{role}] reward margin {margin0:+.3f} -> {margin1:+.3f}   "
-              f"preference accuracy {acc0:.0%} -> {acc1:.0%}")
+        print(f"[{role}] reward margin {before[0]:+.3f} -> {after[0]:+.3f}   "
+              f"preference accuracy {before[1]:.0%} -> {after[1]:.0%}")
         if contexts is not None:
             added = kl - kl_start
             verdict = ("ok" if added <= args.kl_target * 1.5
                        else "WARNING: this run went over the KL budget")
             print(f"[{role}] KL from {anchor_path.name} {kl_start:.4f} -> {kl:.4f}   "
                   f"this run added {added:+.4f} of {args.kl_target:.3f}   {verdict}")
-        if base0 is not None:
-            verdict = "ok" if base1 < base0 * 1.15 else "WARNING: base distribution regressed >15%"
-            print(f"[{role}] base-corpus loss {base0:.3f} -> {base1:.3f}   {verdict}")
+        if before[2] is not None:
+            verdict = ("ok" if after[2] < before[2] * 1.15
+                       else "WARNING: base distribution regressed >15%")
+            print(f"[{role}] base-corpus loss {before[2]:.3f} -> {after[2]:.3f}   {verdict}")
         print(f"[{role}] saved {out_path.name} — make_track.py will now use it by default; "
               f"--base runs the untuned models", flush=True)
     return 0
