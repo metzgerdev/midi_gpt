@@ -119,15 +119,18 @@ the rejected sample, your edit is the chosen one — and because both sit in the
 twelve keys, and optimizes:
 
 ```
-r(seq)  = beta * ( logP_policy(seq) - logP_reference(seq) )
+r(seq)  = beta * ( logP_policy(seq) - logP_anchor(seq) )
 margin  = r(chosen) - r(rejected)
-loss    = -log sigmoid(margin)
+loss    = -log sigmoid(margin) + lambda * KL(policy || anchor)
 ```
 
-The reference is a frozen copy of the starting checkpoint and `beta` bounds how far the
-policy may drift from it. Defaults are beta 0.1, learning rate 1e-5, 15 epochs. Because
-chosen and rejected are both exactly 64 steps, the length bias that affects DPO on
-variable-length text cannot occur here.
+The policy starts at the highest `ftN`; the anchor is a *different*, fixed checkpoint —
+by default the untuned base, so drift is measured from one place across rounds rather
+than compounding. `beta` only scales the reward and cannot bound drift on its own. The
+KL term does, with `lambda` steered every step to hold `--kl-target`. Defaults are beta
+0.1, learning rate 1e-5, 15 epochs, KL budget 0.05 per run. Because chosen and rejected
+are both exactly 64 steps, the length bias that affects DPO on variable-length text
+cannot occur here.
 
 Pairs that tokenize identically are skipped. Velocity and sub-grid timing edits fall into
 this category — the representation cannot express them — so edits that change *which
@@ -157,10 +160,19 @@ uv run --frozen python -m train.finetune_dpo
 uv run --frozen python -m train.finetune_dpo --role bass --beta 0.2 --epochs 20
 ```
 
-The run reports a reward margin and preference accuracy — both should rise — and, if the
-mined corpus is present, the loss on it before and after, which should barely move. A
-large jump there means the model drifted off what it already knew; raise `--beta` or cut
-`--epochs`.
+The run reports a reward margin and preference accuracy, then the two halves the margin
+is built from — the chosen and rejected log-ratios against the anchor. Watch the halves.
+The margin is the quantity being optimized, measured on the very pairs it trained on, so
+it rises close to by construction; what it cannot show is *how*. DPO can win it by making
+your edit more likely or by making the model's own output less likely, and since the
+rejected sample was drawn from the checkpoint the policy starts at, that output is a
+bassline the model would ordinarily play. The run warns when the chosen side does not
+rise at all, or when more than 70% of the gain came from pushing the rejected side down.
+
+If the mined corpus is present it also reports the loss on it before and after, which
+should barely move. That one is genuinely held out from the pairs, so it is the real
+regression guard. A large jump means the model drifted off what it already knew: lower
+`--kl-target` or cut `--epochs`. Raising `--beta` will not help.
 
 `finetune_sft.py` is the lighter alternative: it trains on the edit alone rather than
 the pair, so it needs no original and pulls toward what you kept without pushing away
