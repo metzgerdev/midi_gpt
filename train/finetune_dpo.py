@@ -28,6 +28,12 @@ from one place across rounds instead of compounding.
 Chosen and rejected are both exactly NOTE_STEPS long, so the length bias that affects DPO
 on variable-length text cannot arise here.
 
+The reported margin is split into the two halves it is built from. DPO can raise it by
+making your edit more likely OR by making the model's own output less likely, and here
+the rejected sample is on-policy — a representative bassline you tweaked, not an outlier
+— so pushing it down suppresses the general distribution. A margin that rose because the
+rejected side collapsed is a warning, not a success, and the combined number hides that.
+
 Writes the next checkpoint in the ftN sequence. make_track.py selects the highest ftN
 automatically, so the next batch you edit comes from the model that absorbed this one.
 """
@@ -40,6 +46,7 @@ import glob
 import json
 import re
 from pathlib import Path
+from typing import NamedTuple
 
 import librosa
 import mido
@@ -271,8 +278,23 @@ def train_dpo(policy, anchor, loader, contexts, beta, lr, epochs,
     return kl, lam
 
 
+class Report(NamedTuple):
+    """One evaluation pass over the preference pairs.
+
+    `chosen` and `rejected` are the halves the margin is built from, kept apart because
+    their difference hides how it moved. Both are mean per-sequence log-ratios against
+    the anchor, and both are pre-beta — multiply by --beta for what the sigmoid saw.
+    """
+
+    margin: float
+    accuracy: float
+    chosen: float
+    rejected: float
+    base_loss: float | None
+
+
 def measure_pairs(policy, reference, eval_loader, base_loader=None, weights=None,
-                  device=None):
+                  device=None) -> Report:
     """Reward margin and preference accuracy, plus base-corpus loss if available.
 
     Module level rather than a closure for the same reason `train_dpo` is: so tests can
@@ -281,14 +303,14 @@ def measure_pairs(policy, reference, eval_loader, base_loader=None, weights=None
     device = device or next(policy.parameters()).device
     was_training = policy.training
     policy.eval()
-    margins, base, batches = [], 0.0, 0
+    chosen, rejected, base, batches = [], [], 0.0, 0
     with torch.no_grad():
         for xc, yc, xr, yr, g, c in eval_loader:
             xc, yc, xr, yr, g, c = (t.to(device) for t in (xc, yc, xr, yr, g, c))
-            margins.append(
-                (sequence_logprob(policy, xc, yc, g, c) - sequence_logprob(reference, xc, yc, g, c))
-                - (sequence_logprob(policy, xr, yr, g, c) - sequence_logprob(reference, xr, yr, g, c))
-            )
+            chosen.append(sequence_logprob(policy, xc, yc, g, c)
+                          - sequence_logprob(reference, xc, yc, g, c))
+            rejected.append(sequence_logprob(policy, xr, yr, g, c)
+                            - sequence_logprob(reference, xr, yr, g, c))
         if base_loader is not None:
             for xb, yb, gb, cb in base_loader:
                 xb, yb, gb, cb = (t.to(device) for t in (xb, yb, gb, cb))
@@ -297,9 +319,11 @@ def measure_pairs(policy, reference, eval_loader, base_loader=None, weights=None
                     yb.flatten(), weight=weights).item()
                 batches += 1
     policy.train(was_training)
-    margins = torch.cat(margins)
-    return (margins.mean().item(), (margins > 0).float().mean().item(),
-            base / batches if batches else None)
+    chosen, rejected = torch.cat(chosen), torch.cat(rejected)
+    margins = chosen - rejected
+    return Report(margins.mean().item(), (margins > 0).float().mean().item(),
+                  chosen.mean().item(), rejected.mean().item(),
+                  base / batches if batches else None)
 
 
 def main(argv=None) -> int:
@@ -412,18 +436,37 @@ def main(argv=None) -> int:
                     "seed": args.seed, "kl_target": args.kl_target, "kl_final": kl,
                     "pairs": len(pairs) // 12}, out_path)
 
-        print(f"[{role}] reward margin {before[0]:+.3f} -> {after[0]:+.3f}   "
-              f"preference accuracy {before[1]:.0%} -> {after[1]:.0%}")
+        print(f"[{role}] reward margin {before.margin:+.3f} -> {after.margin:+.3f}   "
+              f"preference accuracy {before.accuracy:.0%} -> {after.accuracy:.0%}")
+        print(f"[{role}] log-ratio vs {anchor_path.name}   "
+              f"chosen {before.chosen:+.3f} -> {after.chosen:+.3f}   "
+              f"rejected {before.rejected:+.3f} -> {after.rejected:+.3f}")
+
+        # Which half moved the margin. Rejected is on-policy here, so winning by pushing
+        # it down means suppressing basslines the model would ordinarily play.
+        lifted = after.chosen - before.chosen
+        suppressed = before.rejected - after.rejected
+        moved = lifted + suppressed                     # == after.margin - before.margin
+        if moved <= 1e-6:
+            print(f"[{role}] the margin did not rise — expected when the KL budget binds")
+        elif lifted <= 0:
+            print(f"[{role}] WARNING: the entire margin came from suppressing the model's "
+                  f"own output — your edit got {lifted:+.3f} less likely, not more")
+        elif suppressed / moved > 0.7:
+            print(f"[{role}] WARNING: {suppressed / moved:.0%} of the margin came from "
+                  f"suppressing the model's own output rather than from making your edit "
+                  f"more likely")
         if contexts is not None:
             added = kl - kl_start
             verdict = ("ok" if added <= args.kl_target * 1.5
                        else "WARNING: this run went over the KL budget")
             print(f"[{role}] KL from {anchor_path.name} {kl_start:.4f} -> {kl:.4f}   "
                   f"this run added {added:+.4f} of {args.kl_target:.3f}   {verdict}")
-        if before[2] is not None:
-            verdict = ("ok" if after[2] < before[2] * 1.15
+        if before.base_loss is not None:
+            verdict = ("ok" if after.base_loss < before.base_loss * 1.15
                        else "WARNING: base distribution regressed >15%")
-            print(f"[{role}] base-corpus loss {before[2]:.3f} -> {after[2]:.3f}   {verdict}")
+            print(f"[{role}] base-corpus loss {before.base_loss:.3f} -> "
+                  f"{after.base_loss:.3f}   {verdict}")
         print(f"[{role}] saved {out_path.name} — make_track.py will now use it by default; "
               f"--base runs the untuned models", flush=True)
     return 0
