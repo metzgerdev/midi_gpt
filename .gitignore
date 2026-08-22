@@ -10,6 +10,12 @@ polyphony.md
 # Generated MIDI
 output/
 
+# Experimental training runs. These must live OUTSIDE checkpoints/, not merely be
+# ignored: latest_ckpt() globs CKPT_DIR and takes the highest ftN on disk, so an
+# experimental checkpoint left there silently becomes the default for generation AND
+# the policy start for the next DPO round. Pass --bass-ckpt / --ref-ckpt to use one.
+experiments/
+
 # Ableton analysis sidecars
 *.asd
 
