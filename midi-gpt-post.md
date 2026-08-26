@@ -129,15 +129,10 @@ From the base checkpoint, I generated 10 outputs, and edited them to my preferen
 **DPO Fine Tune**
 
 
-DPO allows further fine tuning to allow for outputs to match the user's preference. DPO increases the gap between preferred distribution and rejected distribution.
+DPO fine-tunes further toward the user's preference. It optimises an implicit reward — how much more likely the policy makes a clip than the frozen anchor does — and widens the gap between that reward for the clip you kept and the clip you replaced, while a KL term holds the policy near the anchor. Which half moves matters: the gap widens either by making your edit more likely or by making the original less likely, and since the rejected clip is on-policy, pushing it down suppresses the general distribution.
 
 
-The steps for DPO includes:
-1. generate a run
-2. open the MIDI in a DAW and edit
-
-
-sequence_logprob calculates the log probability of the model generating the exact clip. policy are the weights used to generate the clip, and anchor are the base weights. 
+sequence_logprob sums the per-step log probabilities of one exact clip — how likely the model was to produce that precise sequence, under the grid and chord it was conditioned on (g and c below). The policy is the model being trained; it starts as the checkpoint that generated the clip. The anchor is frozen, and by default it is the untuned base model rather than whichever checkpoint you started from, so drift is measured from one fixed place instead of compounding across rounds. Both models score both clips — hence the four lines.
 
 
 ```python
@@ -151,7 +146,7 @@ margin = beta * ((policy_chosen - anchor_chosen)
                 - (policy_rejected - anchor_rejected))
 loss   = -F.logsigmoid(margin).mean() + lam * kl_to_anchor(policy, contexts)
 ```
-![Over 30 DPO rounds on 24 held-out pairs, log P(chosen) rises and log P(rejected) falls, widening the implicit reward margin to +7.53](figures/dpo-rounds-reward.png)
+![Implicit reward over 30 DPO rounds on 24 held-out pairs: r(chosen) climbs to +5.17 while r(rejected) falls to -2.36, a margin of +7.53](figures/dpo-reward-margin.png)
 
 
 
