@@ -71,7 +71,7 @@ Below is a summary on how the four signals get converted into 128 dimension embe
 
 **Transformer**
 
-The backbone is a small GPT-2. At roughly 700k parameters, the model can easily run on a laptop.
+The backbone is a small GPT-2. At roughly 620k parameters, the model can easily run on a laptop.
 
 | key | value | what it is |
 | --- | --- | --- |
@@ -84,14 +84,19 @@ The backbone is a small GPT-2. At roughly 700k parameters, the model can easily 
 | `drop_rate` | 0.1 | |
 | `qkv_bias` | False | |
 
-That comes to 686,848 parameters, 593,664 of them — 86% — in the three transformer blocks.
-The embeddings, the four projections and the output head account for well under a tenth of
-the model between them.
+That comes to 621,184 parameters, 593,664 of them — 96% — in the three transformer blocks.
+The embeddings, the three projections and the output head are the small change.
 
-One line of that table is a lie of omission: 65,664 parameters sit in `cond_proj`, a CLAP
-audio-conditioning path that is never activated. Every call passes `cond=None`. The layer
-is retained only because it exists in the trained checkpoints' state dictionaries, so the
-model that actually runs is 621,184 parameters.
+It was 686,848 until recently. A fourth projection sat in the model, `cond_proj`, a
+`Linear(512, 128)` meant to take a CLAP embedding of a reference audio clip — the hook for
+"make it sound like this track". Nothing in the repo could produce such a vector; there was
+no encoder and never had been. Every call passed `cond=None`, so the layer never entered
+the forward pass and never took a gradient, and its 65,664 weights were still the random
+numbers PyTorch initialised them with — bit-identical across all eight checkpoints, in
+files where every layer that did train had moved.
+
+Deleting it changed no output, which is the useful thing about a layer that never ran: the
+generated MIDI is identical token for token, and there is a test that pins exactly that.
 
 
 **Training**
