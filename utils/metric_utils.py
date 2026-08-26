@@ -1,10 +1,10 @@
 """Metrics behind the preference charts: did fine-tuning move toward the edits?
 
-This is the measurement code for `preference-shift.html` ("Did fine-tuning move
-toward my edits?"). The charts are not training curves — no SFT or DPO run in this
-repo ever logged its history — so every number is measured after the fact by loading
-a finished checkpoint and scoring it. They are endpoint measurements: where a
-checkpoint landed, not the path it took.
+This is the measurement code behind the preference chart in the write-up ("Did
+fine-tuning move toward my edits?"). The charts are not training curves — no SFT or
+DPO run in this repo ever logged its history — so every number is measured after the
+fact by loading a finished checkpoint and scoring it. They are endpoint measurements:
+where a checkpoint landed, not the path it took.
 
 THE QUESTION
 ------------

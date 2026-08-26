@@ -7,10 +7,11 @@ __pycache__/
 # Working design notes, kept local
 polyphony.md
 
-# Screenshots of the write-up's diagrams, at ~450 KB each. The *.html diagrams next
-# to them are the source and are tracked; re-open one and screenshot it rather than
-# committing the render. figures/ is the exception — those are the images
-# midi-gpt-post.md actually inlines, and nothing in the repo regenerates them.
+# Scratch renders, at ~450 KB each — preference_shift.ipynb still writes here. The
+# tracked figures are figures/, which is what midi-gpt-post.md inlines; those are
+# screenshots with no generator left in the repo, so do not delete them expecting a
+# rebuild. The diagram sources that produced them were removed at 2026-08-26 and are
+# recoverable from git history if a variant is ever needed again.
 images/
 
 # Generated MIDI
