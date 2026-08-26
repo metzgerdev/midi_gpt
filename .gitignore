@@ -7,6 +7,12 @@ __pycache__/
 # Working design notes, kept local
 polyphony.md
 
+# Screenshots of the write-up's diagrams, at ~450 KB each. The *.html diagrams next
+# to them are the source and are tracked; re-open one and screenshot it rather than
+# committing the render. figures/ is the exception — those are the images
+# midi-gpt-post.md actually inlines, and nothing in the repo regenerates them.
+images/
+
 # Generated MIDI
 output/
 

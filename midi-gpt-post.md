@@ -1,0 +1,130 @@
+**Midi GPT**
+
+
+A small language model that generates MIDI, trained on a curated data set, and fine tuned further through Direct Preference Optimization.
+
+
+**Motivation**
+
+
+I produce electronic music, and need a tool to help me get past creative blocks. A short musical pattern is often enough to build into something bigger. Existing MIDI generators produce outputs that are not in my style or voice. Midi GPT is aimed at a narrow slice of EDM and can be further fine tuned to a user's preference. 
+
+
+**Data Preparation**
+
+
+I trained two models, one for bass and one for melody. I curated a collection of MIDI patterns from House and UK Garage.
+
+
+Each training example is one 4-bar phrase, reduced to a single voice and written as one token per sixteenth note indicating a pitch, a rest, or a sustain. A distilled representation of music pinned to rhythm and pitch.
+
+
+Each chunk carries two additional signals derived from itself: **grid** (its own note-ons) and **chord** (inferred per bar by matching a pitch-class histogram against chord templates). The corpus is thus self-supervised.
+
+
+Every chunk is transposed through all twelve keys - 354 unique bass phrases become 4,248 training examples, and 288 melody phrases become 3,456.  This data augmentation also removes the correlation between rhythm being tied to a certain pitch, so that the model doesn't overfit rhythm with pitch.
+
+
+**Token Vocabulary**
+
+
+The vocabulary is 65 symbols: REST = 0, SUSTAIN = 1, 61 pitches (MIDI 24–84, C1 through C6), then BOS - (Beginning of Sequence) = 63 and EOS (End of Sequence) = 64.  The tokenization is a direct mapping mapping of the symbol to token id.
+![The 65-token vocabulary laid over a keyboard: REST and SUSTAIN, 61 pitch ids from C1 to C6, then BOS and EOS](figures/vocab-token-ids.png)
+
+
+The model has a simple job at each step — output a pitch, a rest, or a sustain.  The sequence [2, 1, 1, 1] is note C1 sustained for a quarter note (each step is a 1/16th note). The resulting midi is edited in a digital audio workstation. 
+
+**Embedding**
+
+A learned embedding layer converts the token ids to a 128 dimension embedding vector.  Using W as NN.Embedding(65, 128), looking up row 14, which corresponds to note C2, is the same as one hot encocded (14) @ W.  The weights of W are updated during training.  
+![The nn.Embedding(65, 128) table, one row per token, with row 14 (C2) highlighted](figures/embedding-table.png) 
+![One-hot(14) times W equals row 14 of the table](figures/embedding-lookup.png)  
+A similar lookup opertation is performed to convert position (step) index into a position embedding.
+
+Chords are represented by a chord chroma depicted below.  Each index corresponds to a note, and a chord is the composition of multiple notes.  
+![A 12-slot chroma vector for A minor, with C, E and A set to 1 and the rest 0](figures/chord-chroma.png)
+
+The chord is projected into an embedding vector through matrix multiplication with a linear layer (NN.Linear(12, 128)). The resulting operation is represented by:  chord_proj(A minor) = W[:,C] + W[:,E] + W[:,A] + b
+
+![The three active pitch-class rows of the linear layer summing into one 128-d vector](figures/chord-projection.png)
+The grid is a scalar value 0 or 1, for each timestep, projected through a linear layer.  
+
+**Input Embedding**
+
+The token embedding is enriched with signals from the position (current step), the grid projection (rhythm conditioning), and the chord projection (what chord is playing at the current step). The input embedding is:
+
+
+x = tok_emb + pos_emb + grid_proj + chord_proj
+
+The position embedding represents order, where the current step sits in the sequence. The grid projection is the note onset pattern or rhythm.  At training time it is derived from the stem's own note-ons, and at inference it comes from the kick track of a user-selected drum groove — four-on-the-floor house or two-step UK Garage.
+
+The chord projection is a 12-dimensional chroma vector. At training time it is inferred from the training example itself. At inference it is derived deterministically from the user's key and progression. 
+
+Below is a summary on how the four signals get converted into 128 dimension embedding vector.  The four vectors are then summed. 
+
+| signal | shape in | how it becomes 128-d |
+| --- | --- | --- |
+| token | 1 id (0–64) | `nn.Embedding(65, 128)` — the id indexes a row |
+| position | 1 index (0–67) | `nn.Embedding(68, 128)` — the step indexes a row |
+| grid | 1 scalar (0 or 1) | `nn.Linear(1, 128)` — one weight vector scaled by the onset |
+| chord | 12-d chroma | `nn.Linear(12, 128)` — a learned map from pitch classes |
+
+**Transformer**
+
+The backbone is a small GPT-2: 3 transformer blocks, 4 attention heads, 128-dimensional embeddings, dropout 0.1, and a context length of 68 (BOS + 64 steps + EOS, with room to spare). At roughly 700k parameters, the model can easily run on a laptop.
+
+
+**Training**
+
+Training is teacher-forced. A single forward pass covers all 65 positions at once with a causal mask preventing lookahead, so an epoch is fast even on a laptop CPU. AdamW, learning rate 5e-4, weight decay 0.05, batch size 16, 150 epochs, 15% held out for validation, best validation loss kept.
+
+**SFT**
+
+
+From the base checkpoint, I generated 10 outputs, and edited them to my preference.  These edits were transposed through a range of 12 semitones and concatented with the existing corpus into a shuffled loader for SFT.  This mixture, along with a low learning rate (1e-4), and only 8 epochs, limits drift from the base model.  As seen below, the goal is to subtly shift the distribution towards the preference, but not destroy the base model.
+
+
+![Mean log P(clip) across base, ft1, ft2 and ft3: the chosen line rises from -133 to -7, the rejected line lags](figures/sft-preference-shift.png)
+
+
+**DPO Fine Tune**
+
+
+DPO allows further fine tuning to allow for outputs to match the user's preference. DPO increases the gap between preferred distribution and rejected distribution.
+
+
+The steps for DPO includes:
+1. generate a run
+2. open the MIDI in a DAW and edit
+
+
+sequence_logprob calculates the log probability of the model generating the exact clip. policy are the weights used to generate the clip, and anchor are the base weights. 
+
+
+```python
+policy_chosen   = sequence_logprob(policy, xc, yc, g, c)
+policy_rejected = sequence_logprob(policy, xr, yr, g, c)
+anchor_chosen   = sequence_logprob(anchor, xc, yc, g, c)   # frozen
+anchor_rejected = sequence_logprob(anchor, xr, yr, g, c)   # frozen
+
+
+margin = beta * ((policy_chosen - anchor_chosen)
+                - (policy_rejected - anchor_rejected))
+loss   = -F.logsigmoid(margin).mean() + lam * kl_to_anchor(policy, contexts)
+```
+![Over 30 DPO rounds on 24 held-out pairs, log P(chosen) rises and log P(rejected) falls, widening the implicit reward margin to +7.53](figures/dpo-rounds-reward.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
