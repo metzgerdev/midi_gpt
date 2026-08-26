@@ -28,7 +28,7 @@ Every chunk is transposed through all twelve keys - 354 unique bass phrases beco
 **Token Vocabulary**
 
 
-The vocabulary is 65 symbols: REST = 0, SUSTAIN = 1, 61 pitches (MIDI 24–84, C1 through C6), then BOS - (Beginning of Sequence) = 63 and EOS (End of Sequence) = 64.  The tokenization is a direct mapping mapping of the symbol to token id.
+The vocabulary is 65 symbols: REST = 0, SUSTAIN = 1, 61 pitches (MIDI 24–84, C1 through C6), then BOS - (Beginning of Sequence) = 63 and EOS (End of Sequence) = 64.  The tokenization is a direct mapping of the symbol to token id.
 ![The 65-token vocabulary laid over a keyboard: REST and SUSTAIN, 61 pitch ids from C1 to C6, then BOS and EOS](figures/vocab-token-ids.png)
 
 
@@ -36,31 +36,24 @@ The model has a simple job at each step — output a pitch, a rest, or a sustain
 
 **Embedding**
 
-A learned embedding layer converts the token ids to a 128 dimension embedding vector.  Using W as NN.Embedding(65, 128), looking up row 14, which corresponds to note C2, is the same as one hot encocded (14) @ W.  The weights of W are updated during training.  
-![The nn.Embedding(65, 128) table, one row per token, with row 14 (C2) highlighted](figures/embedding-table.png) 
-![One-hot(14) times W equals row 14 of the table](figures/embedding-lookup.png)  
-A similar lookup opertation is performed to convert position (step) index into a position embedding.
+Every token id becomes a 128-d vector by indexing a row of `nn.Embedding(65, 128)` — row 14 is C2. The lookup is exactly `one_hot(14) @ W`, worth seeing once because it explains the other three signals too.
 
-Chords are represented by a chord chroma depicted below.  Each index corresponds to a note, and a chord is the composition of multiple notes.  
+![The nn.Embedding(65, 128) table, one row per token, with row 14 (C2) highlighted](figures/embedding-table.png)
+![One-hot(14) times W equals row 14 of the table](figures/embedding-lookup.png)
+
+Position indexes its own table. Grid and chord are projected rather than looked up, since their inputs are values, not ids. A chord is a 12-slot chroma, one slot per pitch class:
+
 ![A 12-slot chroma vector for A minor, with C, E and A set to 1 and the rest 0](figures/chord-chroma.png)
 
-The chord is projected into an embedding vector through matrix multiplication with a linear layer (NN.Linear(12, 128)). The resulting operation is represented by:  chord_proj(A minor) = W[:,C] + W[:,E] + W[:,A] + b
+`nn.Linear(12, 128)` maps it up, which for A minor is just three columns and a bias:
+
+chord_proj(A minor) = W[:,C] + W[:,E] + W[:,A] + b
 
 ![The three active pitch-class rows of the linear layer summing into one 128-d vector](figures/chord-projection.png)
-The grid is a scalar value 0 or 1, for each timestep, projected through a linear layer.  
 
-**Input Embedding**
-
-The token embedding is enriched with signals from the position (current step), the grid projection (rhythm conditioning), and the chord projection (what chord is playing at the current step). The input embedding is:
-
+All four land in the same 128-d space and are summed:
 
 x = tok_emb + pos_emb + grid_proj + chord_proj
-
-The position embedding represents order, where the current step sits in the sequence. The grid projection is the note onset pattern or rhythm.  At training time it is derived from the stem's own note-ons, and at inference it comes from the kick track of a user-selected drum groove — four-on-the-floor house or two-step UK Garage.
-
-The chord projection is a 12-dimensional chroma vector. At training time it is inferred from the training example itself. At inference it is derived deterministically from the user's key and progression. 
-
-Below is a summary on how the four signals get converted into 128 dimension embedding vector.  The four vectors are then summed. 
 
 | signal | shape in | how it becomes 128-d |
 | --- | --- | --- |
@@ -68,6 +61,8 @@ Below is a summary on how the four signals get converted into 128 dimension embe
 | position | 1 index (0–67) | `nn.Embedding(68, 128)` — the step indexes a row |
 | grid | 1 scalar (0 or 1) | `nn.Linear(1, 128)` — one weight vector scaled by the onset |
 | chord | 12-d chroma | `nn.Linear(12, 128)` — a learned map from pitch classes |
+
+Grid and chord are the two you control. In training both come from the phrase itself — the stem's own note-ons, and the chroma inferred per bar. At inference the grid comes from the kick of a chosen drum groove, four-on-the-floor house or two-step UK Garage, and the chord from your key and progression.
 
 **Transformer**
 
