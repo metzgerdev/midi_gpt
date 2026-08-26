@@ -4,43 +4,37 @@ Small language model trained on house and uk garage patterns.  Provide a drum lo
 # Why I built this model
 As a music producer, sitting down and starting a blank DAW session can feel insurmountable.  Music is built from small beginnings, and a short catchy loop can be just enough to get creativity flowing.  Even better if the midi generated has been tuned to your taste.  This is a small parameter model, runs locally, and generates midi in a couple of seconds. I chose midi generation to preserve a human in the loop control, and also for maximum sound fidelity since audio is created by the DAW.  
 
-# Training Data Generation
+# What the models were trained on
 
-The note models were trained on MIDI mined from a multitrack corpus of 19,356 files by
-`mine_corpus.py`. Selection is by filename and path, then content-hash dedup:
+Both note models learned from MIDI mined out of a multitrack house and UK garage
+collection: bass stems for the bass model, and arp/pluck/lead/melody/keys stems for the
+melodic one.
 
-```
-19,356   .mid in the corpus
- 6,637   filename matches *bass*      (*arp* *pluck* *lead* *melody* *keys* for the arp role)
- 1,483   path contains ukg | garage | 2step
-   393   unique after content-MD5 dedup
-   354   yielded at least one usable chunk
-```
+Each training example is one 4-bar phrase, reduced to a single voice and written as one
+token per sixteenth note — strike a pitch, hold the last one, or rest. There is no
+velocity, no polyphony, and no duration field: a note's length is just how many holds
+follow it.
 
-Each surviving file is merged across tracks, note-ons paired with note-offs, quantized to
-a sixteenth grid, and mono-reduced — lowest note for bass so a reese stack collapses to
-its fundamental, highest for arp so a chord keeps its top line. Pitches are octave-shifted
-so the median sits near E2 for bass and C4 for arp, then split into 4-bar, 64-step chunks.
-Chunks with fewer than three notes are dropped.
+Alongside every phrase sit the two signals the model is conditioned on, both derived from
+the phrase itself rather than labelled by hand:
 
-Both conditioning signals are self-supervised. The onset grid is the stem's own note-ons.
-The chord chroma is inferred per bar: count pitch classes, score that histogram against 72
-chord templates, keep the best match.
+- **grid** — where the notes land, a rhythm skeleton
+- **chord** — which pitch classes are sounding, one chord per bar, a harmony skeleton
 
-Every chunk is then written twelve times, transposed through all keys, with the notes and
-the chroma rotated **together**. That is what forces the model to read the chord track:
-across the twelve copies the rhythm is identical and only the chroma predicts which
-pitches appear, so absolute pitch carries no information. Measured over the finished
-corpus, the pitch-class distribution is flat to within 2% of uniform.
+Every phrase is stored in all twelve keys, with the notes and the chord rotated together.
+That is what forces the model to read the chord track: across the twelve copies the rhythm
+is identical, so only the chord predicts which pitches appear.
 
-The result is 4,248 bass and 3,456 arp examples, each an `.npz` holding
-`tokens (64,)`, `grid (64,)` and `chord (64, 12)`.
+|                        | bass | arp |
+| ---------------------- | ---- | --- |
+| distinct 4-bar phrases | 72   | 66  |
+| distinct rhythms       | 40   | 39  |
+| keys per phrase        | 12   | 12  |
+| steps per phrase       | 64   | 64  |
 
-Two properties worth knowing. The corpus was already transposed to twelve keys before
-mining, and content-hash dedup cannot detect a transposition, so roughly 151 distinct
-songs sit behind the 354 nominally unique sources. And the chord labels come from a
-monophonic line — 35% of bars supply the template matcher a single pitch class, where
-many templates tie and the winner is decided by enumeration order.
+This is a small corpus, and a narrow one by choice — one genre, one producer's selection.
+The model plays UK garage because that is what it has heard. If its taste is not yours,
+that is what the DPO fine-tuning is for.
 
 # How I trained the model
 
@@ -378,8 +372,8 @@ What is on disk from the process described above. Inference reads none of it.
 
 | Path | Contents |
 |---|---|
-| `bass_notes_midi/` | 4,248 mined bass examples (354 segments × 12 keys) |
-| `arp_notes_midi/` | 3,456 mined arp examples (288 × 12) |
+| `bass_notes_midi/` | 4,248 mined bass `.npz` — 72 distinct phrases, each in 12 keys |
+| `arp_notes_midi/` | 3,456 mined arp `.npz` — 66 distinct phrases, each in 12 keys |
 | `dpo/` | 5 tracks of hand-edited MIDI preference pairs |
 | `drum_loops/` | the loop those pairs were conditioned on |
 
