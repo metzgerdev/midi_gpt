@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Did SFT Learn My Taste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{--ground:#DDE3E1;--panel:#F6F8F7;--panel2:#EAEFED;--ink:#16201F;--muted:#63706E;
+ --faint:#8A9694;--rule:#C3CCCA;--rule2:#D5DCDA;--edit:#26699F;--orig:#C2542B;
+ --shadow:0 1px 2px rgba(20,32,31,.10),0 8px 26px -14px rgba(20,32,31,.30)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+ --ground:#101514;--panel:#1A2120;--panel2:#222A29;--ink:#E7ECEA;--muted:#94A29F;
+ --faint:#77837F;--rule:#333D3C;--rule2:#2A3332;--edit:#4E93C8;--orig:#DA6733;
+ --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 26px -14px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{--ground:#101514;--panel:#1A2120;--panel2:#222A29;--ink:#E7ECEA;
+ --muted:#94A29F;--faint:#77837F;--rule:#333D3C;--rule2:#2A3332;--edit:#4E93C8;--orig:#DA6733;
+ --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 26px -14px rgba(0,0,0,.8)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+ font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:clamp(20px,4vw,56px) clamp(14px,3vw,32px)}
+.plate{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.16em;
+ text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-size:clamp(26px,4.2vw,40px);line-height:1.05;letter-spacing:-.022em;font-weight:700;margin:8px 0 0;text-wrap:balance}
+.lede{margin:10px 0 0;color:var(--muted);max-width:68ch;font-size:15.5px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow);
+ padding:clamp(16px,2.4vw,24px)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+ letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.lgi{display:flex;align-items:center;gap:7px}
+.sw{width:16px;height:3px;border-radius:2px;display:block}
+.sw.e{background:var(--edit)}.sw.o{background:var(--orig)}
+.sw.g{height:11px;width:14px;border-radius:2px;opacity:.9}
+.sw.gu{background:var(--edit);opacity:.16}.sw.gd{background:var(--orig);opacity:.16}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:20px}
+.pf{margin:0}
+figcaption{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+figcaption b{font-size:13.5px;font-weight:600}
+figcaption span{font-size:12px;color:var(--muted)}
+svg{width:100%;height:auto;display:block;overflow:visible}
+.grid{stroke:var(--rule2);stroke-width:1}
+.ytick{fill:var(--faint);font-size:9px;font-family:"IBM Plex Mono",monospace;text-anchor:end}
+.xtick{fill:var(--muted);font-size:10.5px;font-family:"IBM Plex Mono",monospace;text-anchor:middle}
+.xsub{fill:var(--faint);font-size:8.5px;font-family:"IBM Plex Mono",monospace;text-anchor:middle}
+.divider{stroke:var(--rule);stroke-width:1}
+.ln{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ln.s-edit{stroke:var(--edit)}.ln.s-orig{stroke:var(--orig)}
+.dot{stroke:var(--panel);stroke-width:2}
+.dot.s-edit{fill:var(--edit)}.dot.s-orig{fill:var(--orig)}
+.gap-up{fill:var(--edit);opacity:.16}.gap-dn{fill:var(--orig);opacity:.16}
+.acc{fill:var(--faint);font-size:9px;font-family:"IBM Plex Mono",monospace;text-anchor:middle}
+.acclbl{fill:var(--faint);font-size:8.5px;font-family:"IBM Plex Mono",monospace;text-anchor:start;
+ letter-spacing:.08em;text-transform:uppercase}
+.axtitle{fill:var(--muted);font-size:9.5px;font-family:"IBM Plex Mono",monospace;
+ letter-spacing:.07em;text-transform:uppercase}
+.axl{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--faint);text-transform:uppercase;
+ letter-spacing:.08em;margin:0 0 12px}
+.cap{margin:0;font-size:12.5px;color:var(--muted);max-width:84ch}
+.cap code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:var(--panel2);padding:1px 5px;border-radius:2px}
+.warn{border-left:3px solid var(--orig);padding-left:14px}
+footer{display:block;font-size:11.5px;color:var(--muted);font-family:"IBM Plex Mono",monospace;
+ border-top:1px solid var(--rule);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="plate">
+  <header>
+    <p class="eyebrow">Midi GPT &middot; bass &middot; preference</p>
+    <h1>Did fine-tuning move toward my edits?</h1>
+    <p class="lede">For each checkpoint, the log-probability it assigns to the clip I kept
+      and to the one I replaced. When the blue line sits above the orange one, the model
+      prefers my edit. Higher is more likely; both panels share one scale.</p>
+  </header>
+  <div class="card">
+    <div class="legend">
+      <span class="lgi"><span class="sw e"></span>My edit (chosen)</span>
+      <span class="lgi"><span class="sw o"></span>Its original (rejected)</span>
+      <span class="lgi"><span class="sw g gu"></span>prefers my edit</span>
+      <span class="lgi"><span class="sw g gd"></span>prefers the original</span>
+    </div>
+    <p class="axl">each clip is 65 tokens &middot; log-probabilities are negative, so nearer the top means the model finds that clip more likely</p>
+    <div class="panels">
+      <figure class="pf">
+  <figcaption><b>The 10 edits it trained on</b><span>ft2 and ft3 were fit on exactly these</span></figcaption>
+  <svg viewBox="0 0 470 352" role="img" aria-label="The 10 edits it trained on">
+    <line class="grid" x1="76" y1="56.1" x2="450" y2="56.1"/><text class="ytick" x="68" y="59.6">0</text><line class="grid" x1="76" y1="106.8" x2="450" y2="106.8"/><text class="ytick" x="68" y="110.3">-50</text><line class="grid" x1="76" y1="157.4" x2="450" y2="157.4"/><text class="ytick" x="68" y="160.9">-100</text><line class="grid" x1="76" y1="208.1" x2="450" y2="208.1"/><text class="ytick" x="68" y="211.6">-150</text><line class="grid" x1="76" y1="258.8" x2="450" y2="258.8"/><text class="ytick" x="68" y="262.3">-200</text><polygon points="76.0,190.8 200.7,142.7 200.7,105.0 76.0,130.8" class="gap-dn"/><polygon points="200.7,142.7 263.1,102.8 263.1,102.8 200.7,105.0" class="gap-dn"/><polygon points="263.1,102.8 325.3,63.0 325.3,100.6 263.1,102.8" class="gap-up"/><polygon points="325.3,63.0 450.0,67.4 450.0,139.3 325.3,100.6" class="gap-up"/><line class="divider" x1="387.7" y1="50" x2="387.7" y2="274"/>
+    <path class="ln s-orig" d="M76.0,130.8 L200.7,105.0 L325.3,100.6 L450.0,139.3"/><circle class="dot s-orig" cx="76.0" cy="130.8" r="4.5"><title>base: -73.7</title></circle><circle class="dot s-orig" cx="200.7" cy="105.0" r="4.5"><title>ft1: -48.2</title></circle><circle class="dot s-orig" cx="325.3" cy="100.6" r="4.5"><title>ft2: -43.9</title></circle><circle class="dot s-orig" cx="450.0" cy="139.3" r="4.5"><title>ft3: -82.1</title></circle><path class="ln s-edit" d="M76.0,190.8 L200.7,142.7 L325.3,63.0 L450.0,67.4"/><circle class="dot s-edit" cx="76.0" cy="190.8" r="4.5"><title>base: -132.9</title></circle><circle class="dot s-edit" cx="200.7" cy="142.7" r="4.5"><title>ft1: -85.4</title></circle><circle class="dot s-edit" cx="325.3" cy="63.0" r="4.5"><title>ft2: -6.9</title></circle><circle class="dot s-edit" cx="450.0" cy="67.4" r="4.5"><title>ft3: -11.1</title></circle>
+    <text class="acc" x="76.0" y="41">23%</text><text class="acc" x="200.7" y="41">40%</text><text class="acc" x="325.3" y="41">95%</text><text class="acc" x="450.0" y="41">100%</text>
+    <text class="xtick" x="76.0" y="294">base</text><text class="xsub" x="76.0" y="307">0 edits</text><text class="xtick" x="200.7" y="294">ft1</text><text class="xsub" x="200.7" y="307">SFT · 4</text><text class="xtick" x="325.3" y="294">ft2</text><text class="xsub" x="325.3" y="307">SFT · 10</text><text class="xtick" x="450.0" y="294">ft3</text><text class="xsub" x="450.0" y="307">DPO</text><text class="acclbl" x="76" y="26">share of pairs where my edit wins</text><text class="axtitle" transform="rotate(-90)" x="-162.0" y="15" text-anchor="middle">mean log P(clip) &mdash; higher = more likely</text><text class="axtitle" x="263.0" y="336" text-anchor="middle">fine-tuning stage &mdash; method &middot; edits used</text>
+  </svg></figure>
+      <figure class="pf">
+  <figcaption><b>One edit it never saw</b><span>held out — not in any training run</span></figcaption>
+  <svg viewBox="0 0 470 352" role="img" aria-label="One edit it never saw">
+    <line class="grid" x1="76" y1="56.1" x2="450" y2="56.1"/><text class="ytick" x="68" y="59.6">0</text><line class="grid" x1="76" y1="106.8" x2="450" y2="106.8"/><text class="ytick" x="68" y="110.3">-50</text><line class="grid" x1="76" y1="157.4" x2="450" y2="157.4"/><text class="ytick" x="68" y="160.9">-100</text><line class="grid" x1="76" y1="208.1" x2="450" y2="208.1"/><text class="ytick" x="68" y="211.6">-150</text><line class="grid" x1="76" y1="258.8" x2="450" y2="258.8"/><text class="ytick" x="68" y="262.3">-200</text><polygon points="76.0,247.6 200.7,258.3 200.7,136.9 76.0,152.7" class="gap-dn"/><polygon points="200.7,258.3 325.3,203.9 325.3,111.9 200.7,136.9" class="gap-dn"/><polygon points="325.3,203.9 450.0,218.2 450.0,108.1 325.3,111.9" class="gap-dn"/><line class="divider" x1="387.7" y1="50" x2="387.7" y2="274"/>
+    <path class="ln s-orig" d="M76.0,152.7 L200.7,136.9 L325.3,111.9 L450.0,108.1"/><circle class="dot s-orig" cx="76.0" cy="152.7" r="4.5"><title>base: -95.3</title></circle><circle class="dot s-orig" cx="200.7" cy="136.9" r="4.5"><title>ft1: -79.8</title></circle><circle class="dot s-orig" cx="325.3" cy="111.9" r="4.5"><title>ft2: -55.1</title></circle><circle class="dot s-orig" cx="450.0" cy="108.1" r="4.5"><title>ft3: -51.3</title></circle><path class="ln s-edit" d="M76.0,247.6 L200.7,258.3 L325.3,203.9 L450.0,218.2"/><circle class="dot s-edit" cx="76.0" cy="247.6" r="4.5"><title>base: -188.9</title></circle><circle class="dot s-edit" cx="200.7" cy="258.3" r="4.5"><title>ft1: -199.5</title></circle><circle class="dot s-edit" cx="325.3" cy="203.9" r="4.5"><title>ft2: -145.8</title></circle><circle class="dot s-edit" cx="450.0" cy="218.2" r="4.5"><title>ft3: -159.9</title></circle>
+    <text class="acc" x="76.0" y="41">0%</text><text class="acc" x="200.7" y="41">0%</text><text class="acc" x="325.3" y="41">0%</text><text class="acc" x="450.0" y="41">0%</text>
+    <text class="xtick" x="76.0" y="294">base</text><text class="xsub" x="76.0" y="307">0 edits</text><text class="xtick" x="200.7" y="294">ft1</text><text class="xsub" x="200.7" y="307">SFT · 4</text><text class="xtick" x="325.3" y="294">ft2</text><text class="xsub" x="325.3" y="307">SFT · 10</text><text class="xtick" x="450.0" y="294">ft3</text><text class="xsub" x="450.0" y="307">DPO</text><text class="acclbl" x="76" y="26">share of pairs where my edit wins</text><text class="axtitle" transform="rotate(-90)" x="-162.0" y="15" text-anchor="middle">mean log P(clip) &mdash; higher = more likely</text><text class="axtitle" x="263.0" y="336" text-anchor="middle">fine-tuning stage &mdash; method &middot; edits used</text>
+  </svg></figure>
+    </div>
+  </div>
+  <p class="cap warn"><b>The two panels do not agree.</b> On its own training edits the model flips
+    from preferring the original (23% of pairs) to preferring my edit (95% at ft2, 100% at ft3) — SFT
+    moved the distribution a long way, and more edits moved it further. On the one edit held out, the
+    orange line stays on top at every stage and preference accuracy is <b>0% throughout</b>. What the
+    left panel measures is absorption of ten specific clips, not a learned taste that transfers.
+    One held-out section is weak evidence — but it is the only held-out edit that exists.</p>
+  <p class="cap"><b>How the margin grew matters too.</b> SFT (base &rarr; ft2) raised it by lifting my
+    edit from &minus;132.9 to &minus;6.9 while leaving the original roughly where it was. DPO (ft2 &rarr; ft3)
+    barely moved my edit (&minus;6.9 &rarr; &minus;11.2) and widened the gap mainly by pushing the original
+    <em>down</em>, &minus;43.9 &rarr; &minus;82.1. That is the suppression case the DPO loss splits its
+    margin in half to detect, visible here as the orange line falling rather than the blue one rising.</p>
+  <footer>ft1 and ft2 both branch from base &middot; ft3 is DPO on ft2 &middot; 12 key-transpositions per section</footer>
+</div>
+</body>
+</html>

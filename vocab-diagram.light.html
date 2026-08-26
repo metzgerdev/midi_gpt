@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Midi GPT Vocabulary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#DDE3E1; --panel:#F6F8F7; --panel2:#EAEFED;
+  --ink:#16201F; --muted:#63706E; --rule:#C3CCCA; --rule2:#D5DCDA;
+  --ctrl:#C2542B; --ctrl-ink:#FFF3EC;
+  --state:#3E6B8A; --state-ink:#EEF5FA;
+  --key-w:#FBFAF7; --key-w-edge:#C8CDCA; --key-w-ink:#3A4746;
+  --key-b:#1E2726; --key-b-ink:#CFD6D3;
+  --o1:#1F4A4E; --o2:#31696A; --o3:#4E8B7C; --o4:#7DAC8A; --o5:#B0C79A; --o6:#DCDCAB;
+  --oi1:#F2F6F3; --oi2:#F2F6F3; --oi3:#F2F6F3; --oi4:#16261F; --oi5:#16261F; --oi6:#16261F;
+  --shadow:0 1px 2px rgba(20,32,31,.10),0 8px 26px -14px rgba(20,32,31,.30);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#101514; --panel:#1A2120; --panel2:#222A29;
+    --ink:#E7ECEA; --muted:#94A29F; --rule:#333D3C; --rule2:#2A3332;
+    --ctrl:#E2703F; --ctrl-ink:#20100A;
+    --state:#6FA3C4; --state-ink:#0C1720;
+    --key-w:#D9D5C9; --key-w-edge:#8E8E85; --key-w-ink:#23292B;
+    --key-b:#0C1211; --key-b-ink:#9AA7A3;
+    --o1:#17383B; --o2:#265451; --o3:#3D7062; --o4:#5F8A6C; --o5:#8AA07A; --o6:#B3B389;
+    --oi1:#E7EFEA; --oi2:#E7EFEA; --oi3:#E7EFEA; --oi4:#0E1813; --oi5:#0E1813; --oi6:#0E1813;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 26px -14px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101514; --panel:#1A2120; --panel2:#222A29;
+  --ink:#E7ECEA; --muted:#94A29F; --rule:#333D3C; --rule2:#2A3332;
+  --ctrl:#E2703F; --ctrl-ink:#20100A;
+  --state:#6FA3C4; --state-ink:#0C1720;
+  --key-w:#D9D5C9; --key-w-edge:#8E8E85; --key-w-ink:#23292B;
+  --key-b:#0C1211; --key-b-ink:#9AA7A3;
+  --o1:#17383B; --o2:#265451; --o3:#3D7062; --o4:#5F8A6C; --o5:#8AA07A; --o6:#B3B389;
+  --oi1:#E7EFEA; --oi2:#E7EFEA; --oi3:#E7EFEA; --oi4:#0E1813; --oi5:#0E1813; --oi6:#0E1813;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 26px -14px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding:clamp(20px,4vw,56px) clamp(14px,3vw,32px);
+}
+.plate{max-width:1140px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0;
+}
+h1{font-size:clamp(27px,4.4vw,42px);line-height:1.05;letter-spacing:-.022em;font-weight:700;margin:8px 0 0;text-wrap:balance}
+.lede{margin:10px 0 0;color:var(--muted);max-width:62ch;font-size:15.5px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:3px;box-shadow:var(--shadow)}
+.pad{padding:clamp(16px,2.4vw,26px)}
+
+/* summary arithmetic */
+.sum{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;border-top:1px solid var(--rule2)}
+.sumitem{flex:1 1 150px;padding:15px 18px;border-bottom:1px solid var(--rule2);border-right:1px solid var(--rule2);display:flex;flex-direction:column;gap:3px}
+.sumitem:last-child{border-right:0}
+.sumn{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.suml{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace}
+.sumr{font-size:12.5px;color:var(--muted)}
+.swatch{width:26px;height:4px;border-radius:2px;margin-bottom:5px}
+
+/* tape */
+.scroll{overflow-x:auto;padding-bottom:6px}
+.tape{display:flex;align-items:stretch;gap:9px;min-width:940px}
+.grp{display:flex;gap:5px}
+.tok{
+  width:74px;border-radius:3px;padding:9px 8px;display:flex;flex-direction:column;
+  justify-content:space-between;gap:12px;border:1px solid transparent;
+}
+.tok .id{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:600;line-height:1}
+.tok .nm{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;opacity:.82}
+.tok .wt{font-family:"IBM Plex Mono",monospace;font-size:10px;opacity:.66;margin-top:2px}
+.t-state{background:var(--state);color:var(--state-ink)}
+.t-ctrl{background:var(--ctrl);color:var(--ctrl-ink)}
+
+/* keyboard */
+.kb-wrap{flex:1;display:flex;flex-direction:column;min-width:560px}
+.kb{position:relative;height:150px;display:flex;background:var(--key-b);border-radius:3px;padding:3px 3px 0;gap:1px;overflow:hidden}
+.wk{
+  position:relative;background:var(--key-w);border-radius:0 0 2px 2px;
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;
+  box-shadow:inset 0 -1px 0 var(--key-w-edge);
+}
+.wk span{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--key-w-ink);opacity:.72}
+.wk.c span{opacity:1;font-weight:600}
+.wk .note{position:absolute;top:6px;font-size:9px;letter-spacing:.06em;color:var(--key-w-ink);opacity:.85;font-weight:600}
+.bk{
+  position:absolute;top:3px;height:60%;background:var(--key-b);border-radius:0 0 2px 2px;
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;z-index:2;
+  box-shadow:0 2px 4px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.07);border-top:0;
+}
+.bk span{font-family:"IBM Plex Mono",monospace;font-size:8.5px;color:var(--key-b-ink)}
+
+/* octave band */
+.oct{display:flex;gap:1px;margin-top:5px}
+.ob{padding:5px 7px;border-radius:2px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.07em;display:flex;justify-content:space-between;align-items:center;min-width:0;overflow:hidden}
+.ob b{font-weight:600}
+.ob-solo{justify-content:center}
+.ob i{font-style:normal;opacity:.72;font-size:9.5px;white-space:nowrap}
+
+.cap{margin:0;font-size:12.5px;color:var(--muted);max-width:78ch}
+.cap code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:var(--panel2);padding:1px 5px;border-radius:2px}
+
+/* lower panels */
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+h2{font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+  font-family:"IBM Plex Mono",monospace;font-weight:500;margin:0 0 14px}
+.formula{font-family:"IBM Plex Mono",monospace;font-size:16px;background:var(--panel2);
+  border-left:3px solid var(--ctrl);padding:11px 14px;border-radius:0 2px 2px 0;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-weight:500;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);padding:0 0 7px;border-bottom:1px solid var(--rule)}
+td{padding:7px 0;border-bottom:1px solid var(--rule2)}
+tr:last-child td{border-bottom:0}
+td:not(:first-child),th:not(:first-child){text-align:right}
+.rule{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.rule li{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;line-height:1.45}
+.rule .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;
+  padding:2px 7px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.k-ctrl{background:var(--ctrl);color:var(--ctrl-ink)}
+.k-state{background:var(--state);color:var(--state-ink)}
+footer{display:block;font-size:11.5px;color:var(--muted);font-family:"IBM Plex Mono",monospace;
+  border-top:1px solid var(--rule);padding-top:14px}
+:focus-visible{outline:2px solid var(--ctrl);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="plate">
+  <header>
+    <p class="eyebrow">Midi GPT &middot; symbolic representation</p>
+    <h1>The 65-token vocabulary</h1>
+    <p class="lede">One token per sixteenth note. The model emits a pitch, a rest, or a sustain &mdash;
+      and the pitch range is simply a piano, bracketed by four symbols that are not notes.</p>
+  </header>
+
+  <div class="card">
+    <div class="sum">
+      <div class="sumitem"><div class="swatch" style="background:var(--state)"></div>
+        <div class="sumn">2</div><div class="suml">state</div>
+        <div class="sumr">Rest and sustain. No pitch.</div></div>
+      <div class="sumitem"><div class="swatch" style="background:linear-gradient(90deg,var(--o1),var(--o6))"></div>
+        <div class="sumn">61</div><div class="suml">pitch</div>
+        <div class="sumr">MIDI 24&ndash;84, C1 to C6.</div></div>
+      <div class="sumitem"><div class="swatch" style="background:var(--ctrl)"></div>
+        <div class="sumn">2</div><div class="suml">control</div>
+        <div class="sumr">Sequence bounds, never audible.</div></div>
+      <div class="sumitem" style="background:var(--panel2)">
+        <div class="swatch" style="background:var(--ink)"></div>
+        <div class="sumn">65</div><div class="suml">total</div>
+        <div class="sumr">Softmax width at every step.</div></div>
+    </div>
+  </div>
+
+  <div class="card pad">
+    <h2>Token id &rarr; symbol</h2>
+    <div class="scroll">
+      <div class="tape">
+        <div class="grp">
+          <div class="tok t-state"><div><div class="id">0</div><div class="wt">wt 1.0</div></div><div class="nm">Rest</div></div>
+          <div class="tok t-state"><div><div class="id">1</div><div class="wt">wt 0.3</div></div><div class="nm">Sustain</div></div>
+        </div>
+        <div class="kb-wrap">
+          <div class="kb"><div class="wk c" style="width:2.7778%" title="token 2 · MIDI 24 · C1"><span class="note">C1</span><span>2</span></div><div class="wk" style="width:2.7778%" title="token 4 · MIDI 26 · D1"><span>4</span></div><div class="wk" style="width:2.7778%" title="token 6 · MIDI 28 · E1"><span>6</span></div><div class="wk" style="width:2.7778%" title="token 7 · MIDI 29 · F1"><span>7</span></div><div class="wk" style="width:2.7778%" title="token 9 · MIDI 31 · G1"><span>9</span></div><div class="wk" style="width:2.7778%" title="token 11 · MIDI 33 · A1"><span>11</span></div><div class="wk" style="width:2.7778%" title="token 13 · MIDI 35 · B1"><span>13</span></div><div class="wk c" style="width:2.7778%" title="token 14 · MIDI 36 · C2"><span class="note">C2</span><span>14</span></div><div class="wk" style="width:2.7778%" title="token 16 · MIDI 38 · D2"><span>16</span></div><div class="wk" style="width:2.7778%" title="token 18 · MIDI 40 · E2"><span>18</span></div><div class="wk" style="width:2.7778%" title="token 19 · MIDI 41 · F2"><span>19</span></div><div class="wk" style="width:2.7778%" title="token 21 · MIDI 43 · G2"><span>21</span></div><div class="wk" style="width:2.7778%" title="token 23 · MIDI 45 · A2"><span>23</span></div><div class="wk" style="width:2.7778%" title="token 25 · MIDI 47 · B2"><span>25</span></div><div class="wk c" style="width:2.7778%" title="token 26 · MIDI 48 · C3"><span class="note">C3</span><span>26</span></div><div class="wk" style="width:2.7778%" title="token 28 · MIDI 50 · D3"><span>28</span></div><div class="wk" style="width:2.7778%" title="token 30 · MIDI 52 · E3"><span>30</span></div><div class="wk" style="width:2.7778%" title="token 31 · MIDI 53 · F3"><span>31</span></div><div class="wk" style="width:2.7778%" title="token 33 · MIDI 55 · G3"><span>33</span></div><div class="wk" style="width:2.7778%" title="token 35 · MIDI 57 · A3"><span>35</span></div><div class="wk" style="width:2.7778%" title="token 37 · MIDI 59 · B3"><span>37</span></div><div class="wk c" style="width:2.7778%" title="token 38 · MIDI 60 · C4"><span class="note">C4</span><span>38</span></div><div class="wk" style="width:2.7778%" title="token 40 · MIDI 62 · D4"><span>40</span></div><div class="wk" style="width:2.7778%" title="token 42 · MIDI 64 · E4"><span>42</span></div><div class="wk" style="width:2.7778%" title="token 43 · MIDI 65 · F4"><span>43</span></div><div class="wk" style="width:2.7778%" title="token 45 · MIDI 67 · G4"><span>45</span></div><div class="wk" style="width:2.7778%" title="token 47 · MIDI 69 · A4"><span>47</span></div><div class="wk" style="width:2.7778%" title="token 49 · MIDI 71 · B4"><span>49</span></div><div class="wk c" style="width:2.7778%" title="token 50 · MIDI 72 · C5"><span class="note">C5</span><span>50</span></div><div class="wk" style="width:2.7778%" title="token 52 · MIDI 74 · D5"><span>52</span></div><div class="wk" style="width:2.7778%" title="token 54 · MIDI 76 · E5"><span>54</span></div><div class="wk" style="width:2.7778%" title="token 55 · MIDI 77 · F5"><span>55</span></div><div class="wk" style="width:2.7778%" title="token 57 · MIDI 79 · G5"><span>57</span></div><div class="wk" style="width:2.7778%" title="token 59 · MIDI 81 · A5"><span>59</span></div><div class="wk" style="width:2.7778%" title="token 61 · MIDI 83 · B5"><span>61</span></div><div class="wk c" style="width:2.7778%" title="token 62 · MIDI 84 · C6"><span class="note">C6</span><span>62</span></div><div class="bk" style="left:calc(1.9167% + 3px);width:1.7222%" title="token 3 · MIDI 25 · C#1"><span>3</span></div><div class="bk" style="left:calc(4.6944% + 3px);width:1.7222%" title="token 5 · MIDI 27 · D#1"><span>5</span></div><div class="bk" style="left:calc(10.2500% + 3px);width:1.7222%" title="token 8 · MIDI 30 · F#1"><span>8</span></div><div class="bk" style="left:calc(13.0278% + 3px);width:1.7222%" title="token 10 · MIDI 32 · G#1"><span>10</span></div><div class="bk" style="left:calc(15.8056% + 3px);width:1.7222%" title="token 12 · MIDI 34 · A#1"><span>12</span></div><div class="bk" style="left:calc(21.3611% + 3px);width:1.7222%" title="token 15 · MIDI 37 · C#2"><span>15</span></div><div class="bk" style="left:calc(24.1389% + 3px);width:1.7222%" title="token 17 · MIDI 39 · D#2"><span>17</span></div><div class="bk" style="left:calc(29.6944% + 3px);width:1.7222%" title="token 20 · MIDI 42 · F#2"><span>20</span></div><div class="bk" style="left:calc(32.4722% + 3px);width:1.7222%" title="token 22 · MIDI 44 · G#2"><span>22</span></div><div class="bk" style="left:calc(35.2500% + 3px);width:1.7222%" title="token 24 · MIDI 46 · A#2"><span>24</span></div><div class="bk" style="left:calc(40.8056% + 3px);width:1.7222%" title="token 27 · MIDI 49 · C#3"><span>27</span></div><div class="bk" style="left:calc(43.5833% + 3px);width:1.7222%" title="token 29 · MIDI 51 · D#3"><span>29</span></div><div class="bk" style="left:calc(49.1389% + 3px);width:1.7222%" title="token 32 · MIDI 54 · F#3"><span>32</span></div><div class="bk" style="left:calc(51.9167% + 3px);width:1.7222%" title="token 34 · MIDI 56 · G#3"><span>34</span></div><div class="bk" style="left:calc(54.6944% + 3px);width:1.7222%" title="token 36 · MIDI 58 · A#3"><span>36</span></div><div class="bk" style="left:calc(60.2500% + 3px);width:1.7222%" title="token 39 · MIDI 61 · C#4"><span>39</span></div><div class="bk" style="left:calc(63.0278% + 3px);width:1.7222%" title="token 41 · MIDI 63 · D#4"><span>41</span></div><div class="bk" style="left:calc(68.5833% + 3px);width:1.7222%" title="token 44 · MIDI 66 · F#4"><span>44</span></div><div class="bk" style="left:calc(71.3611% + 3px);width:1.7222%" title="token 46 · MIDI 68 · G#4"><span>46</span></div><div class="bk" style="left:calc(74.1389% + 3px);width:1.7222%" title="token 48 · MIDI 70 · A#4"><span>48</span></div><div class="bk" style="left:calc(79.6944% + 3px);width:1.7222%" title="token 51 · MIDI 73 · C#5"><span>51</span></div><div class="bk" style="left:calc(82.4722% + 3px);width:1.7222%" title="token 53 · MIDI 75 · D#5"><span>53</span></div><div class="bk" style="left:calc(88.0278% + 3px);width:1.7222%" title="token 56 · MIDI 78 · F#5"><span>56</span></div><div class="bk" style="left:calc(90.8056% + 3px);width:1.7222%" title="token 58 · MIDI 80 · G#5"><span>58</span></div><div class="bk" style="left:calc(93.5833% + 3px);width:1.7222%" title="token 60 · MIDI 82 · A#5"><span>60</span></div></div>
+          <div class="oct"><div class="ob" style="flex:7 1 0;background:var(--o1);color:var(--oi1)"><b>C1</b><i>2–13</i></div><div class="ob" style="flex:7 1 0;background:var(--o2);color:var(--oi2)"><b>C2</b><i>14–25</i></div><div class="ob" style="flex:7 1 0;background:var(--o3);color:var(--oi3)"><b>C3</b><i>26–37</i></div><div class="ob" style="flex:7 1 0;background:var(--o4);color:var(--oi4)"><b>C4</b><i>38–49</i></div><div class="ob" style="flex:7 1 0;background:var(--o5);color:var(--oi5)"><b>C5</b><i>50–61</i></div><div class="ob ob-solo" style="flex:1 1 0;background:var(--o6);color:var(--oi6)"><b>C6</b></div></div>
+        </div>
+        <div class="grp">
+          <div class="tok t-ctrl"><div><div class="id">63</div><div class="wt">wt 1.0</div></div><div class="nm">BOS</div></div>
+          <div class="tok t-ctrl"><div><div class="id">64</div><div class="wt">wt 1.0</div></div><div class="nm">EOS</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="cap" style="margin-top:16px">Numbers on the keys are token ids, not MIDI numbers; each octave band
+      carries its MIDI range and the token ids that cover it. Black and white keys are drawn as a keyboard for
+      legibility only &mdash; the model sees 61 undifferentiated ids. <code>wt</code> is the class weight the
+      training loss applies to that group.</p>
+  </div>
+
+  <div class="cols">
+    <div class="card pad">
+      <h2>Mapping</h2>
+      <div class="formula">token = midi &minus; 22</div>
+      <table>
+        <thead><tr><th>Token</th><th>MIDI</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>2</td><td>24</td><td>C1</td></tr>
+          <tr><td>26</td><td>48</td><td>C3</td></tr>
+          <tr><td>40</td><td>62</td><td>D4</td></tr>
+          <tr><td>62</td><td>84</td><td>C6</td></tr>
+        </tbody>
+      </table>
+      <p class="cap" style="margin-top:14px">Pitch ids are contiguous, so the arithmetic is a single offset in
+        both directions. Anything outside 24&ndash;84 is clamped into range when the corpus is built.</p>
+    </div>
+
+    <div class="card pad">
+      <h2>Sampling constraints</h2>
+      <ul class="rule">
+        <li><span class="k k-ctrl">BOS</span><span>Opens the sequence and never recurs. Masked out of the
+          logits at every step, so it can be fed in but never sampled.</span></li>
+        <li><span class="k k-state">SUSTAIN</span><span>Extends the note before it, so it is illegal at
+          step&nbsp;0 and illegal after a rest &mdash; there is nothing to hold.</span></li>
+        <li><span class="k k-ctrl">EOS</span><span>Ends the clip. Sampling stops the moment it appears.</span></li>
+      </ul>
+      <p class="cap" style="margin-top:16px">Both rules are enforced on the logits rather than learned. An
+        unmasked stray sustain is silently discarded when tokens are converted back to notes, which quietly
+        shortens the clip the model thought it was writing.</p>
+    </div>
+  </div>
+
+  <footer>65 symbols &middot; 64 steps per clip &middot; 4 bars at sixteenth-note resolution</footer>
+</div>
+</body>
+</html>
