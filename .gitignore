@@ -7,6 +7,11 @@ __pycache__/
 # Working design notes, kept local
 polyphony.md
 
+# Kept local: the notebook that renders the preference chart. Its measurement code
+# is utils/metric_utils.py, which IS tracked and is the part worth keeping — the
+# notebook is the scratch around it, and carries ~144 KB of stored cell outputs.
+preference_shift.ipynb
+
 # Scratch renders, at ~450 KB each — preference_shift.ipynb still writes here. The
 # tracked figures are figures/, which is what midi-gpt-post.md inlines; those are
 # screenshots with no generator left in the repo, so do not delete them expecting a
