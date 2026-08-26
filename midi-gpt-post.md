@@ -71,12 +71,51 @@ Below is a summary on how the four signals get converted into 128 dimension embe
 
 **Transformer**
 
-The backbone is a small GPT-2: 3 transformer blocks, 4 attention heads, 128-dimensional embeddings, dropout 0.1, and a context length of 68 (BOS + 64 steps + EOS, with room to spare). At roughly 700k parameters, the model can easily run on a laptop.
+The backbone is a small GPT-2. At roughly 700k parameters, the model can easily run on a laptop.
+
+| key | value | what it is |
+| --- | --- | --- |
+| `n_layers` | 3 | transformer blocks |
+| `n_heads` | 4 | attention heads per block, 32 dimensions each |
+| `emb_dim` | 128 | model width — every signal is projected to this |
+| feed-forward | 512 | hidden width inside each block, 4 × `emb_dim` |
+| `context_length` | 68 | BOS + 64 steps + EOS, with room to spare |
+| `vocab_size` | 65 | REST, SUSTAIN, 61 pitches, BOS, EOS |
+| `drop_rate` | 0.1 | |
+| `qkv_bias` | False | |
+
+That comes to 686,848 parameters, 593,664 of them — 86% — in the three transformer blocks.
+The embeddings, the four projections and the output head account for well under a tenth of
+the model between them.
+
+One line of that table is a lie of omission: 65,664 parameters sit in `cond_proj`, a CLAP
+audio-conditioning path that is never activated. Every call passes `cond=None`. The layer
+is retained only because it exists in the trained checkpoints' state dictionaries, so the
+model that actually runs is 621,184 parameters.
 
 
 **Training**
 
 Training is teacher-forced. A single forward pass covers all 65 positions at once with a causal mask preventing lookahead, so an epoch is fast even on a laptop CPU. AdamW, learning rate 5e-4, weight decay 0.05, batch size 16, 150 epochs, 15% held out for validation, best validation loss kept.
+
+`train_notes.py` records only that best validation figure, so the shipped runs left no curve
+behind. The one below is a retrain from scratch at the same hyperparameters, kept for its
+per-epoch history and nothing else — 150 epochs of bass in about seven and a half minutes on
+an M-series GPU.
+
+![Training and validation cross-entropy over 150 epochs of the bass model, shown whole and zoomed from epoch 20, with a generalisation gap of +0.022 and best validation 0.1243 at epoch 131](figures/loss-curves-bass.png)
+
+Most of the drop happens in the first fifteen epochs — cross-entropy falls from 2.0 to about
+0.18 — and from roughly epoch 40 the run is grinding out small improvements. Validation
+bottoms at 0.1243 on epoch 131 and drifts up slightly afterwards. That drift is the mild
+overfitting the best-validation checkpoint exists to catch.
+
+The gap of +0.022 is flattering, though, and worth being honest about. The split is a random
+one taken *after* the twelve-key augmentation, so a phrase's transpositions land on both
+sides of the line: 300 of 354 phrases appear in training and validation both. Since the
+augmentation exists precisely to make the model key-invariant, a transposed sibling is very
+nearly the same example from the model's point of view. This is close to a best case, and
+the true gap on phrases the model has never heard in any key is wider.
 
 **SFT**
 
