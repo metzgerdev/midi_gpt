@@ -1,7 +1,7 @@
 **Midi GPT**
 
 
-A small language model that generates MIDI, trained on a curated data set, and fine tuned further through Direct Preference Optimization.
+A small language model that generates MIDI, trained on a curated data set, and fine tuned further with Direct Preference Optimization.
 
 
 **Motivation**
@@ -36,12 +36,12 @@ The model has a simple job at each step — output a pitch, a rest, or a sustain
 
 **Embedding**
 
-Every token id becomes a 128-d vector by indexing a row of `nn.Embedding(65, 128)` — row 14 is C2. The lookup is exactly `one_hot(14) @ W`, worth seeing once because it explains the other three signals too.
+Every token id becomes a 128-d vector by indexing a row of `nn.Embedding(65, 128)` — row 14 is C2. The lookup is exactly `one_hot(14) @ W`.
 
 ![The nn.Embedding(65, 128) table, one row per token, with row 14 (C2) highlighted](figures/embedding-table.png)
 ![One-hot(14) times W equals row 14 of the table](figures/embedding-lookup.png)
 
-Position indexes its own table. Grid and chord are projected rather than looked up, since their inputs are values, not ids. A chord is a 12-slot chroma, one slot per pitch class:
+Position indexes its own table, similar to the token id look up. Grid and chord are projected rather than looked up, since their inputs are values, not ids. A chord is a 12-slot chroma, one slot per pitch class:
 
 ![A 12-slot chroma vector for A minor, with C, E and A set to 1 and the rest 0](figures/chord-chroma.png)
 
@@ -62,7 +62,7 @@ x = tok_emb + pos_emb + grid_proj + chord_proj
 | grid | 1 scalar (0 or 1) | `nn.Linear(1, 128)` — one weight vector scaled by the onset |
 | chord | 12-d chroma | `nn.Linear(12, 128)` — a learned map from pitch classes |
 
-Grid and chord are the two you control. In training both come from the phrase itself — the stem's own note-ons, and the chroma inferred per bar. At inference the grid comes from the kick of a chosen drum groove, four-on-the-floor house or two-step UK Garage, and the chord from your key and progression.
+Grid and chord user provided signals to condition the output. In training both come from the phrase itself — the stem's own note-ons, and the chroma inferred per bar. At inference the grid comes from the kick of a chosen drum groove, four-on-the-floor house or two-step UK Garage, and the chord from your key and progression.
 
 **Transformer**
 
@@ -79,48 +79,26 @@ The backbone is a small GPT-2. At roughly 620k parameters, the model can easily 
 | `drop_rate` | 0.1 | |
 | `qkv_bias` | False | |
 
-That comes to 621,184 parameters, 593,664 of them — 96% — in the three transformer blocks.
-The embeddings, the three projections and the output head are the small change.
-
-It was 686,848 until recently. A fourth projection sat in the model, `cond_proj`, a
-`Linear(512, 128)` meant to take a CLAP embedding of a reference audio clip — the hook for
-"make it sound like this track". Nothing in the repo could produce such a vector; there was
-no encoder and never had been. Every call passed `cond=None`, so the layer never entered
-the forward pass and never took a gradient, and its 65,664 weights were still the random
-numbers PyTorch initialised them with — bit-identical across all eight checkpoints, in
-files where every layer that did train had moved.
-
-Deleting it changed no output, which is the useful thing about a layer that never ran: the
-generated MIDI is identical token for token, and there is a test that pins exactly that.
-
 
 **Training**
 
-Training is teacher-forced: the real clip is fed in as the input, so all 65 next-token predictions come out of one forward pass rather than 65 sequential steps. A causal mask is what keeps that honest — each position sees only the tokens before it — and it is why an epoch is fast even on a laptop CPU. AdamW, learning rate 5e-4, weight decay 0.05, batch size 16, 150 epochs, 15% held out for validation, best validation loss kept.
+Training is teacher-forced.  A causal mask prevents look ahead attention. AdamW, learning rate 5e-4, weight decay 0.05, batch size 16, 150 epochs, 15% held out for validation, best validation loss kept.
 
-`train_notes.py` records only that best validation figure, so the shipped runs left no curve
-behind. The one below is a retrain from scratch at the same hyperparameters, kept for its
-per-epoch history and nothing else — 150 epochs of bass in about seven and a half minutes on
+Training took about seven and a half minutes on
 an M-series GPU.
-
-![Training and validation cross-entropy over 150 epochs of the bass model, shown whole and zoomed from epoch 20, with a generalisation gap of +0.022 and best validation 0.1243 at epoch 131](figures/loss-curves-bass.png)
 
 Most of the drop happens in the first fifteen epochs — cross-entropy falls from 2.0 to about
 0.18 — and from roughly epoch 40 the run is grinding out small improvements. Validation
-bottoms at 0.1243 on epoch 131 and drifts up slightly afterwards. That drift is the mild
-overfitting the best-validation checkpoint exists to catch.
+bottoms at 0.1243 on epoch 131 and drifts up slightly afterwards.
 
-The gap of +0.022 is flattering, though, and worth being honest about. The split is a random
-one taken *after* the twelve-key augmentation, so a phrase's transpositions land on both
-sides of the line: 300 of 354 phrases appear in training and validation both. Since the
-augmentation exists precisely to make the model key-invariant, a transposed sibling is very
-nearly the same example from the model's point of view. This is close to a best case, and
-the true gap on phrases the model has never heard in any key is wider.
+![Training and validation cross-entropy over 150 epochs of the bass model, shown whole and zoomed from epoch 20, with a generalisation gap of +0.022 and best validation 0.1243 at epoch 131](figures/loss-curves-bass.png)
+
+ 
 
 **SFT**
 
 
-From the base checkpoint, I generated 10 outputs, and edited them to my preference.  These edits were transposed through a range of 12 semitones and concatented with the existing corpus into a shuffled loader for SFT.  This mixture, along with a low learning rate (1e-4), and only 8 epochs, limits drift from the base model.  As seen below, the goal is to subtly shift the distribution towards the preference, but not destroy the base model.
+From the base checkpoint, I generated 10 outputs, and edited them to my preference.  These edits were transposed through a range of 12 semitones and concatented with the existing corpus into a shuffled loader for SFT.  This mixture, along with a low learning rate (1e-4), and only 8 epochs, limits drift from the base model.  As seen below, the goal is to shift the distribution towards the preference, but not destroy the base model.
 
 
 ![Mean log P(clip) across base, ft1, ft2 and ft3: the chosen line rises from -133 to -7, the rejected line lags](figures/sft-preference-shift.png)
@@ -129,10 +107,10 @@ From the base checkpoint, I generated 10 outputs, and edited them to my preferen
 **DPO Fine Tune**
 
 
-DPO fine-tunes further toward the user's preference. It optimises an implicit reward — how much more likely the policy makes a clip than the frozen anchor does — and widens the gap between that reward for the clip you kept and the clip you replaced, while a KL term holds the policy near the anchor. Which half moves matters: the gap widens either by making your edit more likely or by making the original less likely, and since the rejected clip is on-policy, pushing it down suppresses the general distribution.
+DPO fine-tunes further toward the user's preference. It optimises an implicit reward — how much more likely the policy generates a clip than the frozen anchor does — and widens the gap between that reward for the clip you kept and the clip you replaced, while a KL term holds the policy near the anchor. 
 
 
-sequence_logprob sums the per-step log probabilities of one exact clip — how likely the model was to produce that precise sequence, under the grid and chord it was conditioned on (g and c below). The policy is the model being trained; it starts as the checkpoint that generated the clip. The anchor is frozen, and by default it is the untuned base model rather than whichever checkpoint you started from, so drift is measured from one fixed place instead of compounding across rounds. Both models score both clips — hence the four lines.
+sequence_logprob sums the per-step log probabilities of one exact clip — how likely the model was to produce that precise sequence, under the grid and chord it was conditioned on (g and c below). The policy is the model being trained; it starts as the checkpoint that generated the clip. The anchor is frozen, and by default it is the untuned base model.  Drift is measured from the base checkpoint instead of compounding across rounds. 
 
 
 ```python
