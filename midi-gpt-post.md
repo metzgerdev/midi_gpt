@@ -96,7 +96,7 @@ model that actually runs is 621,184 parameters.
 
 **Training**
 
-Training is teacher-forced. A single forward pass covers all 65 positions at once with a causal mask preventing lookahead, so an epoch is fast even on a laptop CPU. AdamW, learning rate 5e-4, weight decay 0.05, batch size 16, 150 epochs, 15% held out for validation, best validation loss kept.
+Training is teacher-forced: the real clip is fed in as the input, so all 65 next-token predictions come out of one forward pass rather than 65 sequential steps. A causal mask is what keeps that honest — each position sees only the tokens before it — and it is why an epoch is fast even on a laptop CPU. AdamW, learning rate 5e-4, weight decay 0.05, batch size 16, 150 epochs, 15% held out for validation, best validation loss kept.
 
 `train_notes.py` records only that best validation figure, so the shipped runs left no curve
 behind. The one below is a retrain from scratch at the same hyperparameters, kept for its
