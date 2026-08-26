@@ -30,6 +30,7 @@ from utils.config import (
     TRAINING_DATA,
 )
 from inference.make_track import build_progression, parse_key, parse_request
+from model.checkpoints import load_checkpoint
 from utils.midi_utils import (
     midi_to_step_grid, note_onsets, notes_to_tokens, octave_fit, tokens_to_notes,
     write_midi,
@@ -197,7 +198,7 @@ def test_latest_checkpoint_loads_strictly(role):
     checkpoint = Path(f"checkpoints/{role}_notes_gpt_ft3.pt")
     if not checkpoint.exists():
         pytest.skip(f"local inference asset is absent: {checkpoint}")
-    saved = torch.load(checkpoint, map_location="cpu", weights_only=False)
+    saved = load_checkpoint(checkpoint, torch.device("cpu"))
     model = HarmonicNoteGPT(saved["config"])
     model.load_state_dict(saved["model"], strict=True)
 

@@ -47,5 +47,4 @@ NOTE_EOS = NOTE_VOCAB + 1
 NOTE_VOCAB_SIZE = NOTE_VOCAB + 2  # 65
 
 # Checkpoint-compatible conditioning widths.
-CLAP_DIM = 512
 CHORD_DIM = 12

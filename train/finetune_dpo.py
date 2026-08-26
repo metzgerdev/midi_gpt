@@ -56,7 +56,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
 from utils.audio_features import align_to_grid_tempo, onset_grid
-from model.checkpoints import latest_ckpt
+from model.checkpoints import latest_ckpt, load_note_model
 from utils.chords import progression_to_track
 from utils.config import (
     CKPT_DIR, DRUM_DIR, GRID_REF_BPM, GRID_STEPS, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI,
@@ -66,7 +66,7 @@ from utils.config import (
 )
 from utils.device import pick_device
 from utils.midi_utils import midi_to_step_grid, notes_to_tokens, octave_fit
-from model.note_model import HarmonicNoteGPT, generate_notes, note_chord_cond, note_grid_cond
+from model.note_model import generate_notes, note_chord_cond, note_grid_cond
 
 
 
@@ -173,7 +173,7 @@ def to_loader(pairs, batch_size, shuffle, seed=None):
 
 def sequence_logprob(model, x, y, grid, chord):
     """Sum_t log P(y_t | y_<t, grid, chord) — the model's log-likelihood of the sequence."""
-    logp = F.log_softmax(model(x, cond=None, cond_seq=grid, chord_seq=chord), dim=-1)
+    logp = F.log_softmax(model(x, cond_seq=grid, chord_seq=chord), dim=-1)
     return logp.gather(-1, y.unsqueeze(-1)).squeeze(-1).sum(-1)
 
 
@@ -199,7 +199,7 @@ def anchor_contexts(anchor, pairs, n, device, seed=0):
     g = torch.tensor(np.array(gs), dtype=torch.float32, device=device)
     c = torch.tensor(np.array(cs), dtype=torch.float32, device=device)
     with torch.no_grad():
-        logq = F.log_softmax(anchor(x, cond=None, cond_seq=g, chord_seq=c), dim=-1)
+        logq = F.log_softmax(anchor(x, cond_seq=g, chord_seq=c), dim=-1)
     return x, g, c, logq
 
 
@@ -212,7 +212,7 @@ def kl_to_anchor(policy, contexts):
     was_training = policy.training
     policy.eval()
     try:
-        logp = F.log_softmax(policy(x, cond=None, cond_seq=g, chord_seq=c), dim=-1)
+        logp = F.log_softmax(policy(x, cond_seq=g, chord_seq=c), dim=-1)
     finally:
         policy.train(was_training)
     return (logp.exp() * (logp - logq)).sum(-1).mean()
@@ -315,7 +315,7 @@ def measure_pairs(policy, reference, eval_loader, base_loader=None, weights=None
             for xb, yb, gb, cb in base_loader:
                 xb, yb, gb, cb = (t.to(device) for t in (xb, yb, gb, cb))
                 base += F.cross_entropy(
-                    policy(xb, cond=None, cond_seq=gb, chord_seq=cb).flatten(0, 1),
+                    policy(xb, cond_seq=gb, chord_seq=cb).flatten(0, 1),
                     yb.flatten(), weight=weights).item()
                 batches += 1
     policy.train(was_training)
@@ -390,19 +390,14 @@ def main(argv=None) -> int:
             continue
 
         ref_path = args.ref_ckpt or latest_ckpt(role)
-        saved = torch.load(ref_path, map_location=device, weights_only=False)
-        policy = HarmonicNoteGPT(saved["config"]).to(device)
-        policy.load_state_dict(saved["model"])
+        policy = load_note_model(ref_path, device)
 
         # Fixed anchor, not the starting policy: re-anchoring each round lets drift compound.
         anchor_path = args.anchor_ckpt or (CKPT_DIR / f"{role}_notes_gpt.pt")
         if anchor_path.resolve() == ref_path.resolve():
             reference = copy.deepcopy(policy).eval().requires_grad_(False)
         else:
-            anchor_saved = torch.load(anchor_path, map_location=device, weights_only=False)
-            reference = HarmonicNoteGPT(anchor_saved["config"]).to(device)
-            reference.load_state_dict(anchor_saved["model"])
-            reference.eval().requires_grad_(False)
+            reference = load_note_model(anchor_path, device).requires_grad_(False)
 
         contexts = (anchor_contexts(reference, pairs, args.anchor_samples, device, args.seed)
                     if args.kl_target > 0 else None)
@@ -430,7 +425,7 @@ def main(argv=None) -> int:
                               base_loader, weights, device)
 
         out_path = next_ft_path(role)
-        torch.save({"model": policy.state_dict(), "config": saved["config"], "method": "dpo",
+        torch.save({"model": policy.state_dict(), "config": policy.cfg, "method": "dpo",
                     "finetuned_from": ref_path.name, "anchor": anchor_path.name,
                     "beta": args.beta, "lr": args.lr, "epochs": args.epochs,
                     "seed": args.seed, "kl_target": args.kl_target, "kl_final": kl,

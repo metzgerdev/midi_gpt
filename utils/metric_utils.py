@@ -132,11 +132,10 @@ def load_note_model(path: Path, device=None):
     as their parent, so the ftN numbering is not a chain.
     """
     device = device or torch.device("cpu")
-    from model.note_model import HarmonicNoteGPT
-    saved = torch.load(path, map_location=device, weights_only=False)
-    model = HarmonicNoteGPT(NOTE_CONFIG).to(device)
-    model.load_state_dict(saved["model"])
-    model.eval()
+    from model.checkpoints import load_checkpoint, model_from_checkpoint
+
+    saved = load_checkpoint(path, device)
+    model = model_from_checkpoint(saved, device, config=NOTE_CONFIG)
     return model, {k: v for k, v in saved.items() if k not in ("model", "config")}
 
 

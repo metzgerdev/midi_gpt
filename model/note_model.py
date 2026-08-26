@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from utils.config import CHORD_DIM, CLAP_DIM, NOTE_REST, NOTE_SUSTAIN
+from utils.config import CHORD_DIM, NOTE_REST, NOTE_SUSTAIN
 from model.gpt_model import GPTModel
 
 
@@ -24,21 +24,26 @@ def note_chord_cond(chroma) -> np.ndarray:
 class HarmonicNoteGPT(GPTModel):
     """GPT conditioned per step on rhythm and chord chroma.
 
-    ``cond_proj`` is retained even though make_track uses ``cond=None`` because
-    it is present in the trained checkpoint state dictionaries.
+    There was a third conditioning path here — ``cond_proj``, a ``Linear(512, 128)``
+    for a CLAP clip embedding — removed because nothing in this repo could produce
+    such a vector. Every call passed ``cond=None``, so it never entered the graph and
+    never took a gradient; its 65,664 weights were untouched PyTorch init in all eight
+    shipped checkpoints. Those files still carry the keys, which is why checkpoints are
+    loaded through ``model.checkpoints.load_checkpoint``.
     """
 
     def __init__(self, cfg):
         super().__init__(cfg)
-        self.cond_proj = nn.Linear(CLAP_DIM, cfg["emb_dim"])
+        # Kept so a checkpoint can be re-saved with the architecture it was built under,
+        # without the caller having to hold the raw checkpoint dict open alongside the
+        # model. A plain dict, so it stays out of state_dict().
+        self.cfg = dict(cfg)
         self.grid_proj = nn.Linear(1, cfg["emb_dim"])
         self.chord_proj = nn.Linear(CHORD_DIM, cfg["emb_dim"])
 
-    def forward(self, in_idx, cond=None, cond_seq=None, chord_seq=None):
+    def forward(self, in_idx, cond_seq=None, chord_seq=None):
         _, seq_len = in_idx.shape
         x = self.tok_emb(in_idx) + self.pos_emb(torch.arange(seq_len, device=in_idx.device))
-        if cond is not None:
-            x = x + self.cond_proj(cond).unsqueeze(1)
         if cond_seq is not None:
             x = x + self.grid_proj(cond_seq.unsqueeze(-1))
         if chord_seq is not None:
@@ -91,7 +96,6 @@ def generate_notes(
         }
         logits = model(
             idx,
-            cond=None,
             cond_seq=grid_t[:pos].view(1, pos),
             **kwargs,
         )[:, -1, :]

@@ -133,7 +133,7 @@ def main(argv=None) -> int:
 
     def loss_of(batch):
         x, y, grid, chord = (t.to(device) for t in batch)
-        logits = model(x, cond=None, cond_seq=grid, chord_seq=chord)
+        logits = model(x, cond_seq=grid, chord_seq=chord)
         return F.cross_entropy(logits.flatten(0, 1), y.flatten(), weight=weights)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.05)

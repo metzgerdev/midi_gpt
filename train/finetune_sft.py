@@ -35,12 +35,11 @@ from utils.config import (
     CKPT_DIR, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0, NOTE_SUSTAIN, NOTE_VOCAB_SIZE,
     OUTPUT_DIR,
 )
-from model.checkpoints import latest_ckpt
+from model.checkpoints import latest_ckpt, load_note_model
 from utils.device import pick_device
 from train.finetune_dpo import (
     base_corpus_loader, next_ft_path, run_conditioning, tokenize_sections,
 )
-from model.note_model import HarmonicNoteGPT
 
 
 def edit_examples(run_dir, role: str, min_notes: int = 3):
@@ -107,9 +106,7 @@ def main(argv=None) -> int:
                   flush=True)
 
         ref_path = args.ref_ckpt or latest_ckpt(role)
-        saved = torch.load(ref_path, map_location=device, weights_only=False)
-        model = HarmonicNoteGPT(saved["config"]).to(device)
-        model.load_state_dict(saved["model"])
+        model = load_note_model(ref_path, device)
 
         replay_examples_list = []
         if replay is not None:
@@ -128,7 +125,7 @@ def main(argv=None) -> int:
                 for x, y, g, c in dl:
                     x, y, g, c = (t.to(device) for t in (x, y, g, c))
                     total += F.cross_entropy(
-                        model(x, cond=None, cond_seq=g, chord_seq=c).flatten(0, 1),
+                        model(x, cond_seq=g, chord_seq=c).flatten(0, 1),
                         y.flatten(), weight=weights).item()
                     n += 1
             model.train()
@@ -143,7 +140,7 @@ def main(argv=None) -> int:
             for x, y, g, c in loader:
                 x, y, g, c = (t.to(device) for t in (x, y, g, c))
                 loss = F.cross_entropy(
-                    model(x, cond=None, cond_seq=g, chord_seq=c).flatten(0, 1),
+                    model(x, cond_seq=g, chord_seq=c).flatten(0, 1),
                     y.flatten(), weight=weights)
                 optimizer.zero_grad(); loss.backward(); optimizer.step()
 
@@ -151,7 +148,7 @@ def main(argv=None) -> int:
         base1 = mean_loss(replay) if replay is not None else None
 
         out_path = next_ft_path(role)
-        torch.save({"model": model.state_dict(), "config": saved["config"],
+        torch.save({"model": model.state_dict(), "config": model.cfg,
                     "method": "sft", "finetuned_from": ref_path.name,
                     "edits": len(edits) // 12}, out_path)
 
