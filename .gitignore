@@ -7,6 +7,10 @@ __pycache__/
 # Working design notes, kept local
 polyphony.md
 
+# Job-hunt planning doc. Kept local: it is scaffolding for the repo's presentation,
+# not part of the project, and it quotes numbers that are wrong until the fixes land.
+better.md
+
 # Kept local: the notebook that renders the preference chart. Its measurement code
 # is utils/metric_utils.py, which IS tracked and is the part worth keeping — the
 # notebook is the scratch around it, and carries ~144 KB of stored cell outputs.
@@ -22,11 +26,21 @@ images/
 # Generated MIDI
 output/
 
-# Experimental training runs. These must live OUTSIDE checkpoints/, not merely be
+# Experimental training runs. Weights must live OUTSIDE checkpoints/, not merely be
 # ignored: latest_ckpt() globs CKPT_DIR and takes the highest ftN on disk, so an
 # experimental checkpoint left there silently becomes the default for generation AND
 # the policy start for the next DPO round. Pass --bass-ckpt / --ref-ckpt to use one.
-experiments/
+#
+# The .pt stay out. The *scripts* are tracked, because every published figure and
+# number in the README is produced by one of them, and an untracked generator makes a
+# figure an unreproducible screenshot. Measured JSON is tracked too — it is small, and
+# it is the evidence behind the tables.
+experiments/**
+!experiments/**/
+!experiments/**/*.py
+!experiments/**/*.md
+!experiments/**/*.json
+experiments/**/*.pt
 
 # Ableton analysis sidecars
 *.asd
@@ -44,6 +58,14 @@ bass_grid/
 bass_notes/
 stems/
 stem_renders/
+
+# The source MIDI the .npz are mined from, vendored so mining is reproducible and every
+# example can be traced back to a named pack file. Ignored for a stronger reason than the
+# .npz below: these are the purchased pack files verbatim, not derivatives. The contents
+# are excluded rather than the directory, so its README survives — git will not descend
+# into an excluded directory to find a re-admitted file inside it.
+training_data/corpus/*
+!training_data/corpus/README.md
 
 # Audio and arrays are ignored by default, then re-admitted below where the file
 # is small, irreplaceable, or needed to run.

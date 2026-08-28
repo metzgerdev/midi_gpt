@@ -1,0 +1,2859 @@
+{
+  "role": "bass",
+  "corpus": "/Users/zynarai/Documents/Code/midi_gpt/training_data/corpus",
+  "mined_utc": "2026-08-28T00:16:33+00:00",
+  "options": {
+    "filter": "ukg",
+    "min_notes": 3,
+    "key_aug": 12,
+    "limit": null
+  },
+  "funnel": {
+    "scanned": 19065,
+    "role_matched": 6561,
+    "genre_kept": 1483,
+    "after_limit": 1483,
+    "content_duplicates": 1090,
+    "unreadable": 0,
+    "no_note_data": 0,
+    "shorter_than_4_bars": 39,
+    "chunks_below_min_notes": 0,
+    "unique_sources": 354,
+    "distinct_phrase_families": 45,
+    "examples_written": 4248
+  },
+  "sources": [
+    {
+      "digest": "04a038dd67",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-01/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "05eae64691",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+06/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0866ac0130",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+04/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3033a68ae8",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+03/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "31a86178d0",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-02/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "406db5b4ee",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-04/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4dd9cf845e",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+05/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7db7cbedf1",
+      "path": "Midi/SO_UKG_140_bass_brass_stab_Amin.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "83abdee664",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-05/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8584bf2bc8",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+01/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f69e9d7d0c",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-03/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fd91640d62",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+02/bass.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2aa0f24c29",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t+03/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4d54aa7349",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t-01/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7d1753db86",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t+06/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "885d9793cb",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t+02/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "886e17ea7e",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t+01/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8d8075cb84",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t-03/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cc6d795679",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t+05/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cfd6b7985c",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t-04/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d7d7d9c57a",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t-02/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ea676a2175",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t+04/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ee6984a395",
+      "path": "Midi/SO_UKG_140_bass_distortion_Amin.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f002da4e8d",
+      "path": "genre_corpus_aug/SOUKG_Amin_0048_t-05/bass.mid",
+      "family": "SOUKG_Amin_0048",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "020eade410",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t+03/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0f558693cf",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t+02/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "204b777f36",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t+01/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "21df5deac1",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t+06/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "27ec54add6",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t-04/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "80ef026a0f",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t+05/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8b135ebec3",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t-05/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9b55ed50c6",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t-01/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b296d48ebe",
+      "path": "Midi/SO_UKG_140_bass_pluck_with_edge_Amin.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bf2b9bf2dc",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t-02/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e8c73f92dd",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t-03/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f723ed76b8",
+      "path": "genre_corpus_aug/SOUKG_Amin_0051_t+04/bass.mid",
+      "family": "SOUKG_Amin_0051",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "225969c036",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-04/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2cf3460fd1",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-05/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "32e64ec78c",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-01/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "479d8d2c6f",
+      "path": "Midi/SO_UKG_140_bass_5th_reese_Bmin.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4c99c02cc2",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+02/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b033b1b015",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+03/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "be7e941ba1",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+04/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cfc607481f",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+05/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e3dfe4c341",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-02/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "eadf05f178",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+06/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f5c1ee8dd9",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-03/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f94c28fe18",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+01/bass.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0114000de0",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t+03/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "073b39c554",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t+06/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1c0f6b7748",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t+05/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "25242b4e15",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t-02/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3a887b52f6",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t+01/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3c128bfc45",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t-03/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "56103ec816",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t-01/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "58b609f77b",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t-04/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "77b61b1fcd",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t+02/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "aab2af0ee2",
+      "path": "Midi/SO_UKG_140_bass_what_a_reese_Bmin.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ac5377fc83",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t+04/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f4a780f78b",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0066_t-05/bass.mid",
+      "family": "SOUKG_Bmin_0066",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0124b7d02c",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t+04/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "026dd43bf8",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t-03/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "08847851ae",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t-02/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "168f550f94",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t+02/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "265edb795f",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t+05/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6023ccefb4",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t+03/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "61d5a33a5c",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t-04/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7776c085f3",
+      "path": "Midi/SO_UKG_140_keys_chords_on_top_of_the_bass_Bmin.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7e089d28c5",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t+06/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a41ef617d4",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t+01/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a7dc2dcc47",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t-01/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b46d6fb6a0",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0069_t-05/bass.mid",
+      "family": "SOUKG_Bmin_0069",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "13673f463b",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-03/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "15eaf0dd65",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+05/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1691b02a1a",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+01/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "21bb1e02b5",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+02/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "35fcd19493",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+03/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "488a20d882",
+      "path": "Midi/SO_UKG_140_bass_notion_C#min.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 5,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5d534acd45",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-05/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7a504e1407",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+06/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bf48cf800e",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+04/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d0d3002139",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-01/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d8a815ad53",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-02/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e10442d93b",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-04/bass.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1509ca39ba",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t-02/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "20054cfdd0",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t+02/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "24e4d19b49",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t-05/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "27a5c2fc0d",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t+01/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3783c5e79e",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t+06/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "47a613ca9a",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t+04/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6b11d85612",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t+05/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "88157ad981",
+      "path": "genre_corpus/SOUKG_C#min_0083/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 4,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9466b79fcc",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t-01/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b83f4dead6",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t+03/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c817829c99",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t-04/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dddad1b461",
+      "path": "genre_corpus_aug/SOUKG_C#min_0083_t-03/bass.mid",
+      "family": "SOUKG_C#min_0083",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1bb4a484cc",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t-02/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "25a500d943",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t-05/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2fae93ac58",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t+04/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "40c94c58e6",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t+06/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5d00a0d137",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t+01/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "65bdeec2cc",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t+02/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "65dcce521e",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t-01/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7827b7ae50",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t+03/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a7739e12a6",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t+05/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b411817c42",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t-04/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c050a9fe68",
+      "path": "genre_corpus/SOUKG_C#min_0085/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 4,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f0acfe5427",
+      "path": "genre_corpus_aug/SOUKG_C#min_0085_t-03/bass.mid",
+      "family": "SOUKG_C#min_0085",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "184ebd01ed",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-05/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "26d98e6c3c",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+05/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3a431d5acc",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+04/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "60c8ec1d3d",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-02/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "636bdf4f8a",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+06/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8f730e0f31",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+01/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ace705f181",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+03/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b05c8156db",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+02/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bcef6448cf",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-04/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d6cfeb0a49",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-01/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e7b7ca4b19",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-03/bass.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f5c736da65",
+      "path": "Midi/SO_UKG_140_bass_good_sustained_D#min.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 5,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "47b078d348",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t-04/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4b97a59918",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t+05/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5810a90fe2",
+      "path": "Midi/SO_UKG_140_bass_speed_in_the_garage_D#min.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 5,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5f1c191fc4",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t+06/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7a1ad0c8fa",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t-05/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8b833e5445",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t-02/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9acd2d7806",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t-01/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ac34514ab8",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t+02/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c99c994689",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t+04/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cd0e9cb0ce",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t-03/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e40e5b744e",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t+01/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f176492d6d",
+      "path": "genre_corpus_aug/SOUKG_D#min_0128_t+03/bass.mid",
+      "family": "SOUKG_D#min_0128",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0295446b10",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-05/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0c7799211e",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-01/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "20164ec5ee",
+      "path": "Midi/SO_UKG_140_bass_aggressive_pluck_Dmin.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3945531c56",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-03/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5d1a0ef9dd",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+06/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6692c56437",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+05/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7d5476ef98",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+01/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7dfeb2adf6",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+04/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "81fd0eaa01",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-02/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "afad17f4aa",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+02/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cc46087573",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+03/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fea46f40cd",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-04/bass.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1df081e464",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t-05/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2a5621cfe6",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t+06/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "412bdf8b4b",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t+03/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4d18157983",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t+04/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a62c9ed1b7",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t-02/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a6716666ad",
+      "path": "Midi/SO_UKG_140_bass_broken_reese_Dmin.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b364ccb4b4",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t-04/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c867f7375a",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t-01/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e21c6a9162",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t-03/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f09177fc44",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t+05/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f0a11f9929",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t+01/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f4c2ab7f8e",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0146_t+02/bass.mid",
+      "family": "SOUKG_Dmin_0146",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "09f0abfe8b",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t-04/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3e09798a58",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t-03/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4b9eb941d6",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t-02/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7084b5461e",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t+03/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "71b0502091",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t-01/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7c5adcf080",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t+01/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "80cc6d6cb2",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t+04/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9dae9964af",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t+06/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b55bd68b68",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t+02/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c75619af46",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t+05/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f5689f5ded",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0149_t-05/bass.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fbd6fe979d",
+      "path": "Midi/SO_UKG_140_bass_detuned_mid_Dmin.mid",
+      "family": "SOUKG_Dmin_0149",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "105bcc70aa",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t-03/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3bbf3dda82",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t-05/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3ebb01816a",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t+05/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "65420f608a",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t+03/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "65567af215",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t+06/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8b2f831942",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t+04/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9930739d21",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t+02/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9ec7f592b6",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t-02/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9ecb641266",
+      "path": "Midi/SO_UKG_140_bass_reese_with_a_twist_Emin.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 19,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b7f3480972",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t-04/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c70a9e6303",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t+01/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d9d3f5f3c6",
+      "path": "genre_corpus_aug/SOUKG_Emin_0168_t-01/bass.mid",
+      "family": "SOUKG_Emin_0168",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "079d77f2f3",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t+01/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "286242e32f",
+      "path": "Midi/SO_UKG_140_bass_sensus_Emin.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 19,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "43234788bd",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t+03/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4ac451f879",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t+06/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "77c92e48c1",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t+05/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8335692313",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t-02/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "89db456abb",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t-04/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "91da453797",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t+04/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9e9b5ca5d3",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t-01/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a5cfaa9602",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t+02/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bfc420cc28",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t-03/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ca5b459584",
+      "path": "genre_corpus_aug/SOUKG_Emin_0171_t-05/bass.mid",
+      "family": "SOUKG_Emin_0171",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "05e5a4c803",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+02/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0f26f5c630",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+04/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "30e9add21b",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-04/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3b3e1de1a1",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+06/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3faa99756f",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-01/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4eea09a347",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+01/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "55f16b68e8",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-03/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5a37b2411a",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+05/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "71b2045782",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-05/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7e2b2da43c",
+      "path": "genre_corpus/SOUKG_F#min_0200/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a2a06dba2e",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-02/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e8e4bc8a53",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+03/bass.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1d8e40a599",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t+01/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2da114db40",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t+06/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3731234293",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t-04/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "397072af95",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t-05/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "78e747c282",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t-03/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "94ca0f2e39",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t+02/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a10f3a5095",
+      "path": "Midi/SO_UKG_140_bass_mid_F#min.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a91659a830",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t+05/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d7ff7ea246",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t+04/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d95f5d9668",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t-01/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f1f6f12abe",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t-02/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f99171af84",
+      "path": "genre_corpus_aug/SOUKG_F#min_0206_t+03/bass.mid",
+      "family": "SOUKG_F#min_0206",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "067db4e4ba",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+02/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "42b2a84050",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+03/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4929160e34",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-05/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "689f3e4177",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+05/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9b4e4f3e97",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-02/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9b75831848",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+01/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9c812af470",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-04/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "afe09ce88a",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-01/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b0de875cb1",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-03/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d0b8ffae44",
+      "path": "Midi/SO_UKG_140_bass_attack_power_and_drive_Fmin.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "da334939aa",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+04/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f37b3358d0",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+06/bass.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "18eee42400",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t+03/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1c700ed4a6",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t+02/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1e5d5fcb14",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t+04/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1f6afbb4fb",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t+01/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "266d5d374d",
+      "path": "Midi/SO_UKG_140_bass_classic_ukg_Fmin.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3075977379",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t-03/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3c37909d76",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t-05/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4371c63f4f",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t-04/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7f4a417bde",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t-01/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "92a5742290",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t+06/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9ac363fd04",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t+05/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9bffcf567f",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0230_t-02/bass.mid",
+      "family": "SOUKG_Fmin_0230",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "04b5ad9a96",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t+06/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "10f9df9c04",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t+04/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1dfb11efff",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t+05/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "436921ad38",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t-01/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4d42842168",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t-02/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "89f0c2000b",
+      "path": "Midi/SO_UKG_140_bass_garage_pluck_Fmin.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ad7176d415",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t-03/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d3980eef01",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t+01/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "db909c76d4",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t-05/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dc4a9aaa4a",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t-04/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fab638840d",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t+02/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fac6413648",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0233_t+03/bass.mid",
+      "family": "SOUKG_Fmin_0233",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1a32df83a5",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-02/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2e7c5cf614",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+02/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5477931cbf",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-05/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "72899c1071",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-03/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "771f89137c",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+03/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "886b3f9854",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+00/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8eae21f1e2",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-01/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "93f9f2cf3d",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+06/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a1972ef3c7",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+05/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a7b674b081",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-04/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ce7be2576f",
+      "path": "genre_corpus/SOUKG_G#maj_0236/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f8f682b795",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+04/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fadc052fc2",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+01/bass.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "01dddd2e6c",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+01/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "25284cdf85",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+05/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "50d6964320",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+02/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "60eae05047",
+      "path": "genre_corpus/SOUKG_G#min_0255/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8036f5261f",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-02/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8e3cb58718",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+04/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9b4c511a15",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-05/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b16735949f",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-04/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c36d835267",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-03/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e0cb8aeb20",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+03/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f9296e928d",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-01/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fa28e1d5d5",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+06/bass.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "084aabb7a3",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t-05/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "346ee9d5de",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t+02/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "458cab42ed",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t-03/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4b3b66be1d",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t-04/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4bbe3ad5ef",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t+06/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "766b11f383",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t+03/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8f0e7c6cb5",
+      "path": "genre_corpus/SOUKG_G#min_0258/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "980c58fd60",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t+04/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c1e6aace69",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t-01/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c40c171104",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t+01/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c688192715",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t-02/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cd5a85175a",
+      "path": "genre_corpus_aug/SOUKG_G#min_0258_t+05/bass.mid",
+      "family": "SOUKG_G#min_0258",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "356bdbb9a4",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t-01/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "43ceaf072f",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t+04/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4707baa5ce",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t+05/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8bbebde425",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t-04/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9f034e28fe",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t+01/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a6250bcacb",
+      "path": "genre_corpus/SOUKG_Gmaj_0264/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b711cc3863",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t-05/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c28dfd1323",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t-03/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ccd95ebd2b",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t-02/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d1b6e9cde8",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t+03/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e83b530d38",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t+02/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ec5fbb884a",
+      "path": "genre_corpus_aug/SOUKG_Gmaj_0264_t+06/bass.mid",
+      "family": "SOUKG_Gmaj_0264",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "195f9002f4",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t+02/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "41b9785920",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t+06/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4ae38f194e",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t+01/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "519b23b3e6",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t-03/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8532464090",
+      "path": "genre_corpus/SOUKG_Gmin_0276/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 12,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a3f60e5082",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t+05/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a5b5e48810",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t-04/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bac96d776b",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t+03/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d7e254d492",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t-05/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e6f2a826f9",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t+04/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "eabfada041",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t-02/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ffbd97025d",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0276_t-01/bass.mid",
+      "family": "SOUKG_Gmin_0276",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0bf73f3715",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t+05/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "268a97e165",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t+06/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3d186a72e4",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t+02/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5194163353",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t-04/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "60eb9e9252",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t+03/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6a27bc51bf",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t-01/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "78797dcf1b",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t-02/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ce5e635d28",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t+01/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e19326bd1d",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t-05/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e4a6fad515",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t+04/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ea5054afa5",
+      "path": "Midi/SO_UKG_140_bass_break_or_drop_Gmin.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 13,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f4170fb6be",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0279_t-03/bass.mid",
+      "family": "SOUKG_Gmin_0279",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "065554e25f",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t-02/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "25225159f3",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t+06/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5fd100aef4",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t+02/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "947cce0f79",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t-05/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "995002ea5e",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t+04/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9c1e9a9782",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t+03/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a9e20cb346",
+      "path": "Midi/SO_UKG_140_bass_hype_Gmin.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 13,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ba4bb0302b",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t-01/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e622c148b5",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t+01/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e788588b58",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t+05/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f0c190226a",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t-03/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fd708e2f9a",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0282_t-04/bass.mid",
+      "family": "SOUKG_Gmin_0282",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8c274a5a0c",
+      "path": "Midi/SO_UKG_140_bass_edgy_and_spooky_A#min.mid",
+      "family": "SO_UKG_140_bass_edgy_and_spooky_A#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1fbd0308f2",
+      "path": "Midi/SO_UKG_140_bass_harsh_Dmin.mid",
+      "family": "SO_UKG_140_bass_harsh_Dmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cbe3a32cf9",
+      "path": "Midi/SO_UKG_140_bass_pluck_with_character_Dmin.mid",
+      "family": "SO_UKG_140_bass_pluck_with_character_Dmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5f0c0bab45",
+      "path": "Midi/SO_UKG_140_bass_plucky_spark_A#min.mid",
+      "family": "SO_UKG_140_bass_plucky_spark_A#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "09ecf97d8f",
+      "path": "Midi/SO_UKG_140_bass_reesy_Cmin.mid",
+      "family": "SO_UKG_140_bass_reesy_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "38f95d69de",
+      "path": "Midi/SO_UKG_140_bass_riser_wobble_reese_F#min.mid",
+      "family": "SO_UKG_140_bass_riser_wobble_reese_F#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b6ef70a17c",
+      "path": "Midi/SO_UKG_140_bass_rolling_pluck_F#min.mid",
+      "family": "SO_UKG_140_bass_rolling_pluck_F#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6fd269e6f9",
+      "path": "Midi/SO_UKG_140_bass_sharp_plucky_Amin.mid",
+      "family": "SO_UKG_140_bass_sharp_plucky_Amin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "33064d9ed1",
+      "path": "Midi/SO_UKG_140_bass_show_me_love_Fmin.mid",
+      "family": "SO_UKG_140_bass_show_me_love_Fmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7c2fe76f43",
+      "path": "Midi/SO_UKG_140_bass_uk_power_Emin.mid",
+      "family": "SO_UKG_140_bass_uk_power_Emin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4d4f95dd71",
+      "path": "Midi/SO_UKG_140_bass_with_character_Dmin.mid",
+      "family": "SO_UKG_140_bass_with_character_Dmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c31bf70b7d",
+      "path": "Midi/SO_UKG_140_bass_with_high_end_Cmin.mid",
+      "family": "SO_UKG_140_bass_with_high_end_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "24d05e004b",
+      "path": "Midi/SO_UKG_140_bass_wobble_wobble_F#min.mid",
+      "family": "SO_UKG_140_bass_wobble_wobble_F#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a73e27969b",
+      "path": "Midi/SO_UKG_140_bass_wobbly_ukg_Emin.mid",
+      "family": "SO_UKG_140_bass_wobbly_ukg_Emin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0a1b94a4e7",
+      "path": "Midi/SO_UKG_140_bass_wowwow_Emin.mid",
+      "family": "SO_UKG_140_bass_wowwow_Emin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "172b20a574",
+      "path": "Midi/SO_UKG_140_lead_melody_speed_bass_lead_Cmin.mid",
+      "family": "SO_UKG_140_lead_melody_speed_bass_lead_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "58eb546323",
+      "path": "Midi/SO_UKG_140_pluck_riff_mid_bass_pluck_Gmin.mid",
+      "family": "SO_UKG_140_pluck_riff_mid_bass_pluck_Gmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    }
+  ]
+}

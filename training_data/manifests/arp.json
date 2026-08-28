@@ -1,0 +1,2331 @@
+{
+  "role": "arp",
+  "corpus": "/Users/zynarai/Documents/Code/midi_gpt/training_data/corpus",
+  "mined_utc": "2026-08-28T00:16:35+00:00",
+  "options": {
+    "filter": "ukg",
+    "min_notes": 3,
+    "key_aug": 12,
+    "limit": null
+  },
+  "funnel": {
+    "scanned": 19065,
+    "role_matched": 6355,
+    "genre_kept": 1477,
+    "after_limit": 1477,
+    "content_duplicates": 1098,
+    "unreadable": 0,
+    "no_note_data": 0,
+    "shorter_than_4_bars": 90,
+    "chunks_below_min_notes": 1,
+    "unique_sources": 288,
+    "distinct_phrase_families": 45,
+    "examples_written": 3456
+  },
+  "sources": [
+    {
+      "digest": "0bc947fca6",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+06/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "23e99b1e99",
+      "path": "Midi/SO_UKG_140_pluck_melody_broken_organ_Amin.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4ca38dfd59",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+05/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "53423d9353",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+04/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a4c8615b20",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-03/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b1ef7833d6",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-01/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b387b8482c",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+02/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e79aab5171",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+03/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f329cfb666",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-05/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f7e54043be",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-04/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f95d520873",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t-02/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "facc13be61",
+      "path": "genre_corpus_aug/SOUKG_Amin_0045_t+01/melody.mid",
+      "family": "SOUKG_Amin_0045",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0ea2466f6b",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t-02/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "262cf74498",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t+03/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "28f9ff59ab",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t+01/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2c3b782bec",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t-04/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "64422983d6",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t-01/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a77406c175",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t+04/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c85d2411df",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t+02/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d153e82be5",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t+06/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dcabb3e867",
+      "path": "genre_corpus/SOUKG_Amin_0047/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "de40095931",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t+05/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "deda88ac16",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t-05/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fca9e801cc",
+      "path": "genre_corpus_aug/SOUKG_Amin_0047_t-03/melody.mid",
+      "family": "SOUKG_Amin_0047",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "101fcfe123",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+01/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "35f2b8cdb0",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-03/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "63fdbdb98a",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+03/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "658ab17bcd",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-02/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "71150af65a",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+05/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "92030dd733",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+06/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a59ffae442",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+04/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ad833dc8db",
+      "path": "Midi/SO_UKG_140_lead_melody_break_Bmin.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bdb57c95d8",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t+02/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ecc7b126d1",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-01/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f168602d3d",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-05/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f47e5a079c",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0063_t-04/melody.mid",
+      "family": "SOUKG_Bmin_0063",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "00cec959b0",
+      "path": "Midi/SO_UKG_140_lead_melody_speedrunner_Bmin.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0e3bef4db9",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t-03/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1603aefd8b",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t-02/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "69893b5f4d",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t+06/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "737461e63e",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t+01/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "983c1bc880",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t-05/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9f4c375318",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t+03/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a02e2a91d3",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t+04/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c69350293b",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t-01/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ce9e3b1498",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t+02/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d4ef63701d",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t-04/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ddccdc7647",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0064_t+05/melody.mid",
+      "family": "SOUKG_Bmin_0064",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2bf7870bc6",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+01/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2e7048cac9",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+02/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "34a0d1d005",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+03/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "43d1446522",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t-03/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "56c8136d4a",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+04/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "68194ace1a",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t-05/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6f7821cc35",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+06/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7330d79155",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t-02/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "85192c7eb7",
+      "path": "genre_corpus/SOUKG_Bmin_0065/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8b78156808",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+00/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bcd605814a",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t+05/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c46b824420",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t-01/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dde63121f8",
+      "path": "genre_corpus_aug/SOUKG_Bmin_0065_t-04/melody.mid",
+      "family": "SOUKG_Bmin_0065",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "11e53712e5",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+05/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1755f151d1",
+      "path": "Midi/SO_UKG_140_lead_melody_acid_C#min.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "39a28b9169",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-05/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5625d4e4dc",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+04/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5b54a0444a",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-04/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "62df5783b1",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-01/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7292429dc9",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+03/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "adf7d23ebe",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-03/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bbe0ed744c",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+02/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c0bd6200ec",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+06/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d468defde2",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t-02/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fafb7773c6",
+      "path": "genre_corpus_aug/SOUKG_C#min_0081_t+01/melody.mid",
+      "family": "SOUKG_C#min_0081",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0c2c7a6abb",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t-02/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0d2a32cc4d",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t+06/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "245cc72235",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t-05/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3fc3f40450",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t-01/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "48e1566730",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t+03/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "72c2a13fd0",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t-04/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7f26e32cc2",
+      "path": "genre_corpus/SOUKG_C#min_0082/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "90322db641",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t+02/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "90459e8716",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t-03/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ae9cae4fcd",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t+04/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c5d4988a37",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t+05/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fcf689c6c4",
+      "path": "genre_corpus_aug/SOUKG_C#min_0082_t+01/melody.mid",
+      "family": "SOUKG_C#min_0082",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "107a9e75c8",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+03/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "166bc1ab47",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-03/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2e80dacb21",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+01/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3bb0f36dc7",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-02/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "54c1c16407",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+02/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "576ae23b49",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+06/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6830cf198b",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-01/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "75e112a2a1",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-04/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8e0947b69d",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+04/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d1622ccd54",
+      "path": "genre_corpus/SOUKG_D#min_0126/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 4,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e60913c9a6",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t+05/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ec918d702d",
+      "path": "genre_corpus_aug/SOUKG_D#min_0126_t-05/melody.mid",
+      "family": "SOUKG_D#min_0126",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0c0fc165ed",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+06/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3802d796ac",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-03/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "433a6f6661",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+01/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "478d3d1e67",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-05/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5d538840f2",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+05/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7cbdb44fa0",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-01/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "88a30f6108",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-02/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a4a1e1d05a",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+04/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c8b13e3be9",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t-04/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d26ebf56b6",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+02/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d672a31fc9",
+      "path": "Midi/SO_UKG_140_lead_melody_ravey_stab_Dmin.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f4cabcf8b8",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0143_t+03/melody.mid",
+      "family": "SOUKG_Dmin_0143",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "048f5c153f",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t+05/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "41a6ad5f85",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t+06/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "41bacb55b4",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t-01/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "42c881cc2a",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t-04/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4c2dc6b08e",
+      "path": "Midi/SO_UKG_140_lead_melody_rough_Dmin.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6f37919260",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t+03/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "71ceedddc4",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t-05/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "797866411a",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t+02/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a5b9f67018",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t+04/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a75b8e8351",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t-03/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ac013bb5e5",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t-02/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c81dd4656c",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0144_t+01/melody.mid",
+      "family": "SOUKG_Dmin_0144",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "05d587cfc0",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t-01/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "11523fef43",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t-03/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "28d9072acc",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t+06/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2c1ad435ab",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t-05/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "602e67c0d0",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t-04/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6e1dae5518",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t+03/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7d8b240ed1",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t+05/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "806151fe39",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t+01/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "94be4445ef",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t+04/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a97a467f26",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t+02/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "aa566da423",
+      "path": "genre_corpus/SOUKG_Dmin_0145/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c69b7f6cba",
+      "path": "genre_corpus_aug/SOUKG_Dmin_0145_t-02/melody.mid",
+      "family": "SOUKG_Dmin_0145",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0649e08b2b",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t+05/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0a1e17ed24",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t+06/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "480863b5fc",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t-01/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4e1c65fee1",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t-03/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "51047f3f41",
+      "path": "Midi/SO_UKG_140_pluck_melody_melodic_garage_Emin.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 19,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "58ccb471a0",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t+01/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "66d5e08e0c",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t+04/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6eae8f35f0",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t+02/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "79e1d91371",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t-02/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8399cdb7f3",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t-05/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "869948993d",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t-04/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b4e4a27699",
+      "path": "genre_corpus_aug/SOUKG_Emin_0166_t+03/melody.mid",
+      "family": "SOUKG_Emin_0166",
+      "copies": 9,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1e946ec608",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+06/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "205972a811",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-05/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2ddd12300b",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-02/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "349b8fdb01",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-01/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3ed298a1c9",
+      "path": "Midi/SO_UKG_140_lead_melody_yuuuu_F#min.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "52ab9731f5",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-03/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "581c022345",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+04/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "71c008e108",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+02/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b4b352f248",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+03/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bac6bf79da",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+01/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dc47af26b2",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t-04/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f8bd9a5253",
+      "path": "genre_corpus_aug/SOUKG_F#min_0200_t+05/melody.mid",
+      "family": "SOUKG_F#min_0200",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1d4067582f",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t+02/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "20caebb2e8",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t+01/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4613667336",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t+03/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "47596ae3a1",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t-04/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4a2884c814",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t+04/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5b4069741a",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t-03/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "693c900235",
+      "path": "Midi/SO_UKG_140_pluck_melody_heartstring_F#min.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "afbe492ba6",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t-01/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bf6cb7d711",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t-05/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d1a26d5132",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t+06/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d7e5a0647d",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t+05/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e0d78c45b2",
+      "path": "genre_corpus_aug/SOUKG_F#min_0202_t-02/melody.mid",
+      "family": "SOUKG_F#min_0202",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "16d20ea1b5",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+01/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1d4026dbf4",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-02/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3aa1a3156a",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+04/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "79aae1ec12",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+03/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7de6f8a5df",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+05/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8c4bd1c6e5",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-03/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b698ddaec0",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-05/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d427293f21",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+02/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dd91b80dad",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-01/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ed56c9c2b2",
+      "path": "genre_corpus/SOUKG_Fmin_0227/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ed62602eb0",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t+06/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fb232b5fa9",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0227_t-04/melody.mid",
+      "family": "SOUKG_Fmin_0227",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "050d628ead",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t+05/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0d7f60a82d",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t-03/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0e8d9d5f74",
+      "path": "genre_corpus/SOUKG_Fmin_0229/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "10abecb500",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t+06/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1ab9ef052b",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t+02/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "2a36131436",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t-02/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "44b2f595a0",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t-05/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4dc8b9b390",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t+01/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5646308c4c",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t+04/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "9c60f9e6ea",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t-01/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bee7c257fa",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t-04/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "de3d9afd73",
+      "path": "genre_corpus_aug/SOUKG_Fmin_0229_t+03/melody.mid",
+      "family": "SOUKG_Fmin_0229",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1180ea6bab",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+03/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1bfe64fe2e",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+05/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "236d73d052",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-01/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "29c04c5f13",
+      "path": "genre_corpus/SOUKG_G#maj_0236/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 2,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "353721b949",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+04/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a71998bcf3",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-02/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b47b067122",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+01/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cedfce834f",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-04/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d4aa645ea9",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-05/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e19ee94d26",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t-03/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e342774b16",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+02/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f34e0e81b8",
+      "path": "genre_corpus_aug/SOUKG_G#maj_0236_t+06/melody.mid",
+      "family": "SOUKG_G#maj_0236",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "184a9d6187",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+06/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "377110750a",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-03/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "48a9098622",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-05/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4fa8c13922",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-01/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5876284191",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+02/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6876d69079",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-02/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "827a2c4c8d",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+05/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "99dbc9a27e",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+04/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b9e24ebaab",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+03/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ee021848d2",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t-04/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ef2127f688",
+      "path": "Midi/SO_UKG_140_keys_melody_melodic_garage_G#min.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f846f29af4",
+      "path": "genre_corpus_aug/SOUKG_G#min_0255_t+01/melody.mid",
+      "family": "SOUKG_G#min_0255",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "370f45022b",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t+02/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "46de6cbf84",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t-02/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5583220575",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t+01/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "58f51a984a",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t+06/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "62aa1bb9c5",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t-03/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7ad450473b",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t+04/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7deb278668",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t-01/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "840cc3fb78",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t+03/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ca57b80978",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t+05/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d01e3b17ce",
+      "path": "Midi/SO_UKG_140_lead_melody_uk_rave_G#min.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "eb16731934",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t-05/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ede76c3c8c",
+      "path": "genre_corpus_aug/SOUKG_G#min_0256_t-04/melody.mid",
+      "family": "SOUKG_G#min_0256",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "06d9ebf427",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t+01/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1b2bc7c08b",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t+05/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "370d334241",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t-03/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3e5c5640e8",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t-05/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "47da837d0e",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t-02/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "83da4eda3b",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t+02/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "90ecf76ea0",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t-04/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "969364fdb7",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t-01/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ac687ebfc8",
+      "path": "Midi/SO_UKG_140_lead_melody_wobbly_G#min.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 7,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d456825e05",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t+03/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e8ec7fed30",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t+06/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "f7ad51b459",
+      "path": "genre_corpus_aug/SOUKG_G#min_0257_t+04/melody.mid",
+      "family": "SOUKG_G#min_0257",
+      "copies": 3,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3f6d40a477",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t+01/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "42068548dd",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t-05/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4623aa0c20",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t-02/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6c406e2c8e",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t-01/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6e6fd8f47c",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t-03/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "81159a1ed1",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t+06/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8422a7fb93",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t-04/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "acf631381f",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t+02/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "afcc034cad",
+      "path": "Midi/SO_UKG_140_pluck_melody_again_fred_Gmin.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 13,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "dfd62faeda",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t+04/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e9040c5a38",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t+05/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "ef2cea1294",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0277_t+03/melody.mid",
+      "family": "SOUKG_Gmin_0277",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4bf88783bc",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t+05/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4cdc6a1c85",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t-01/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "53e4942a61",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t+04/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5e78473b9f",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t+06/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "72d58f6b65",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t+03/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "76ba7bd433",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t+01/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "86dac9816f",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t-04/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a22c550071",
+      "path": "Midi/SO_UKG_140_pluck_melody_fishers_berries_Gmin.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 13,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a3fe66ea8e",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t-03/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "a55cc55bf4",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t-02/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "c911cf08e7",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t+02/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "de1dc262b2",
+      "path": "genre_corpus_aug/SOUKG_Gmin_0278_t-05/melody.mid",
+      "family": "SOUKG_Gmin_0278",
+      "copies": 6,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "20164ec5ee",
+      "path": "Midi/SO_UKG_140_bass_aggressive_pluck_Dmin.mid",
+      "family": "SO_UKG_140_bass_aggressive_pluck_Dmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "89f0c2000b",
+      "path": "Midi/SO_UKG_140_bass_garage_pluck_Fmin.mid",
+      "family": "SO_UKG_140_bass_garage_pluck_Fmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "cbe3a32cf9",
+      "path": "Midi/SO_UKG_140_bass_pluck_with_character_Dmin.mid",
+      "family": "SO_UKG_140_bass_pluck_with_character_Dmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b296d48ebe",
+      "path": "Midi/SO_UKG_140_bass_pluck_with_edge_Amin.mid",
+      "family": "SO_UKG_140_bass_pluck_with_edge_Amin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "5f0c0bab45",
+      "path": "Midi/SO_UKG_140_bass_plucky_spark_A#min.mid",
+      "family": "SO_UKG_140_bass_plucky_spark_A#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b6ef70a17c",
+      "path": "Midi/SO_UKG_140_bass_rolling_pluck_F#min.mid",
+      "family": "SO_UKG_140_bass_rolling_pluck_F#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "6fd269e6f9",
+      "path": "Midi/SO_UKG_140_bass_sharp_plucky_Amin.mid",
+      "family": "SO_UKG_140_bass_sharp_plucky_Amin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b5a06efdee",
+      "path": "Midi/SO_UKG_140_keys_chords_bellish_Cmin.mid",
+      "family": "SO_UKG_140_keys_chords_bellish_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "7776c085f3",
+      "path": "Midi/SO_UKG_140_keys_chords_on_top_of_the_bass_Bmin.mid",
+      "family": "SO_UKG_140_keys_chords_on_top_of_the_bass_Bmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "fdaae74a97",
+      "path": "Midi/SO_UKG_140_keys_chords_rave_Emin.mid",
+      "family": "SO_UKG_140_keys_chords_rave_Emin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e551e5d838",
+      "path": "Midi/SO_UKG_140_keys_chords_redux_Cmin.mid",
+      "family": "SO_UKG_140_keys_chords_redux_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "0a3f981759",
+      "path": "Midi/SO_UKG_140_keys_chords_stringheart_Ebmin.mid",
+      "family": "SO_UKG_140_keys_chords_stringheart_Ebmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "3d6bdc4250",
+      "path": "Midi/SO_UKG_140_keys_rhythm_broken_piano_Cmin.mid",
+      "family": "SO_UKG_140_keys_rhythm_broken_piano_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "1f98ff2af7",
+      "path": "Midi/SO_UKG_140_lead_melody_melodic_Cmin.mid",
+      "family": "SO_UKG_140_lead_melody_melodic_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "8c21c3fc47",
+      "path": "Midi/SO_UKG_140_lead_melody_plucky_Cmin.mid",
+      "family": "SO_UKG_140_lead_melody_plucky_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "e620bfac99",
+      "path": "Midi/SO_UKG_140_lead_melody_raw_mph_Bbmin.mid",
+      "family": "SO_UKG_140_lead_melody_raw_mph_Bbmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "172b20a574",
+      "path": "Midi/SO_UKG_140_lead_melody_speed_bass_lead_Cmin.mid",
+      "family": "SO_UKG_140_lead_melody_speed_bass_lead_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "b583f62e77",
+      "path": "Midi/SO_UKG_140_lead_melody_trance_gate_Cmin.mid",
+      "family": "SO_UKG_140_lead_melody_trance_gate_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "377e0d1d5f",
+      "path": "Midi/SO_UKG_140_pluck_arp_little_bells_Cmin.mid",
+      "family": "SO_UKG_140_pluck_arp_little_bells_Cmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "bca1ea6740",
+      "path": "Midi/SO_UKG_140_pluck_arp_speed_G#min.mid",
+      "family": "SO_UKG_140_pluck_arp_speed_G#min",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "d6b8ec5222",
+      "path": "Midi/SO_UKG_140_pluck_chords_organ_pad_Gmin.mid",
+      "family": "SO_UKG_140_pluck_chords_organ_pad_Gmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "4eb15a0ad9",
+      "path": "Midi/SO_UKG_140_pluck_melody_glassy_Gmin.mid",
+      "family": "SO_UKG_140_pluck_melody_glassy_Gmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    },
+    {
+      "digest": "58eb546323",
+      "path": "Midi/SO_UKG_140_pluck_riff_mid_bass_pluck_Gmin.mid",
+      "family": "SO_UKG_140_pluck_riff_mid_bass_pluck_Gmin",
+      "copies": 1,
+      "chunks": 1,
+      "examples": 12
+    }
+  ]
+}
