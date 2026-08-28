@@ -175,7 +175,7 @@ def best_section(model, grid_tok, chord_tok, chroma, grid, temp, base_seed, devi
     """Best-of-N: sample candidates, score = harmony fit + kick lock + density sanity.
 
     Density prefers a real UKG bassline (6-16 onsets per 4 bars) over one droning
-    note or machine-gun spam. Cheap on a 0.69M model; big quality-floor win."""
+    note or machine-gun spam. Cheap on a 621k model; big quality-floor win."""
     best, best_score, best_fl = None, -1e9, (0.0, 0.0)
     for c in range(n_cand):
         tk = gen_section(model, grid_tok, chord_tok, temp, seed=base_seed + c * 101, device=device)

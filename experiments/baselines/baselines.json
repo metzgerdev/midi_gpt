@@ -1,0 +1,106 @@
+{
+  "bass": [
+    {
+      "system": "random",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.354,
+      "chord_fit_se": 0.007,
+      "kick_lock": 0.083,
+      "kick_lock_se": 0.007,
+      "note_density": 61.8
+    },
+    {
+      "system": "markov",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.463,
+      "chord_fit_se": 0.013,
+      "kick_lock": 0.124,
+      "kick_lock_se": 0.013,
+      "note_density": 10.9
+    },
+    {
+      "system": "unconditioned",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.472,
+      "chord_fit_se": 0.019,
+      "kick_lock": 0.186,
+      "kick_lock_se": 0.027,
+      "note_density": 6.2
+    },
+    {
+      "system": "model",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.937,
+      "chord_fit_se": 0.01,
+      "kick_lock": 0.886,
+      "kick_lock_se": 0.015,
+      "note_density": 14.2
+    },
+    {
+      "system": "corpus",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.904,
+      "chord_fit_se": 0.022,
+      "kick_lock": 0.78,
+      "kick_lock_se": 0.035,
+      "note_density": 12.3
+    }
+  ],
+  "arp": [
+    {
+      "system": "random",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.358,
+      "chord_fit_se": 0.007,
+      "kick_lock": 0.103,
+      "kick_lock_se": 0.009,
+      "note_density": 61.9
+    },
+    {
+      "system": "markov",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.412,
+      "chord_fit_se": 0.009,
+      "kick_lock": 0.114,
+      "kick_lock_se": 0.014,
+      "note_density": 17.0
+    },
+    {
+      "system": "unconditioned",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.625,
+      "chord_fit_se": 0.029,
+      "kick_lock": 0.193,
+      "kick_lock_se": 0.025,
+      "note_density": 14.9
+    },
+    {
+      "system": "model",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.938,
+      "chord_fit_se": 0.01,
+      "kick_lock": 0.81,
+      "kick_lock_se": 0.038,
+      "note_density": 20.8
+    },
+    {
+      "system": "corpus",
+      "n": 240,
+      "clusters": 38,
+      "chord_fit": 0.947,
+      "chord_fit_se": 0.013,
+      "kick_lock": 0.8,
+      "kick_lock_se": 0.042,
+      "note_density": 20.1
+    }
+  ]
+}

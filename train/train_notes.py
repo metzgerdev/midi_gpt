@@ -27,12 +27,15 @@ from __future__ import annotations
 
 import argparse
 import glob
+import json
+import random
+import re
 from pathlib import Path
 
 import numpy as np
 import torch
 import torch.nn.functional as F
-from torch.utils.data import DataLoader, Dataset, random_split
+from torch.utils.data import DataLoader, Dataset, Subset, random_split
 
 from utils.config import (
     CKPT_DIR, NOTE_BOS, NOTE_EOS, NOTE_MIDI_HI, NOTE_MIDI_LO, NOTE_PITCH0,
@@ -49,6 +52,61 @@ NOTE_CONFIG = {"vocab_size": NOTE_VOCAB_SIZE, "context_length": NOTE_STEPS + 4,
                "qkv_bias": False}
 
 
+DIGEST_RE = re.compile(r"^.+_([0-9a-f]{10})__\d+_k\d+$")
+
+
+def phrase_families(data_dir: Path, names: list[str]) -> list[str]:
+    """The phrase each example belongs to, read from the mining manifest.
+
+    Falls back to the source digest when no manifest is present, which is weaker but
+    still better than nothing: it groups the twelve keys this repo added, though not
+    the twelve the source corpus had already added before mining.
+    """
+    role = data_dir.name.replace("_notes_midi", "")
+    manifest_path = TRAINING_DATA / "manifests" / f"{role}.json"
+    family_of = {}
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text())
+        family_of = {s["digest"]: s["family"] for s in manifest["sources"]}
+    out = []
+    for name in names:
+        matched = DIGEST_RE.match(Path(name).stem)
+        digest = matched[1] if matched else Path(name).stem
+        out.append(family_of.get(digest, digest))
+    return out
+
+
+def grouped_split(families: list[str], val_split: float, seed: int):
+    """Indices for a split no phrase straddles.
+
+    Shuffles whole phrases, not rows, and fills validation until it reaches the target
+    share of examples. A random split over this corpus leaves *zero* clean validation
+    examples — every one has another key of its own source file in train, and ~half have
+    a byte-identical twin — so the gap it reports is a train-train gap.
+    """
+    by_family: dict[str, list[int]] = {}
+    for i, family in enumerate(families):
+        by_family.setdefault(family, []).append(i)
+
+    order = sorted(by_family)                       # deterministic before shuffling
+    random.Random(seed).shuffle(order)
+    target = max(1, int(val_split * len(families)))
+
+    val_idx: list[int] = []
+    for family in order:
+        if len(val_idx) >= target:
+            break
+        val_idx += by_family[family]
+    held = set(val_idx)
+    train_idx = [i for i in range(len(families)) if i not in held]
+    if not train_idx or not val_idx:
+        raise SystemExit(
+            f"a grouped split of {len(by_family)} phrases at val_split={val_split} "
+            f"left one side empty; lower --val-split or use --split-by random"
+        )
+    return sorted(train_idx), sorted(val_idx)
+
+
 class NoteCorpus(Dataset):
     """The mined .npz set: tokens plus their two aligned conditioning tracks."""
 
@@ -57,9 +115,9 @@ class NoteCorpus(Dataset):
         if not files:
             raise SystemExit(
                 f"no .npz in {data_dir}. Build the corpus first:\n"
-                f"    python -m train.mine_corpus --corpus <folder of MIDI> --role <role>"
+                f"    python -m train.mine_corpus --role <role>"
             )
-        xs, ys, grids, chords = [], [], [], []
+        xs, ys, grids, chords, names = [], [], [], [], []
         for path in files:
             example = np.load(path)
             tokens = example["tokens"].astype(np.int64)
@@ -70,10 +128,14 @@ class NoteCorpus(Dataset):
             ys.append(sequence[1:])                     # target: the next token
             grids.append(note_grid_cond(example["grid"].astype(np.float32)))
             chords.append(note_chord_cond(example["chord"].astype(np.float32)))
+            names.append(Path(path).name)
         self.x = torch.tensor(np.array(xs))
         self.y = torch.tensor(np.array(ys))
         self.grid = torch.tensor(np.array(grids), dtype=torch.float32)
         self.chord = torch.tensor(np.array(chords), dtype=torch.float32)
+        # Kept so a split can group on the phrase behind each row rather than the row.
+        self.names = names
+        self.families = phrase_families(data_dir, names)
 
     def __len__(self):
         return len(self.x)
@@ -93,6 +155,11 @@ def main(argv=None) -> int:
     ap.add_argument("--lr", type=float, default=5e-4)
     ap.add_argument("--min-notes", type=int, default=3)
     ap.add_argument("--val-split", type=float, default=0.15)
+    ap.add_argument("--split-by", default="family", choices=("family", "random"),
+                    help="'family' keeps every key of a phrase on one side (default); "
+                         "'random' reproduces the leaking split the shipped "
+                         "checkpoints were trained under")
+    ap.add_argument("--split-seed", type=int, default=0)
     ap.add_argument("--out", type=Path, default=None,
                     help="default: checkpoints/<role>_notes_gpt.pt")
     ap.add_argument("--force", action="store_true",
@@ -114,16 +181,27 @@ def main(argv=None) -> int:
         )
 
     dataset = NoteCorpus(data_dir, min_notes=args.min_notes)
-    n_val = max(1, int(args.val_split * len(dataset)))
-    train_set, val_set = random_split(dataset, [len(dataset) - n_val, n_val],
-                                      generator=torch.Generator().manual_seed(0))
+    if args.split_by == "family":
+        train_idx, val_idx = grouped_split(dataset.families, args.val_split,
+                                           args.split_seed)
+        train_set, val_set = Subset(dataset, train_idx), Subset(dataset, val_idx)
+        held = len({dataset.families[i] for i in val_idx})
+        split_note = (f"grouped by phrase ({held} of "
+                      f"{len(set(dataset.families))} held out)")
+    else:
+        n_val = max(1, int(args.val_split * len(dataset)))
+        train_set, val_set = random_split(
+            dataset, [len(dataset) - n_val, n_val],
+            generator=torch.Generator().manual_seed(args.split_seed))
+        split_note = "RANDOM — phrases straddle the split, so val loss is not held out"
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True, drop_last=True)
     val_loader = DataLoader(val_set, batch_size=args.batch_size)
 
     model = HarmonicNoteGPT(NOTE_CONFIG).to(device)
     print(f"device {device}   examples {len(dataset)} "
           f"(train {len(train_set)} / val {len(val_set)})   "
-          f"params {sum(p.numel() for p in model.parameters()) / 1e6:.3f}M", flush=True)
+          f"params {sum(p.numel() for p in model.parameters()):,}", flush=True)
+    print(f"split:  {split_note}", flush=True)
 
     # Upweight onsets, downweight sustain: without this the model predicts the majority
     # classes and emits a sparse drone.

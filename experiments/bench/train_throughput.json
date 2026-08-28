@@ -1,0 +1,33 @@
+{
+  "machine": {
+    "platform": "macOS-26.2-arm64-arm-64bit",
+    "torch": "2.12.0"
+  },
+  "settings": {
+    "epochs_timed": 5,
+    "batch_size": 16,
+    "full_run_epochs": 150,
+    "saves_checkpoint": false
+  },
+  "roles": {
+    "bass": {
+      "examples": 4248,
+      "devices": {
+        "cpu": {
+          "epochs_timed": 5,
+          "first_epoch_s": 5.48,
+          "median_epoch_s": 5.11,
+          "projected_full_run_s": 767.2,
+          "projected_full_run_min": 12.8
+        },
+        "mps": {
+          "epochs_timed": 5,
+          "first_epoch_s": 3.32,
+          "median_epoch_s": 2.89,
+          "projected_full_run_s": 433.5,
+          "projected_full_run_min": 7.2
+        }
+      }
+    }
+  }
+}

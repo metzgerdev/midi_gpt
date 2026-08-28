@@ -343,36 +343,36 @@ def test_note_onsets_records_restrikes_that_the_pitch_array_loses():
     assert int((notes_to_tokens(pitch) >= NOTE_PITCH0).sum()) == 2, "tokens agree with pitch"
 
 
-@pytest.mark.slow          # scans for the source MIDI outside the repo
+@pytest.mark.slow          # re-reads the vendored corpus
 def test_mine_corpus_grid_rule_reproduces_the_shipped_corpus():
     """The .npz in training_data/ are the record of what the checkpoints learned from.
 
     Deriving the grid from the mono-reduced pitch array instead of the note events made
     it identical to the token onsets, which is both a different signal and a strictly
     less informative one. Pinned here against the data itself.
-    """
-    import hashlib
 
+    This used to locate the sources by scanning ~/Documents/Code for *bass*.mid, which
+    only worked on the machine that mined them. It now resolves them through the tracked
+    manifest, which is the point of the manifest.
+    """
     from utils.config import ROLE_MONO
 
     corpus = sorted((TRAINING_DATA / "bass_notes_midi").glob("*_k0.npz"))
     if not corpus:
         pytest.skip("mined corpus is absent (gitignored); nothing to pin against")
-
-    sources = {}
-    for candidate in Path.home().joinpath("Documents/Code").rglob("*bass*.mid*"):
-        try:
-            digest = hashlib.md5(candidate.read_bytes()).hexdigest()[:10]
-        except OSError:
-            continue
-        sources.setdefault(digest, candidate)
+    manifest_path = TRAINING_DATA / "manifests" / "bass.json"
+    if not manifest_path.exists():
+        pytest.skip("no manifest; run python -m train.mine_corpus --role bass")
+    manifest = json.loads(manifest_path.read_text())
+    corpus_root = TRAINING_DATA / "corpus"
+    sources = {s["digest"]: corpus_root / s["path"] for s in manifest["sources"]}
 
     pattern = re.compile(r"^(?P<stem>.+)_(?P<digest>[0-9a-f]{10})__(?P<chunk>\d+)_k0$")
     checked = 0
     for npz_path in corpus:
         matched = pattern.match(npz_path.stem)
         source = sources.get(matched["digest"]) if matched else None
-        if source is None:
+        if source is None or not source.exists():
             continue
         midi = mido.MidiFile(source)
         pitch = midi_to_step_grid(midi, mono=ROLE_MONO["bass"])
@@ -389,7 +389,148 @@ def test_mine_corpus_grid_rule_reproduces_the_shipped_corpus():
         if checked >= 40:
             break
     if not checked:
-        pytest.skip("no corpus example could be matched to its source MIDI")
+        pytest.skip("corpus MIDI is absent (gitignored); nothing to resolve against")
+
+
+def test_manifest_accounts_for_every_shipped_example():
+    """The manifest is the only surviving link from an example to a named source file.
+
+    The .npz filename carries the content digest but truncates the stem to 28 characters,
+    and for a multitrack corpus that stem is "bass" — 90% of the sources here. Without
+    this mapping nothing downstream can say what any example is, which is what made the
+    provenance of this corpus unanswerable for as long as it was.
+    """
+    for role in ("bass", "arp"):
+        manifest_path = TRAINING_DATA / "manifests" / f"{role}.json"
+        if not manifest_path.exists():
+            pytest.skip(f"no manifest; run python -m train.mine_corpus --role {role}")
+        manifest = json.loads(manifest_path.read_text())
+        mined = sorted((TRAINING_DATA / f"{role}_notes_midi").glob("*.npz"))
+        if not mined:
+            pytest.skip("mined corpus is absent (gitignored)")
+
+        digests = {re.match(r"^.+_([0-9a-f]{10})__\d+_k\d+$", p.stem)[1] for p in mined}
+        listed = {s["digest"] for s in manifest["sources"]}
+        assert digests == listed, (
+            f"{role}: {len(digests - listed)} mined digests are absent from the manifest, "
+            f"{len(listed - digests)} manifest entries have no example on disk"
+        )
+        assert sum(s["examples"] for s in manifest["sources"]) == len(mined)
+        assert manifest["funnel"]["examples_written"] == len(mined)
+
+
+def test_transposed_copies_of_one_phrase_share_a_family():
+    """Content hashing cannot deduplicate a transposition — it changes every byte.
+
+    The corpus was mined from an already-augmented source, so its 354 "unique" bass files
+    are 45 phrases in twelve keys each. Counting them as 354 overstates the corpus by 7x
+    and, more seriously, lets a random split put one phrase on both sides of itself.
+    """
+    from train.mine_corpus import phrase_family, resolve_families
+
+    assert phrase_family(Path("genre_corpus_aug/SOUKG_Amin_0045_t-03/bass.mid")) \
+        == "SOUKG_Amin_0045"
+    assert phrase_family(Path("Midi/SO_UKG_140_bass_reesy_Cmin.mid")) \
+        == "SO_UKG_140_bass_reesy_Cmin"
+
+    # one phrase found under two arrangement folders resolves to a single family, even
+    # though no two of its transpositions were deduplicated to the same path
+    families = resolve_families({
+        "aaaaaaaaaa": [Path("g/SOUKG_Amin_0045_t+00/bass.mid"),
+                       Path("g/JAFUNK_Amin_0031_t+00/bass.mid")],
+        "bbbbbbbbbb": [Path("g/JAFUNK_Amin_0031_t+03/bass.mid")],
+        "cccccccccc": [Path("g/SOUKG_Bmin_0063_t+00/bass.mid")],
+    })
+    assert families["aaaaaaaaaa"] == families["bbbbbbbbbb"], "same phrase, two folders"
+    assert families["cccccccccc"] != families["aaaaaaaaaa"], "a genuinely different phrase"
+
+    for role in ("bass", "arp"):
+        manifest_path = TRAINING_DATA / "manifests" / f"{role}.json"
+        if not manifest_path.exists():
+            pytest.skip(f"no manifest; run python -m train.mine_corpus --role {role}")
+        manifest = json.loads(manifest_path.read_text())
+        counted = manifest["funnel"]["distinct_phrase_families"]
+        assert counted == len({s["family"] for s in manifest["sources"]})
+        assert counted < manifest["funnel"]["unique_sources"], (
+            f"{role}: the family rule found no redundancy, which for this corpus means "
+            "it stopped working — every phrase here is present in twelve keys"
+        )
+
+
+def test_parameter_count_is_the_number_the_docs_quote():
+    """Three different parameter counts were in circulation. All three were real.
+
+        621,184   the live architecture — what the README and post should say
+        686,848   + cond_proj, a Linear(512, 128) for a CLAP embedding this repo cannot
+                  produce. Removed from the model; still present in all eight shipped
+                  checkpoints as untouched init. This is where "0.687M" came from.
+        700,720   + three 68x68 causal masks, which are buffers, not parameters. This
+                  is what a state_dict on disk sums to.
+
+    Pinned so the number cannot drift back apart, and so the arithmetic connecting the
+    three is written down somewhere rather than rediscovered.
+    """
+    from train.train_notes import NOTE_CONFIG
+    from model.note_model import HarmonicNoteGPT
+
+    model = HarmonicNoteGPT(NOTE_CONFIG)
+    live = sum(p.numel() for p in model.parameters())
+    assert live == 621_184, f"architecture changed: {live:,} parameters"
+
+    retired = 512 * 128 + 128                       # cond_proj.weight + cond_proj.bias
+    masks = 3 * (NOTE_STEPS + 4) ** 2               # one causal mask per block
+    assert live + retired == 686_848
+    assert live + retired + masks == 700_720
+
+    ckpt = CKPT_DIR / "bass_notes_gpt.pt"
+    if not ckpt.exists():
+        pytest.skip("no checkpoint to compare against")
+    saved = torch.load(ckpt, map_location="cpu", weights_only=False)
+    weights = saved["model"] if "model" in saved else saved
+    assert sum(v.numel() for v in weights.values()) == 700_720, (
+        "the shipped checkpoint no longer matches the documented breakdown"
+    )
+
+
+def test_grouped_split_keeps_every_key_of_a_phrase_on_one_side():
+    """A random split over this corpus holds out nothing at all.
+
+    Measured by experiments/split-leak: 100% of validation examples have another key of
+    their own source file in train, and 42% (bass) / 57% (arp) have a byte-identical
+    twin. The reported +0.022 gap is therefore a train-train gap. This pins the split
+    that fixes it — the mechanism is what ships, since retraining is out of scope.
+    """
+    from train.train_notes import grouped_split
+
+    families = [f"phrase{i // 12}" for i in range(120)]      # 10 phrases, 12 keys each
+    train_idx, val_idx = grouped_split(families, val_split=0.2, seed=0)
+
+    assert set(train_idx) & set(val_idx) == set(), "an example is on both sides"
+    assert sorted(train_idx + val_idx) == list(range(120)), "an example was dropped"
+    train_families = {families[i] for i in train_idx}
+    val_families = {families[i] for i in val_idx}
+    assert train_families & val_families == set(), "a phrase straddles the split"
+    assert val_families, "nothing was held out"
+
+    # every key of a held-out phrase must be held out, not just some of them
+    for family in val_families:
+        assert sum(f == family for f in families) == sum(
+            families[i] == family for i in val_idx
+        ), f"{family} is only partly held out"
+
+    # and on the real corpus, if it is present
+    for role in ("bass", "arp"):
+        data_dir = TRAINING_DATA / f"{role}_notes_midi"
+        if not list(data_dir.glob("*.npz")):
+            pytest.skip("mined corpus is absent (gitignored)")
+        from train.train_notes import NoteCorpus
+
+        corpus = NoteCorpus(data_dir)
+        train_idx, val_idx = grouped_split(corpus.families, 0.15, 0)
+        held = {corpus.families[i] for i in val_idx}
+        kept = {corpus.families[i] for i in train_idx}
+        assert held & kept == set(), f"{role}: a phrase straddles the split"
+        assert len(held) >= 2, f"{role}: only {len(held)} phrase held out"
 
 
 def test_training_from_scratch_refuses_to_replace_an_existing_checkpoint(tmp_path):

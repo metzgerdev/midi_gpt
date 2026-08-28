@@ -1,0 +1,68 @@
+{
+  "machine": {
+    "platform": "macOS-26.2-arm64-arm-64bit",
+    "processor": "arm",
+    "torch": "2.12.0"
+  },
+  "settings": {
+    "candidates": 10,
+    "sections": 2,
+    "reps": 30,
+    "warmup": 3
+  },
+  "checkpoints": {
+    "bass": "bass_notes_gpt_ft3.pt",
+    "arp": "arp_notes_gpt_ft3.pt"
+  },
+  "devices": {
+    "cpu": {
+      "candidate": {
+        "n": 30,
+        "median_ms": 51.8,
+        "p95_ms": 52.4,
+        "min_ms": 49.9,
+        "max_ms": 53.0
+      },
+      "track_sampling": {
+        "n": 3,
+        "median_ms": 2065.6,
+        "p95_ms": 2077.5,
+        "min_ms": 2055.8,
+        "max_ms": 2077.5
+      },
+      "end_to_end": {
+        "n": 3,
+        "median_ms": 2112.0,
+        "p95_ms": 3018.4,
+        "min_ms": 2089.8,
+        "max_ms": 3018.4
+      }
+    },
+    "mps": {
+      "candidate": {
+        "n": 30,
+        "median_ms": 431.4,
+        "p95_ms": 476.6,
+        "min_ms": 415.9,
+        "max_ms": 605.1
+      },
+      "track_sampling": {
+        "n": 3,
+        "median_ms": 17872.9,
+        "p95_ms": 18188.4,
+        "min_ms": 17643.0,
+        "max_ms": 18188.4
+      },
+      "end_to_end": {
+        "n": 3,
+        "median_ms": 18145.8,
+        "p95_ms": 18337.5,
+        "min_ms": 17710.0,
+        "max_ms": 18337.5
+      }
+    }
+  },
+  "cpu_speedup": {
+    "mps": 8.33
+  }
+}
