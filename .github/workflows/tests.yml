@@ -1,0 +1,53 @@
+name: tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  pytest:
+    # macos-latest is arm64, which is what the project targets — utils/device.py picks
+    # between CPU and MPS, and the checkpoints were trained and benchmarked there.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Sync dependencies
+        run: uv sync --frozen
+
+      # The fast suite only. `slow` runs real fine-tuning rounds and re-reads the
+      # vendored corpus, which is gitignored and therefore absent on a clean checkout;
+      # those tests skip rather than fail, but they cost minutes to reach that skip.
+      - name: Run tests
+        run: uv run --frozen python -m pytest -q
+
+      # Not a lint job — this asserts the two things a clone silently gets wrong:
+      # that the corpus and its derivatives stay untracked, since they are licensed
+      # sample-pack material, and that experiment checkpoints stay out of the tree.
+      - name: Check no licensed material is tracked
+        run: |
+          set -e
+          leaked=$(git ls-files 'training_data/corpus' \
+                   | grep -v '^training_data/corpus/README.md$' || true)
+          if [ -n "$leaked" ]; then
+            echo "::error::sample-pack MIDI is tracked; see .gitignore"
+            echo "$leaked"
+            exit 1
+          fi
+          stray=$(git ls-files | grep -E '\.(npz|pt)$' \
+                  | grep -v '^checkpoints/' || true)
+          if [ -n "$stray" ]; then
+            echo "::error::weights or mined arrays tracked outside checkpoints/"
+            echo "$stray"
+            exit 1
+          fi
+          echo "clean"
