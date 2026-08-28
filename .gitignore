@@ -6,6 +6,7 @@ __pycache__/
 
 # Working design notes, kept local
 polyphony.md
+retrain.md
 
 # Job-hunt planning doc. Kept local: it is scaffolding for the repo's presentation,
 # not part of the project, and it quotes numbers that are wrong until the fixes land.
