@@ -17,6 +17,18 @@ The project combines:
 The system runs entirely on the local machine. It generates symbolic MIDI; audio
 playback, sound selection, and mixing remain in the DAW.
 
+## Interface
+
+The local Streamlit app provides separate views for generation and preference fine-tuning.
+
+### Generate
+
+![Generate view showing track controls, conditioning settings, generated MIDI stems, and validation scores](figures/ui-generate.png)
+
+### Fine-tune
+
+![Fine-tune view showing the DAW edit workflow, DPO controls, and checkpoint chain](figures/ui-finetune.png)
+
 ## Results
 
 The shipped fine-tuned models contain 621,184 parameters each. On an Apple Silicon
